@@ -20,6 +20,8 @@ import { resolveBillingWriteAccountId } from '../require-billing-write';
 import { syncSeatQuantity } from '../services/seat-management';
 import { maybeMigrateLegacyAccount } from '../services/legacy-account-migration';
 import { makeOpenApiApp, json, auth, errors } from '../../openapi';
+import { getPaystack } from '../../shared/paystack';
+import { getOrCreatePaystackCustomer } from '../services/paystack';
 
 export const subscriptionsRouter = makeOpenApiApp<AppEnv>();
 
@@ -82,6 +84,27 @@ subscriptionsRouter.openapi(
     const email = c.get('userEmail');
     const body = await c.req.json();
 
+    const provider = body.provider === 'paystack' ? 'paystack' : 'stripe';
+
+    if (provider === 'paystack') {
+      const customerCode = await getOrCreatePaystackCustomer(accountId, email);
+      const paystack = getPaystack();
+      
+      const session = await paystack.initializeTransaction({
+        email,
+        amount: 4000, // Hardcoded $40 for now, or you'd use a tier price resolution
+        plan: body.plan_code, // Assuming client passes plan_code
+        callback_url: body.success_url,
+        metadata: {
+          account_id: accountId,
+          tier_key: body.tier_key,
+          type: 'subscription_checkout',
+        },
+      });
+
+      return c.json({ status: 'checkout_created', checkout_url: session.data.authorization_url });
+    }
+
     const result = await createCheckoutSession({
       accountId,
       email,
@@ -114,6 +137,26 @@ subscriptionsRouter.openapi(
     const accountId = await resolveBillingWriteAccountId(c, 'body');
     const email = c.get('userEmail');
     const body = await c.req.json();
+
+    const provider = body.provider === 'paystack' ? 'paystack' : 'stripe';
+
+    if (provider === 'paystack') {
+      const customerCode = await getOrCreatePaystackCustomer(accountId, email);
+      const paystack = getPaystack();
+
+      const session = await paystack.initializeTransaction({
+        email,
+        amount: 4000, // Per-seat plan hardcode, or real lookup
+        plan: body.plan_code, // Requires pre-configured Paystack Plan
+        callback_url: body.success_url,
+        metadata: {
+          account_id: accountId,
+          type: 'per_seat_checkout',
+        },
+      });
+
+      return c.json({ checkout_url: session.data.authorization_url });
+    }
 
     const result = await createPerSeatCheckoutSession({
       accountId,

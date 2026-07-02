@@ -794,3 +794,105 @@ async function handleRevenueCatBillingIssue(accountId: string, event: any) {
 
   console.log(`[RevenueCat] Billing issue: ${accountId}`);
 }
+
+export async function processPaystackWebhook(body: any) {
+  const eventType = body?.event;
+  if (!eventType) throw new WebhookError('Missing event in Paystack webhook');
+  const data = body.data;
+
+  console.log(`[Paystack Webhook] Processing ${eventType}`);
+
+  switch (eventType) {
+    case 'charge.success':
+      await handlePaystackChargeSuccess(data);
+      break;
+
+    case 'subscription.create':
+      await handlePaystackSubscriptionCreate(data);
+      break;
+      
+    case 'invoice.update':
+    case 'invoice.create':
+      // Handle subscription renewal
+      break;
+
+    default:
+      console.log(`[Paystack Webhook] Unhandled event type: ${eventType}`);
+  }
+
+  return { received: true, event_type: eventType };
+}
+
+async function handlePaystackChargeSuccess(data: any) {
+  const reference = data.reference;
+  if (!reference) return;
+
+  const metadata = data.metadata;
+  const accountId = metadata?.account_id;
+  const type = metadata?.type;
+
+  if (type === 'credit_purchase' && accountId) {
+    // Determine amount in USD, data.amount is in kobo/cents.
+    const amountTotal = (data.amount ?? 0) / 100;
+    if (amountTotal <= 0) return;
+
+    await grantCredits(
+      accountId,
+      amountTotal,
+      'purchase',
+      `Credit purchase (Paystack): $${amountTotal.toFixed(2)}`,
+      false,
+      reference,
+    );
+
+    if (metadata.purchase_id) {
+      await updatePurchaseStatus(metadata.purchase_id, 'completed', new Date().toISOString());
+    }
+
+    console.log(`[Paystack Webhook] Credit purchase: $${amountTotal} for ${accountId}`);
+  } else if (type === 'subscription_checkout' || type === 'per_seat_checkout') {
+    if (!accountId) return;
+    
+    // For subscription initial payment
+    const tierKey = metadata?.tier_key;
+    const tier = tierKey ? getTier(tierKey) : null;
+    
+    await upsertCreditAccount(accountId, {
+      tier: tierKey ?? 'per_seat',
+      provider: 'paystack',
+      paystackSubscriptionCode: data.plan?.subscription_code ?? reference,
+      stripeSubscriptionStatus: 'active',
+      planType: 'monthly',
+      autoTopupEnabled: true,
+      autoTopupThreshold: String(AUTO_TOPUP_DEFAULT_THRESHOLD),
+      autoTopupAmount: String(AUTO_TOPUP_DEFAULT_AMOUNT),
+    });
+
+    if (tier && tier.monthlyCredits > 0) {
+      await grantCredits(
+        accountId,
+        tier.monthlyCredits,
+        'tier_grant',
+        `${tier.displayName} subscription activated: ${tier.monthlyCredits} credits`,
+        true,
+        reference,
+      );
+    }
+
+    if (data.customer?.customer_code) {
+      await upsertCustomer({
+        accountId,
+        id: data.customer.customer_code,
+        email: data.customer.email,
+        provider: 'paystack',
+        active: true,
+      });
+    }
+
+    console.log(`[Paystack Webhook] Subscription checkout for ${accountId}`);
+  }
+}
+
+async function handlePaystackSubscriptionCreate(data: any) {
+  // Sync the subscription data directly if available
+}

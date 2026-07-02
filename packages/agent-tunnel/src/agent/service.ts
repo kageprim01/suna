@@ -151,7 +151,7 @@ export function renderSystemdUnit(command: string, paths: ServicePaths = getServ
   const stdout = join(paths.logDir, 'agent-tunnel.out.log');
   const stderr = join(paths.logDir, 'agent-tunnel.err.log');
   return `[Unit]
-Description=Kortix Agent Tunnel
+Description=Agentica Agent Tunnel
 After=network-online.target
 Wants=network-online.target
 

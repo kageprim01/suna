@@ -46,6 +46,7 @@ export function BillingTab({ returnUrl, isActive }: { returnUrl: string; isActiv
   const [selectedPackage, setSelectedPackage] = useState<(typeof CREDIT_PACKAGES)[number] | null>(
     null,
   );
+  const [selectedProvider, setSelectedProvider] = useState<'stripe' | 'paystack'>('stripe');
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [purchaseError, setPurchaseError] = useState<string | null>(null);
   const queryClient = useQueryClient();
@@ -99,6 +100,7 @@ export function BillingTab({ returnUrl, isActive }: { returnUrl: string; isActiv
           amount: selectedPackage.price,
           success_url: `${window.location.origin}/dashboard?credit_purchase=success`,
           cancel_url: window.location.href,
+          provider: selectedProvider,
         },
         billingAccountId,
       );
@@ -254,6 +256,29 @@ export function BillingTab({ returnUrl, isActive }: { returnUrl: string; isActiv
                   )}
                 </p>
               </div>
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground text-xs">Pay with</span>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={selectedProvider === 'stripe' ? 'default' : 'outline'}
+                  className="h-7 rounded-lg px-3 text-xs"
+                  onClick={() => setSelectedProvider('stripe')}
+                  disabled={isPurchasing}
+                >
+                  Stripe
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={selectedProvider === 'paystack' ? 'default' : 'outline'}
+                  className="h-7 rounded-lg px-3 text-xs"
+                  onClick={() => setSelectedProvider('paystack')}
+                  disabled={isPurchasing}
+                >
+                  Paystack
+                </Button>
+              </div>
               <div className="grid grid-cols-3 gap-2">
                 {CREDIT_PACKAGES.map((pkg) => {
                   const isSelected = selectedPackage?.price === pkg.price;
@@ -291,7 +316,7 @@ export function BillingTab({ returnUrl, isActive }: { returnUrl: string; isActiv
                 {isPurchasing
                   ? 'Processing...'
                   : selectedPackage
-                    ? `Buy $${selectedPackage.price} in credits`
+                    ? `Buy $${selectedPackage.price} via ${selectedProvider === 'paystack' ? 'Paystack' : 'Stripe'}`
                     : 'Select a package'}
               </Button>
             </div>

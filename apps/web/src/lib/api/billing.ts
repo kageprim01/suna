@@ -186,6 +186,8 @@ export interface CreateCheckoutSessionRequest {
   server_type?: string;
   /** Instance provisioning: managed VPS location (e.g. 'nbg1') */
   location?: string;
+  provider?: 'stripe' | 'paystack';
+  plan_code?: string;
 }
 
 export interface CreateCheckoutSessionResponse {
@@ -238,6 +240,7 @@ export interface PurchaseCreditsRequest {
   amount: number;
   success_url: string;
   cancel_url: string;
+  provider?: 'stripe' | 'paystack';
 }
 
 export interface PurchaseCreditsResponse {
@@ -460,7 +463,7 @@ export const billingApi = {
 
   // Billing v2 — per-seat plan checkout. Stripe quantity = current member count.
   async createPerSeatCheckout(
-    args: { success_url: string; cancel_url: string; locale?: string },
+    args: { success_url: string; cancel_url: string; locale?: string; provider?: 'stripe' | 'paystack'; plan_code?: string },
     accountId?: string,
   ) {
     const response = await backendApi.post<{

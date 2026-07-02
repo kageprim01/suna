@@ -1,7 +1,9 @@
 import { createRoute, z } from '@hono/zod-openapi';
 import type { AppEnv } from '../../types';
 import { getStripe } from '../../shared/stripe';
+import { getPaystack } from '../../shared/paystack';
 import { getOrCreateStripeCustomer } from '../services/subscriptions';
+import { getOrCreatePaystackCustomer } from '../services/paystack';
 import { canPurchaseCredits, resolveCreditPriceId } from '../services/tiers';
 import { getCreditAccount } from '../repositories/credit-accounts';
 import {
@@ -36,6 +38,7 @@ paymentsRouter.openapi(
               account_id: z.string().optional(),
               success_url: z.string().optional(),
               cancel_url: z.string().optional(),
+              provider: z.string().optional(),
             }),
           },
         },
@@ -62,6 +65,34 @@ paymentsRouter.openapi(
 
     if (!canPurchaseCredits(tierName)) {
       throw new BillingError('Your tier does not allow credit purchases');
+    }
+
+    const provider = body.provider === 'paystack' ? 'paystack' : 'stripe';
+
+    if (provider === 'paystack') {
+      const customerCode = await getOrCreatePaystackCustomer(accountId, email);
+      const paystack = getPaystack();
+      
+      const purchase = await insertPurchase({
+        accountId,
+        amountDollars: String(amount),
+        status: 'pending',
+        description: `$${amount} credit purchase`,
+        provider: 'paystack',
+      });
+
+      const session = await paystack.initializeTransaction({
+        email,
+        amount: Math.round(amount * 100), // Paystack uses cents
+        callback_url: body.success_url, // For Paystack, redirect back here
+        metadata: {
+          account_id: accountId,
+          purchase_id: purchase!.id,
+          type: 'credit_purchase',
+        },
+      });
+
+      return c.json({ checkout_url: session.data.authorization_url });
     }
 
     const customerId = await getOrCreateStripeCustomer(accountId, email);

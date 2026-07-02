@@ -127,6 +127,13 @@
       "when": 1782412998383,
       "tag": "20260625184318_slack_user_identity",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1782953669617,
+      "tag": "20260702005429_add_paystack_columns",
+      "breakpoints": true
     }
   ]
 }

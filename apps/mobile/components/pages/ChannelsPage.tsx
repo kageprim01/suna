@@ -1230,7 +1230,7 @@ function SlackWizard({
           <BottomSheetTextInput
             value={botName}
             onChangeText={setBotName}
-            placeholder="Kortix Agent"
+            placeholder="Agentica"
             placeholderTextColor={isDark ? 'rgba(248,248,248,0.25)' : 'rgba(18,18,21,0.3)'}
             style={{ ...inputStyle, marginBottom: 4 }}
           />

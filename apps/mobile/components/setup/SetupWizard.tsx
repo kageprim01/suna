@@ -527,7 +527,7 @@ function ProviderStep({ onContinue, isDark, themeColors }: StepProps & { onConti
           <Text style={{ fontSize: 13, fontFamily: 'Roobert', color: isDark ? 'rgba(248,248,248,0.5)' : 'rgba(18,18,21,0.5)', textAlign: 'center', lineHeight: 18, paddingHorizontal: 8, maxWidth: 300 }}>
             {hasLLMProvider
               ? `${connectedCount} provider${connectedCount > 1 ? 's' : ''} ready. You can add more anytime from settings.`
-              : 'Configure which AI models to use with your Kortix agent. Connect OpenAI, Anthropic, Google, or any supported provider.'}
+              : 'Configure which AI models to use with Agentica. Connect OpenAI, Anthropic, Google, or any supported provider.'}
           </Text>
         </View>
 
@@ -1199,7 +1199,7 @@ function GetStartedStep({ onComplete, completing, isDark, themeColors }: StepPro
           You're all set
         </Text>
         <Text style={{ fontSize: 13, fontFamily: 'Roobert', color: colors.muted, textAlign: 'center', lineHeight: 18, maxWidth: 280 }}>
-          Your Kortix agent is configured and ready. We'll walk you through the basics in a quick guided conversation.
+          Your agent is configured and ready. We'll walk you through the basics in a quick guided conversation.
         </Text>
       </View>
 

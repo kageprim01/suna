@@ -1,7 +1,8 @@
 import { createRoute, z } from '@hono/zod-openapi';
 import { config } from '../../config';
-import { processStripeWebhook, processRevenueCatWebhook } from '../services/webhooks';
+import { processStripeWebhook, processRevenueCatWebhook, processPaystackWebhook } from '../services/webhooks';
 import { makeOpenApiApp, json, errors } from '../../openapi';
+import * as crypto from 'crypto';
 
 export const webhooksRouter = makeOpenApiApp();
 
@@ -56,6 +57,36 @@ webhooksRouter.openapi(
     const result = await processRevenueCatWebhook(body);
     return c.json(result);
   },
+);
+
+webhooksRouter.openapi(
+  createRoute({
+    method: 'post',
+    path: '/paystack',
+    tags: ['billing'],
+    summary: 'Paystack webhook',
+    responses: {
+      200: json(z.record(z.string(), z.any()), 'Webhook processing result'),
+      ...errors(400, 500),
+    },
+  }),
+  async (c: any) => {
+    if (!config.PAYSTACK_SECRET_KEY) {
+      return c.json({ error: 'Webhook not configured' }, 500);
+    }
+    const signature = c.req.header('x-paystack-signature');
+    if (!signature) return c.json({ error: 'Missing x-paystack-signature header' }, 400);
+
+    const rawBody = await c.req.text();
+    const hash = crypto.createHmac('sha512', config.PAYSTACK_SECRET_KEY).update(rawBody).digest('hex');
+    if (hash !== signature) {
+      return c.json({ error: 'Invalid signature' }, 400);
+    }
+
+    const body = JSON.parse(rawBody);
+    const result = await processPaystackWebhook(body);
+    return c.json(result);
+  }
 );
 
 // Sandbox lifecycle webhooks (Daytona/Platinum) live at /v1/webhooks/sandbox/*

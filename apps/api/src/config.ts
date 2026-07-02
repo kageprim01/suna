@@ -254,6 +254,10 @@ const envSchema = z.object({
   STRIPE_SECRET_KEY:           optStr,
   STRIPE_WEBHOOK_SECRET:       optStr,
 
+  // ── Billing — Paystack (optional, for Nigerian market) ───────────────────
+  PAYSTACK_SECRET_KEY:         optStr,
+  PAYSTACK_PUBLIC_KEY:         optStr,
+
   // ── Billing — RevenueCat (optional) ──────────────────────────────────────
   REVENUECAT_WEBHOOK_SECRET:   optStr,
 
@@ -641,6 +645,10 @@ export const config = {
   // ─── Stripe (Billing) ─────────────────────────────────────────────────────
   STRIPE_SECRET_KEY: env.STRIPE_SECRET_KEY,
   STRIPE_WEBHOOK_SECRET: env.STRIPE_WEBHOOK_SECRET,
+
+  // ─── Paystack (Billing) ───────────────────────────────────────────────────
+  PAYSTACK_SECRET_KEY: env.PAYSTACK_SECRET_KEY,
+  PAYSTACK_PUBLIC_KEY: env.PAYSTACK_PUBLIC_KEY,
 
   // ─── RevenueCat (Billing) ─────────────────────────────────────────────────
   REVENUECAT_WEBHOOK_SECRET: env.REVENUECAT_WEBHOOK_SECRET,
