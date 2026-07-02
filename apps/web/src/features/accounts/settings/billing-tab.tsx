@@ -46,7 +46,7 @@ export function BillingTab({ returnUrl, isActive }: { returnUrl: string; isActiv
   const [selectedPackage, setSelectedPackage] = useState<(typeof CREDIT_PACKAGES)[number] | null>(
     null,
   );
-  const [selectedProvider, setSelectedProvider] = useState<'stripe' | 'paystack'>('stripe');
+  const [selectedProvider, setSelectedProvider] = useState<'stripe' | 'paystack'>('paystack');
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [purchaseError, setPurchaseError] = useState<string | null>(null);
   const queryClient = useQueryClient();

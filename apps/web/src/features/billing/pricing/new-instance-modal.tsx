@@ -49,7 +49,7 @@ export function NewInstanceModal({ open, onOpenChange, returnUrl, title }: NewIn
   const [selected, setSelected] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedProvider, setSelectedProvider] = useState<'stripe' | 'paystack'>('stripe');
+  const [selectedProvider, setSelectedProvider] = useState<'stripe' | 'paystack'>('paystack');
 
   const { data: serverTypesData, isLoading: typesLoading } = useServerTypes(location);
   const serverTypes = useMemo(

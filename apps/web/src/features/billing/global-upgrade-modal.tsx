@@ -32,7 +32,7 @@ export interface UpgradePlansModalProps {
 export function UpgradePlansModal({ open, onOpenChange, accountState }: UpgradePlansModalProps) {
   const tI18nHardcoded = useTranslations('hardcodedUi');
   const createPerSeat = useCreatePerSeatCheckout();
-  const [selectedProvider, setSelectedProvider] = useState<'stripe' | 'paystack'>('stripe');
+  const [selectedProvider, setSelectedProvider] = useState<'stripe' | 'paystack'>('paystack');
 
   const pricePerSeat = accountState?.seats?.price_per_seat_usd ?? 40;
   const seatCount = Math.max(1, accountState?.member_count ?? accountState?.seats?.count ?? 1);
