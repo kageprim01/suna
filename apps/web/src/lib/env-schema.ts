@@ -74,6 +74,8 @@ const RuntimeEnvSchema = z.object({
   AUTH_METHODS: z.string().optional().default('magic,password'),
   /** Unified platform version (root VERSION file) — surfaced for the UI footer / about. */
   VERSION: z.string().optional().default('dev'),
+  PAYSTACK_PRO_PLAN_CODE: z.string().optional().default(''),
+  PAYSTACK_TEAM_PLAN_CODE: z.string().optional().default(''),
 })
 
 export type RuntimeEnv = z.infer<typeof RuntimeEnvSchema>

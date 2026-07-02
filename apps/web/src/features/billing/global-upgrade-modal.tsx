@@ -21,6 +21,7 @@ import { useUpgradeDialogStore } from '@/stores/upgrade-dialog-store';
 import { ArrowRight, UserPlus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export interface UpgradePlansModalProps {
   open: boolean;
@@ -31,6 +32,7 @@ export interface UpgradePlansModalProps {
 export function UpgradePlansModal({ open, onOpenChange, accountState }: UpgradePlansModalProps) {
   const tI18nHardcoded = useTranslations('hardcodedUi');
   const createPerSeat = useCreatePerSeatCheckout();
+  const [selectedProvider, setSelectedProvider] = useState<'stripe' | 'paystack'>('stripe');
 
   const pricePerSeat = accountState?.seats?.price_per_seat_usd ?? 40;
   const seatCount = Math.max(1, accountState?.member_count ?? accountState?.seats?.count ?? 1);
@@ -43,6 +45,7 @@ export function UpgradePlansModal({ open, onOpenChange, accountState }: UpgradeP
     createPerSeat.mutate({
       success_url: `${origin}/projects?team_signup=success`,
       cancel_url: typeof window !== 'undefined' ? window.location.href : `${origin}/`,
+      provider: selectedProvider,
     });
   };
 
@@ -64,6 +67,29 @@ export function UpgradePlansModal({ open, onOpenChange, accountState }: UpgradeP
             {seatCount} {seatCount === 1 ? 'seat' : 'seats'} × ${pricePerSeat} = ${monthlyTotal}/mo
           </p>
         )}
+        <div className="flex items-center justify-center gap-2">
+          <span className="text-muted-foreground text-xs">Pay with</span>
+          <Button
+            type="button"
+            size="sm"
+            variant={selectedProvider === 'stripe' ? 'default' : 'outline'}
+            className="h-7 rounded-lg px-3 text-xs"
+            onClick={() => setSelectedProvider('stripe')}
+            disabled={createPerSeat.isPending}
+          >
+            Stripe
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant={selectedProvider === 'paystack' ? 'default' : 'outline'}
+            className="h-7 rounded-lg px-3 text-xs"
+            onClick={() => setSelectedProvider('paystack')}
+            disabled={createPerSeat.isPending}
+          >
+            Paystack
+          </Button>
+        </div>
         <Button
           type="button"
           variant="default"
@@ -83,6 +109,7 @@ export function UpgradePlansModal({ open, onOpenChange, accountState }: UpgradeP
               {hasSeatMath
                 ? `Subscribe — $${monthlyTotal}/mo`
                 : `Subscribe — $${pricePerSeat}/seat`}
+              {` via ${selectedProvider === 'paystack' ? 'Paystack' : 'Stripe'}`}
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
             </>
           )}

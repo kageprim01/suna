@@ -235,7 +235,7 @@ export function useCreatePerSeatCheckout() {
   const accountId = useBillingAccountId();
 
   return useMutation({
-    mutationFn: (args: { success_url: string; cancel_url: string; locale?: string }) =>
+    mutationFn: (args: { success_url: string; cancel_url: string; locale?: string; provider?: 'stripe' | 'paystack'; plan_code?: string }) =>
       billingApi.createPerSeatCheckout(args, accountId),
     onSuccess: async (data) => {
       if (data.status === 'subscription_created') {

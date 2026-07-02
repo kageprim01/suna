@@ -49,6 +49,7 @@ export function NewInstanceModal({ open, onOpenChange, returnUrl, title }: NewIn
   const [selected, setSelected] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedProvider, setSelectedProvider] = useState<'stripe' | 'paystack'>('stripe');
 
   const { data: serverTypesData, isLoading: typesLoading } = useServerTypes(location);
   const serverTypes = useMemo(
@@ -111,6 +112,7 @@ export function NewInstanceModal({ open, onOpenChange, returnUrl, title }: NewIn
         commitment_type: 'monthly',
         ...(selected ? { server_type: selected } : {}),
         location,
+        provider: selectedProvider,
       });
       if (response.url || response.checkout_url) {
         window.location.href = response.url || response.checkout_url!;
@@ -308,6 +310,30 @@ export function NewInstanceModal({ open, onOpenChange, returnUrl, title }: NewIn
               )}
             </p>
           </div>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              <span className="text-muted-foreground text-xs">Pay with</span>
+              <Button
+                type="button"
+                size="sm"
+                variant={selectedProvider === 'stripe' ? 'default' : 'outline'}
+                className="h-7 rounded-lg px-2 text-xs"
+                onClick={() => setSelectedProvider('stripe')}
+                disabled={isLoading}
+              >
+                Stripe
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={selectedProvider === 'paystack' ? 'default' : 'outline'}
+                className="h-7 rounded-lg px-2 text-xs"
+                onClick={() => setSelectedProvider('paystack')}
+                disabled={isLoading}
+              >
+                Paystack
+              </Button>
+            </div>
           <Button
             className="h-11 px-7 text-sm font-semibold"
             disabled={isLoading || !selected}
@@ -324,6 +350,7 @@ export function NewInstanceModal({ open, onOpenChange, returnUrl, title }: NewIn
               </>
             )}
           </Button>
+          </div>
         </div>
       </div>
     </div>

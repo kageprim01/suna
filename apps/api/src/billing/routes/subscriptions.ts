@@ -87,37 +87,55 @@ subscriptionsRouter.openapi(
     const provider = body.provider === 'paystack' ? 'paystack' : 'stripe';
 
     if (provider === 'paystack') {
-      const customerCode = await getOrCreatePaystackCustomer(accountId, email);
-      const paystack = getPaystack();
-      
-      const session = await paystack.initializeTransaction({
-        email,
-        amount: 4000, // Hardcoded $40 for now, or you'd use a tier price resolution
-        plan: body.plan_code, // Assuming client passes plan_code
-        callback_url: body.success_url,
-        metadata: {
-          account_id: accountId,
-          tier_key: body.tier_key,
-          type: 'subscription_checkout',
-        },
-      });
+      try {
+        const customerCode = await getOrCreatePaystackCustomer(accountId, email);
+        const paystack = getPaystack();
+        
+        let amount = 4000;
+        if (body.server_type) {
+          const computePriceCents = getComputeDisplayPriceCents(body.server_type);
+          if (computePriceCents != null) {
+            amount = computePriceCents;
+          }
+        }
 
-      return c.json({ status: 'checkout_created', checkout_url: session.data.authorization_url });
+        const session = await paystack.initializeTransaction({
+          email,
+          amount, // Plan price or compute price
+          plan: body.plan_code, // Assuming client passes plan_code
+          callback_url: body.success_url,
+          metadata: {
+            account_id: accountId,
+            tier_key: body.tier_key,
+            type: 'subscription_checkout',
+          },
+        });
+
+        return c.json({ status: 'checkout_created', checkout_url: session.data.authorization_url });
+      } catch (err: any) {
+        console.error('[Billing] Paystack checkout session failed:', err);
+        throw new BillingError(err.message || 'Paystack checkout session failed');
+      }
     }
 
-    const result = await createCheckoutSession({
-      accountId,
-      email,
-      tierKey: body.tier_key,
-      successUrl: body.success_url,
-      cancelUrl: body.cancel_url,
-      commitmentType: body.commitment_type,
-      locale: body.locale,
-      serverType: body.server_type,
-      location: body.location,
-    });
+    try {
+      const result = await createCheckoutSession({
+        accountId,
+        email,
+        tierKey: body.tier_key,
+        successUrl: body.success_url,
+        cancelUrl: body.cancel_url,
+        commitmentType: body.commitment_type,
+        locale: body.locale,
+        serverType: body.server_type,
+        location: body.location,
+      });
 
-    return c.json(result);
+      return c.json(result);
+    } catch (err: any) {
+      console.error('[Billing] Stripe checkout session failed:', err);
+      throw new BillingError(err.message || 'Stripe checkout session failed');
+    }
   },
 );
 
@@ -141,32 +159,42 @@ subscriptionsRouter.openapi(
     const provider = body.provider === 'paystack' ? 'paystack' : 'stripe';
 
     if (provider === 'paystack') {
-      const customerCode = await getOrCreatePaystackCustomer(accountId, email);
-      const paystack = getPaystack();
+      try {
+        const customerCode = await getOrCreatePaystackCustomer(accountId, email);
+        const paystack = getPaystack();
 
-      const session = await paystack.initializeTransaction({
-        email,
-        amount: 4000, // Per-seat plan hardcode, or real lookup
-        plan: body.plan_code, // Requires pre-configured Paystack Plan
-        callback_url: body.success_url,
-        metadata: {
-          account_id: accountId,
-          type: 'per_seat_checkout',
-        },
-      });
+        const session = await paystack.initializeTransaction({
+          email,
+          amount: 4000, // Per-seat plan hardcode, or real lookup
+          plan: body.plan_code, // Requires pre-configured Paystack Plan
+          callback_url: body.success_url,
+          metadata: {
+            account_id: accountId,
+            type: 'per_seat_checkout',
+          },
+        });
 
-      return c.json({ checkout_url: session.data.authorization_url });
+        return c.json({ checkout_url: session.data.authorization_url });
+      } catch (err: any) {
+        console.error('[Billing] Paystack per-seat checkout failed:', err);
+        throw new BillingError(err.message || 'Paystack per-seat checkout failed');
+      }
     }
 
-    const result = await createPerSeatCheckoutSession({
-      accountId,
-      email,
-      successUrl: body.success_url,
-      cancelUrl: body.cancel_url,
-      locale: body.locale,
-    });
+    try {
+      const result = await createPerSeatCheckoutSession({
+        accountId,
+        email,
+        successUrl: body.success_url,
+        cancelUrl: body.cancel_url,
+        locale: body.locale,
+      });
 
-    return c.json(result);
+      return c.json(result);
+    } catch (err: any) {
+      console.error('[Billing] Stripe per-seat checkout failed:', err);
+      throw new BillingError(err.message || 'Stripe per-seat checkout failed');
+    }
   },
 );
 
