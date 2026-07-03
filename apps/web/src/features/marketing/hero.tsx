@@ -8,32 +8,61 @@ import { UnicornBackground } from '@/components/ui/unicorn-background';
 import { vujahdayScript } from '@/app/(system)/fonts/vujahday-script';
 import { Button } from '@/components/ui/marketing/button';
 
-const ACTIONS = ['Work', 'Design', 'Prototype', 'Automate'];
+const TAGLINES = [
+  {
+    tagline: 'The Autonomous Agent Platform',
+    subtitle: 'Your AI coworker, not another chatbot.',
+  },
+  {
+    tagline: 'Secure Agents in Secure Environments',
+    subtitle: 'Enterprise-grade isolation, built in.',
+  },
+  {
+    tagline: 'One Query \u2192 One Deliverable',
+    subtitle: 'We ship complete work, not just text.',
+  },
+  {
+    tagline: 'Agents That Ship, Not Just Chat',
+    subtitle: 'Results, not rambling.',
+  },
+];
 
-function BlinkingActions() {
+function AnimatedTagline() {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(() => setIndex((i) => (i + 1) % ACTIONS.length), 2000);
+    const id = setInterval(() => setIndex((i) => (i + 1) % TAGLINES.length), 6000);
     return () => clearInterval(id);
   }, []);
 
   return (
-    <span className="relative inline-block w-[2.8em] text-left align-top">
-      <span className="invisible">{ACTIONS.reduce((a, b) => (a.length > b.length ? a : b))}</span>
-      <AnimatePresence mode="popLayout">
+    <div className="relative flex flex-col items-center gap-4">
+      <AnimatePresence mode="wait">
         <motion.span
-          key={ACTIONS[index]}
-          className={`absolute inset-0 text-left italic ${vujahdayScript.className}`}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -12 }}
-          transition={{ duration: 0.25, ease: 'easeInOut' }}
+          key={TAGLINES[index].tagline}
+          className={`text-foreground text-center text-4xl leading-tight font-light tracking-tight md:text-6xl lg:text-7xl italic ${vujahdayScript.className}`}
+          initial={{ opacity: 0, filter: 'blur(4px)' }}
+          animate={{ opacity: 1, filter: 'blur(0px)' }}
+          exit={{ opacity: 0, filter: 'blur(4px)' }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
         >
-          {ACTIONS[index]}
+          {TAGLINES[index].tagline}
         </motion.span>
       </AnimatePresence>
-    </span>
+      <span className="text-muted-foreground text-lg md:text-xl">火</span>
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={TAGLINES[index].subtitle}
+          className="text-muted-foreground text-center text-base md:text-lg text-balance"
+          initial={{ opacity: 0, filter: 'blur(4px)' }}
+          animate={{ opacity: 1, filter: 'blur(0px)' }}
+          exit={{ opacity: 0, filter: 'blur(4px)' }}
+          transition={{ duration: 0.4, delay: 0.1, ease: 'easeInOut' }}
+        >
+          {TAGLINES[index].subtitle}
+        </motion.span>
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -45,37 +74,27 @@ const Hero = () => {
       </div>
 
       <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6">
-        <motion.h1
-          className="text-foreground text-center text-4xl leading-tight font-light tracking-tight md:text-6xl lg:text-7xl"
+        <motion.div
+          className="grid place-items-center"
           initial={{ opacity: 0, filter: 'blur(4px)' }}
           animate={{ opacity: 1, filter: 'blur(0px)' }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
           style={{ willChange: 'opacity, filter', transform: 'translateZ(0)' }}
         >
-          Agentica for{' '}
-          <BlinkingActions />
-        </motion.h1>
-        <motion.p
-          className="text-muted-foreground mt-5 max-w-xl text-center text-base text-balance md:text-lg"
-          initial={{ opacity: 0, filter: 'blur(4px)' }}
-          animate={{ opacity: 1, filter: 'blur(0px)' }}
-          transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
-          style={{ willChange: 'opacity, filter', transform: 'translateZ(0)' }}
-        >
-          The first AI coworker your team will actually use.
-        </motion.p>
+          <AnimatedTagline />
+        </motion.div>
         <motion.div
-          className="mt-8"
+          className="mt-10 flex items-center gap-4"
           initial={{ opacity: 0, filter: 'blur(4px)' }}
           animate={{ opacity: 1, filter: 'blur(0px)' }}
           transition={{ duration: 0.6, delay: 0.6, ease: 'easeOut' }}
           style={{ willChange: 'opacity, filter', transform: 'translateZ(0)' }}
         >
           <Button size="xl" asChild>
-            <Link href="/auth">
-              <span className="text-base">火</span>
-              Get started
-            </Link>
+            <Link href="/auth">Get started</Link>
+          </Button>
+          <Button size="xl" variant="outline" asChild>
+            <Link href="/showcase">See Agentica in action</Link>
           </Button>
         </motion.div>
       </div>
