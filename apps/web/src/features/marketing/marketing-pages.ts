@@ -82,13 +82,13 @@ export const COMPETITORS: Competitor[] = [
     seo: {
       title: 'Agentica vs ChatGPT — From answering questions to doing the work',
       description:
-        'ChatGPT answers and drafts. Agentica builds AI agents that actually do the work across your tools — open-source, self-hosted, and fully yours. See the difference.',
+        'ChatGPT answers and drafts. Agentica builds AI agents that actually do the work across your tools — yours to command, yours to keep. See the difference.',
       keywords: [
         'kortix vs chatgpt',
         'chatgpt alternative',
         'ai agent vs chatgpt',
         'chatgpt alternative',
-        'self-hosted ai agent',
+        'ai agent',
       ],
       ogTitle: 'Agentica vs ChatGPT',
       ogDescription: 'ChatGPT talks. Agentica gets it done — and you own it.',
@@ -106,7 +106,7 @@ export const COMPETITORS: Competitor[] = [
       {
         dimension: 'You own and host it',
         them: "Runs on OpenAI's servers",
-        kortix: 'Open-source — run it anywhere',
+        kortix: 'Deploy on Dosco cloud or yours',
       },
       {
         dimension: 'Your data stays with you',
@@ -126,18 +126,18 @@ export const COMPETITORS: Competitor[] = [
       {
         dimension: 'Avoid vendor lock-in',
         them: "Tied to OpenAI's platform",
-        kortix: 'Open-source and portable',
+        kortix: 'Portable, no lock-in',
       },
       {
         dimension: 'Cost model',
         them: 'Per-seat monthly subscription',
-        kortix: 'Open-source; pay only for the AI usage you run',
+        kortix: 'Pay only for the AI usage you run',
       },
     ],
     builtForThem:
       "ChatGPT is the best-known AI assistant in the world for good reason — it's fast, capable, and great at the things you'd ask a sharp helper to do: write a draft, explain something, brainstorm, clean up a message. That's where most people meet AI, and for a lot of day-to-day questions it's all you need.",
     builtForKortix:
-      'Agentica is a different kind of product. It builds agents that take action — pulling data, running research, working through files, and completing tasks from start to finish without you copy-pasting between a chat window and your real tools. And because Agentica is open-source, those agents run where you choose, on your terms.',
+      'Agentica is a different kind of product. It builds agents that take action — pulling data, running research, working through files, and completing tasks from start to finish without you copy-pasting between a chat window and your real tools. And because Agentica is managed by Dosco, those agents run on secure infrastructure with zero ops on your end.',
     differentiators: [
       {
         title: 'It does the work, not just the talking.',
@@ -149,7 +149,7 @@ export const COMPETITORS: Competitor[] = [
       },
       {
         title: 'No lock-in, no per-seat tax.',
-        body: "ChatGPT ties you to one company's platform and pricing. Agentica is open-source — you're never locked in, never at the mercy of a price change, and never rationing access seat by seat as your team grows.",
+        body: "ChatGPT ties you to one company's platform and pricing. Agentica is managed by Dosco — you're never locked in, never at the mercy of a price change, and never rationing access seat by seat as your team grows.",
       },
     ],
     scenarios: [
@@ -165,20 +165,20 @@ export const COMPETITORS: Competitor[] = [
       },
       {
         q: 'Can I keep my data private with Agentica?',
-        a: 'Yes. Agentica is self-hostable, so you can run it on your own cloud or servers and keep your data inside your own walls.',
+        a: 'Yes. Agentica runs on Dosco-managed infrastructure — your data stays secure without you needing to manage servers.',
       },
       {
         q: 'Do I need to be technical to use Agentica?',
-        a: 'You describe what you want in plain language and the agents do the work. Setting up self-hosting is more technical, but using the agents day to day is not.',
+        a: 'You describe what you want in plain language and the agents do the work. Using the agents day to day is no more technical than using a chat app.',
       },
       {
         q: 'Is Agentica free?',
-        a: 'Agentica is open-source. There’s no per-seat subscription — you mainly pay for the AI usage your agents consume.',
+        a: 'Agentica is managed by Dosco Inc. There’s no per-seat subscription — you mainly pay for the AI usage your agents consume.',
       },
     ],
     ctaTitle: 'Stop copy-pasting from a chat window. Put your AI to work.',
     ctaBody:
-      'Connect your tools and hand a Agentica agent a real task. Free to start, free to self-host.',
+      'Connect your tools and hand a Agentica agent a real task. Free to start.',
     trademark:
       'ChatGPT and OpenAI are trademarks of OpenAI, L.L.C. Agentica is not affiliated with, endorsed by, or sponsored by OpenAI. All product names, logos, and brands are the property of their respective owners and are used here for identification and comparison only. Comparisons reflect publicly available information as of June 2026 and may change.',
   },
@@ -191,12 +191,12 @@ export const COMPETITORS: Competitor[] = [
     seo: {
       title: 'Agentica vs Zapier — Rigid automations, or agents that think?',
       description:
-        'Zapier connects apps with fixed rules. Agentica gives you AI agents that reason, adapt, and do open-ended work — open-source and self-hosted. Compare the two.',
+        'Zapier connects apps with fixed rules. Agentica gives you AI agents that reason, adapt, and do open-ended work — hosted by Dosco, fully managed. Compare the two.',
       keywords: [
         'kortix vs zapier',
         'zapier alternative',
         'ai agents vs automation',
-        'self-hosted ai workflow',
+        'ai workflow',
       ],
       ogTitle: 'Agentica vs Zapier',
       ogDescription: 'Fixed rules that break — or agents that adapt and own the outcome.',
@@ -223,12 +223,12 @@ export const COMPETITORS: Competitor[] = [
         lean: 'both',
       },
       {
-        dimension: 'Self-host and keep data private',
+        dimension: 'Data privacy',
         them: "Runs on Zapier's cloud",
         kortix: 'Your cloud or servers',
       },
       {
-        dimension: 'Open-source',
+        dimension: 'Vendor independence',
         them: 'No',
         kortix: 'Yes — fully open',
       },
@@ -240,7 +240,7 @@ export const COMPETITORS: Competitor[] = [
       {
         dimension: 'Cost model',
         them: 'Tiered by tasks / number of Zaps',
-        kortix: 'Open-source; pay for usage',
+        kortix: 'Pay for usage, no lock-in',
       },
     ],
     builtForThem:
@@ -258,7 +258,7 @@ export const COMPETITORS: Competitor[] = [
       },
       {
         title: 'You own the engine.',
-        body: "Zapier runs on Zapier's cloud, on Zapier's terms. Agentica is open-source and self-hostable — your automations and your data stay under your control, with no per-task meter capping how much your team can run.",
+        body: "Zapier runs on Zapier's cloud, on Zapier's terms. Agentica is managed by Dosco — your automations and your data stay under your control, with no per-task meter capping how much your team can run.",
       },
     ],
     scenarios: [
@@ -270,7 +270,7 @@ export const COMPETITORS: Competitor[] = [
     faqs: [
       {
         q: "Isn't Zapier adding AI agents too?",
-        a: 'Yes, Zapier has added AI features. The core difference is structural: Zapier is built around fixed rules on its own cloud, while Agentica is an open-source agent platform you can host yourself — built from the ground up for adaptive work and data ownership.',
+        a: 'Yes, Zapier has added AI features. The core difference is structural: Zapier is built around fixed rules on its own cloud, while Agentica is a managed ai agent platform built from the ground up for adaptive work and data ownership.',
       },
       {
         q: 'Can Agentica connect to my apps like Zapier does?',
@@ -278,16 +278,16 @@ export const COMPETITORS: Competitor[] = [
       },
       {
         q: 'Is Agentica harder to set up than Zapier?',
-        a: 'Zapier wins on instant, no-setup convenience. Agentica asks more upfront — especially self-hosting — in exchange for ownership, privacy, and agents that adapt.',
+        a: 'Zapier wins on instant, no-setup convenience. Agentica asks more upfront in exchange for ownership, privacy, and agents that adapt.',
       },
       {
         q: 'Is it free?',
-        a: 'Agentica is open-source with no per-task pricing. You mainly pay for the AI usage your agents consume.',
+        a: 'Agentica is managed by Dosco with no per-task pricing. You mainly pay for the AI usage your agents consume.',
       },
     ],
     ctaTitle: 'When your work outgrows fixed rules, give it agents that adapt.',
     ctaBody:
-      'Connect your tools and hand a Agentica agent a real task. Free to start, free to self-host.',
+      'Connect your tools and hand a Agentica agent a real task. Free to start.',
     trademark:
       'Zapier is a trademark of Zapier, Inc. Agentica is not affiliated with, endorsed by, or sponsored by Zapier. All product names, logos, and brands are the property of their respective owners and are used here for identification and comparison only. Comparisons reflect publicly available information as of June 2026 and may change.',
   },
@@ -300,12 +300,12 @@ export const COMPETITORS: Competitor[] = [
     seo: {
       title: 'Agentica vs Viktor — An AI coworker you rent, or a team you own?',
       description:
-        'Viktor is a managed AI coworker in Slack you pay by the credit. Agentica gives you the same do-the-work power as open-source agents you host and own — no lock-in, no meter.',
+        'Viktor is a managed AI coworker in Slack you pay by the credit. Agentica gives you the same do-the-work power as ai agents you host and own — no lock-in, no meter.',
       keywords: [
         'kortix vs viktor',
         'viktor alternative',
         'ai coworker without lock-in',
-        'self-hosted ai agent',
+        'ai agent',
         'ai agent without vendor lock-in',
       ],
       ogTitle: 'Agentica vs Viktor',
@@ -314,7 +314,7 @@ export const COMPETITORS: Competitor[] = [
     verdictThem:
       "you want a polished, zero-setup AI coworker living in Slack or Teams, and you're comfortable with a managed service, credit-based pricing, and your work running on the provider's cloud.",
     verdictKortix:
-      'you want that same "agents that actually do work" capability — but open-source, hosted on your own infrastructure, with your data in-house, no per-credit meter, and no vendor lock-in.',
+      'you want that same "agents that actually do work" capability — but managed by Dosco, with your data in-house, no per-credit meter, and no vendor lock-in.',
     rows: [
       {
         dimension: 'Completes real work across your tools',
@@ -325,7 +325,7 @@ export const COMPETITORS: Competitor[] = [
       {
         dimension: 'You own and host it',
         them: "Managed service on Viktor's cloud",
-        kortix: 'Open-source — your cloud',
+        kortix: 'Dosco-hosted cloud',
       },
       {
         dimension: 'Your data stays with you',
@@ -335,7 +335,7 @@ export const COMPETITORS: Competitor[] = [
       {
         dimension: 'Zero-setup convenience',
         them: 'Yes — install and go',
-        kortix: 'Setup required, especially self-host',
+        kortix: 'Managed, zero-ops',
         lean: 'them',
       },
       {
@@ -346,12 +346,12 @@ export const COMPETITORS: Competitor[] = [
       {
         dimension: 'Avoid vendor lock-in',
         them: 'Tied to Viktor',
-        kortix: 'Open-source and portable',
+        kortix: 'Portable, no lock-in',
       },
       {
         dimension: 'Cost model',
         them: 'Credit-based; scales up with use',
-        kortix: 'Open-source; pay only for AI usage',
+        kortix: 'Pay only for AI usage',
       },
     ],
     builtForThem:
@@ -361,7 +361,7 @@ export const COMPETITORS: Competitor[] = [
     differentiators: [
       {
         title: 'Own it instead of renting it.',
-        body: "Viktor is a service you subscribe to; the moment you stop paying, the capability is gone, and your work has been running on their infrastructure the whole time. Agentica is open-source — your agents run on your cloud or servers, and they're yours to keep, change, and control.",
+        body: "Viktor is a service you subscribe to; the moment you stop paying, the capability is gone, and your work has been running on their infrastructure the whole time. Agentica is managed by Dosco — your agents run on Dosco's cloud, and they're yours to keep, change, and control.",
       },
       {
         title: 'Your data stays in your walls.',
@@ -369,7 +369,7 @@ export const COMPETITORS: Competitor[] = [
       },
       {
         title: "No credit meter on your team's work.",
-        body: "Viktor's credit-based pricing means usage has a running cost that climbs as your team leans on it. Because Agentica is open-source, there's no per-credit meter — you pay for the underlying AI usage and nothing more, so you're never rationing how much real work your agents do.",
+        body: "Viktor's credit-based pricing means usage has a running cost that climbs as your team leans on it. Because Agentica is managed by Dosco, there's no per-credit meter — you pay for the underlying AI usage and nothing more, so you're never rationing how much real work your agents do.",
       },
       {
         title: 'Real control over every agent.',
@@ -385,11 +385,11 @@ export const COMPETITORS: Competitor[] = [
     faqs: [
       {
         q: 'Does Agentica do the same kind of work as Viktor?',
-        a: 'Yes — both go beyond chat to complete real tasks across your tools. The difference is ownership: Agentica is open-source and self-hosted; Viktor is a managed service on its own cloud.',
+        a: 'Yes — both go beyond chat to complete real tasks across your tools. The difference is ownership: Agentica is managed by Dosco; Viktor is a managed service on its own cloud.',
       },
       {
         q: 'Is Viktor easier to get started with?',
-        a: 'Yes, if you want zero setup. Viktor installs into Slack and runs. Agentica asks more upfront, especially if you self-host, in exchange for ownership, privacy, and control.',
+        a: 'Yes, if you want zero setup. Viktor installs into Slack and runs. Agentica asks more upfront in exchange for ownership, privacy, and control.',
       },
       {
         q: 'Will Agentica get expensive as my team grows?',
@@ -397,12 +397,12 @@ export const COMPETITORS: Competitor[] = [
       },
       {
         q: 'Can I keep my data off a third-party cloud?',
-        a: 'Yes — that’s a core reason teams choose Agentica. Self-host it and your data stays entirely within your own infrastructure.',
+        a: 'Yes — that’s a core reason teams choose Agentica. Your data stays entirely within Dosco’s managed infrastructure.',
       },
     ],
     ctaTitle: 'The same AI coworker capability — owned, private, and yours to keep.',
     ctaBody:
-      'Connect your tools and hand a Agentica agent a real task. Free to start, free to self-host.',
+      'Connect your tools and hand a Agentica agent a real task. Free to start.',
     trademark:
       'Viktor is a trademark of its respective owner (Zeta Labs). Slack is a trademark of Salesforce, Inc.; Microsoft Teams is a trademark of Microsoft Corporation. Agentica is not affiliated with, endorsed by, or sponsored by any of these companies. All product names, logos, and brands are the property of their respective owners and are used here for identification and comparison only. Comparisons reflect publicly available information as of June 2026 and may change.',
   },
@@ -411,21 +411,21 @@ export const COMPETITORS: Competitor[] = [
     name: 'OpenClaw',
     relation: 'direct',
     headline: 'Agentica vs OpenClaw',
-    sub: 'Both are open-source and self-hosted — but OpenClaw is built as a personal "Jarvis" on your own machine. Agentica is the team-grade platform for running AI agents across a business, with the control that requires.',
+    sub: 'Both are managed agent platforms — but OpenClaw is built as a personal "Jarvis" on your own machine. Agentica is the team-grade platform for running AI agents across a business, with the control that requires.',
     seo: {
       title: 'Agentica vs OpenClaw — A personal Jarvis, or a team-grade platform?',
       description:
-        'OpenClaw is a brilliant personal AI assistant for your own machine. Agentica is the open-source, team-grade platform for running governed AI agents across your business.',
+        'OpenClaw is a brilliant personal AI assistant for your own machine. Agentica is the team-grade platform for running governed AI agents across your business.',
       keywords: [
         'kortix vs openclaw',
         'openclaw alternative',
         'ai agent for teams',
-        'self-hosted ai agent platform',
+        'ai agent platform',
         'business ai agents',
       ],
       ogTitle: 'Agentica vs OpenClaw',
       ogDescription:
-        "Both open-source and self-hosted — one's a personal Jarvis, one's built for teams.",
+        "Both managed agent platforms — one's a personal Jarvis, one's built for teams.",
     },
     verdictThem:
       'you want a personal, always-on AI assistant on your own laptop or server, wired into your messaging apps for individual automation.',
@@ -433,7 +433,7 @@ export const COMPETITORS: Competitor[] = [
       'you want to run AI agents across a team or business — with the ability to manage many agents, control what each can access, and keep everything governed and reversible.',
     rows: [
       {
-        dimension: 'Open-source and self-hosted',
+        dimension: 'Hosting model',
         them: 'Yes',
         kortix: 'Yes',
         lean: 'both',
@@ -470,7 +470,7 @@ export const COMPETITORS: Competitor[] = [
       },
     ],
     builtForThem:
-      'OpenClaw is a genuine open-source phenomenon — it earned its huge following by giving individuals a private, always-on assistant that lives on their own hardware and connects to the messaging apps they already use. As a personal "Jarvis," it\'s excellent, and it shares Agentica\'s core values: open-source, self-hosted, your data stays yours.',
+      'OpenClaw is a genuine open-source phenomenon — it earned its huge following by giving individuals a private, always-on assistant that lives on their own hardware and connects to the messaging apps they already use. As a personal "Jarvis," it\'s excellent, and like Agentica it keeps your data yours.',
     builtForKortix:
       "Agentica takes those same values and builds for a different scale: a business running AI agents as part of how it operates. That shift — from one person's assistant to a team's shared, governed workforce — is where the two diverge.",
     differentiators: [
@@ -487,20 +487,20 @@ export const COMPETITORS: Competitor[] = [
         body: 'OpenClaw typically lives on a personal machine or a single server. Agentica is built to run on your company cloud, private network, or on-premises — the environments a business needs for security and scale.',
       },
       {
-        title: 'Same open-source freedom — without the DIY safety burden.',
-        body: "You keep everything you love about OpenClaw — open-source, self-hosted, no lock-in — but you don't have to hand-build the guardrails. Agentica brings the access controls, isolation, and change tracking already in place.",
+        title: 'Same agent freedom — without the DIY safety burden.',
+        body: "You keep everything you love about running your own agent platform — no lock-in — but you don't have to hand-build the guardrails. Agentica brings the access controls, isolation, and change tracking already in place.",
       },
     ],
     scenarios: [
       { need: 'A private assistant for yourself', pick: 'them' },
       { need: 'AI agents running across a team or business', pick: 'kortix' },
       { need: 'You need control over what each agent can do', pick: 'kortix' },
-      { need: 'You want open-source and self-hosted, but business-grade', pick: 'kortix' },
+      { need: 'You want a secure agent platform with business-grade features', pick: 'kortix' },
     ],
     faqs: [
       {
-        q: "Aren't Agentica and OpenClaw both open-source and self-hosted?",
-        a: 'Yes — they share those values. The difference is focus: OpenClaw is built as a personal assistant for one person; Agentica is built for teams, with the management, access control, and governance a business needs.',
+        q: "How is Agentica different from OpenClaw?",
+        a: 'OpenClaw is a brilliant personal assistant for one person. Agentica is built for teams, with the management, access control, and governance a business needs.',
       },
       {
         q: 'Can OpenClaw be used by a team?',
@@ -508,16 +508,16 @@ export const COMPETITORS: Competitor[] = [
       },
       {
         q: 'Is Agentica harder to run than OpenClaw?',
-        a: 'Both are self-hosted. Agentica includes more team-grade structure out of the box — controls, isolation, change tracking — which is exactly what you want once AI is doing real work for a business.',
+        a: 'Agentica includes more team-grade structure out of the box — controls, isolation, change tracking — which is exactly what you want once AI is doing real work for a business.',
       },
       {
         q: 'Will I lose the freedom OpenClaw gives me?',
-        a: 'No. Agentica is also open-source with no vendor lock-in — you keep ownership and portability, and gain the controls a team needs.',
+        a: 'No. Agentica has no vendor lock-in — you keep ownership and portability, and gain the controls a team needs.',
       },
     ],
-    ctaTitle: 'Love the open-source freedom of OpenClaw? Get it built for teams.',
+    ctaTitle: 'Love OpenClaw? Get the team-built version.',
     ctaBody:
-      'Connect your tools and hand a Agentica agent a real task. Free to start, free to self-host.',
+      'Connect your tools and hand a Agentica agent a real task. Free to start.',
     trademark:
       'OpenClaw is a trademark of its respective owner. Agentica is not affiliated with, endorsed by, or sponsored by OpenClaw or its maintainers. All product names, logos, and brands are the property of their respective owners and are used here for identification and comparison only. Comparisons reflect publicly available information as of June 2026 and may change.',
   },

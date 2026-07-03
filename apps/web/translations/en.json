@@ -1520,7 +1520,7 @@
       "line173JsxTextNoSpamWeOnlyUseThisToPrepare": "No spam. We only use this to prepare your demo.",
       "heroEyebrow": "Enterprise",
       "heroTitle": "Deploy internal agents. Keep control of every action.",
-      "heroDescription": "Agentica is the open-source AI command center where your entire agent infrastructure — agents, permissions, integrations, schedules — lives in a Git repo. Reviewable, reversible, and deployable to cloud, VPC, or your own metal.",
+      "heroDescription": "Agentica is the AI command center where your entire agent infrastructure — agents, permissions, integrations, schedules — lives in a Git repo. Reviewable, reversible, and deployable to cloud, VPC, or your own metal.",
       "heroMicroline": "SSO · RBAC · Audit logs · Self-host · Open source",
       "talkToSalesCta": "Request demo",
       "comparePlansCta": "Compare plans",

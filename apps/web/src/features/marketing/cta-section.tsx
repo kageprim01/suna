@@ -24,7 +24,7 @@ export function CtaSection() {
             your team will actually use.
           </h2>
           <p className="text-muted-foreground mx-auto mt-4 max-w-lg text-base leading-relaxed text-balance">
-            Free to self-host. Managed cloud from $20/month. No trick, no time limit.
+            Managed cloud from $20/month. No trick, no time limit.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button size="xl" onClick={handleLaunch}>

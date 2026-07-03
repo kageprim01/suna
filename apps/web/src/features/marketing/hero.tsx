@@ -1,10 +1,12 @@
 'use client';
 
 import { AnimatePresence, motion } from 'motion/react';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { UnicornBackground } from '@/components/ui/unicorn-background';
 import { vujahdayScript } from '@/app/(system)/fonts/vujahday-script';
+import { Button } from '@/components/ui/marketing/button';
 
 const ACTIONS = ['Work', 'Design', 'Prototype', 'Automate'];
 
@@ -62,6 +64,20 @@ const Hero = () => {
         >
           The first AI coworker your team will actually use.
         </motion.p>
+        <motion.div
+          className="mt-8"
+          initial={{ opacity: 0, filter: 'blur(4px)' }}
+          animate={{ opacity: 1, filter: 'blur(0px)' }}
+          transition={{ duration: 0.6, delay: 0.6, ease: 'easeOut' }}
+          style={{ willChange: 'opacity, filter', transform: 'translateZ(0)' }}
+        >
+          <Button size="xl" asChild>
+            <Link href="/auth">
+              <span className="text-base">火</span>
+              Get started
+            </Link>
+          </Button>
+        </motion.div>
       </div>
     </section>
   );
