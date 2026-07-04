@@ -1,5 +1,6 @@
 {
   "name": "kortix",
+  "packageManager": "pnpm@8.11.0",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
