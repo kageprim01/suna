@@ -10,8 +10,8 @@ dist/
 build/
 *.tsbuildinfo
 
-# pnpm worktree — per-worktree marker (state lives in ~/.kortix, outside the repo)
-.kortix-worktree.json
+# pnpm worktree — per-worktree marker (state lives in ~/.agentica, outside the repo)
+.agentica-worktree.json
 
 # Environment variables
 .env
@@ -96,15 +96,13 @@ dump.rdb
 .cwc/
 test/
 
-# suna is itself a Kortix project: its root .kortix/ (Dockerfile + opencode
+# suna is itself an Agentica project: its root .agentica/ (Dockerfile + opencode
 # config dir) is committed and synced via git, so cloud sessions clone the real
-# config. Only the per-clone link state stays out. Other vendored .kortix dirs
+# config. Only the per-clone link state stays out. Other vendored .agentica dirs
 # stay ignored further down.
-.kortix/link.json
-apps/kortix-v0/.local/
-apps/api/.kortix-data/
+.agentica/link.json
+apps/api/.agentica-data/
 apps/api/.sandbox-auth-token.json
-core/kortix-master/opencode/.kortix/
 **/.buildx-cache/
 
 .nx/
@@ -118,11 +116,11 @@ core/kortix-master/opencode/.kortix/
 /kortix-darwin-x64
 /kortix-linux-x64
 /kortix-linux-arm64
-# Root-anchored so we don't ignore apps/mobile/ios/Kortix on case-insensitive FS.
-# The references/kortix doc dirs were previously un-ignored with ! rules; they
-# were never matched by /kortix anyway, but keep the exceptions for clarity.
-!**/references/kortix/
-!**/references/kortix/**
+# Root-anchored so we don't ignore apps/mobile/ios/Agentica on case-insensitive FS.
+# The references/agentica doc dirs were previously un-ignored with ! rules; they
+# were never matched by /agentica anyway, but keep the exceptions for clarity.
+!**/references/agentica/
+!**/references/agentica/**
 
 # Terraform — never commit local state, provider binaries, lockfile, or tfvars
 infra/terraform/**/.terraform/

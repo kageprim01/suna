@@ -63,8 +63,8 @@ export async function startSupabaseFullStack(name: string, ports: Ports): Promis
   return run(['supabase', '--workdir', supaWorkdir(name), 'start']);
 }
 
-export function hasKortixSchema(ports: Ports): boolean {
-  const sql = "select 1 from information_schema.tables where table_schema='kortix' limit 1";
+export function hasAgenticaSchema(ports: Ports): boolean {
+  const sql = "select 1 from information_schema.tables where table_schema='agentica' limit 1";
   return sh([
     'bash',
     '-lc',

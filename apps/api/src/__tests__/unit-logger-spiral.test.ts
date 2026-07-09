@@ -32,7 +32,7 @@ mock.module('@logtail/node', () => ({
 }));
 
 process.env.BETTERSTACK_API_LOG_TOKEN = 'log-token-test';
-process.env.INTERNAL_KORTIX_ENV = 'test';
+process.env.INTERNAL_AGENTICA_ENV = 'test';
 
 const { logger, isLoggingTransportError } = await import('../lib/logger');
 

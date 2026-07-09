@@ -6,12 +6,12 @@ describe('package index re-exports', () => {
     expect(typeof db.createDb).toBe('function');
   });
 
-  test('exposes the kortix schema namespace object', () => {
+  test('exposes the agentica schema namespace object', () => {
     expect(db.schema).toBeDefined();
     expect(db.schema.kortixSchema).toBeDefined();
   });
 
-  test('re-exports the core kortix tables', () => {
+  test('re-exports the core agentica tables', () => {
     const expected = [
       'accounts',
       'accountMembers',
@@ -26,7 +26,7 @@ describe('package index re-exports', () => {
     }
   });
 
-  test('re-exports the kortix enums', () => {
+  test('re-exports the agentica enums', () => {
     const expected = [
       'sandboxStatusEnum',
       'deploymentStatusEnum',
@@ -50,7 +50,7 @@ describe('package index re-exports', () => {
     expect(db.accounts).toBe(db.schema.accounts);
   });
 
-  test('does not collide the public apiKeys with the kortix kortixApiKeys', () => {
+  test('does not collide the public apiKeys with the agentica kortixApiKeys', () => {
     expect(db.apiKeys).not.toBe(db.kortixApiKeys);
   });
 });

@@ -88,7 +88,7 @@ describe('dbModeOf', () => {
 
 describe('rewriteConfigToml', () => {
   const toml = [
-    'project_id = "kortix-local"',
+    'project_id = "agentica-local"',
     '[api]',
     'port = 54321',
     '[db]',
@@ -101,8 +101,8 @@ describe('rewriteConfigToml', () => {
 
   test('rewrites project_id + per-section ports + host:port references', () => {
     const ports = computePorts(2);
-    const out = rewriteConfigToml(toml, 'kortix-fe', ports);
-    expect(out).toContain('project_id = "kortix-fe"');
+    const out = rewriteConfigToml(toml, 'agentica-fe', ports);
+    expect(out).toContain('project_id = "agentica-fe"');
     expect(out).toContain(`port = ${ports.sbApi}`); // [api]
     expect(out).toContain(`port = ${ports.sbDb}`); // [db]
     expect(out).toContain(`port = ${ports.sbStudio}`); // [studio]

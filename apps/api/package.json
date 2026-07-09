@@ -1,5 +1,5 @@
 {
-  "name": "kortix-api",
+  "name": "agentica-api",
   "version": "1.0.0",
   "description": "Kortix API - Unified monolith combining router, billing, platform, cron, and daytona-proxy",
   "private": true,

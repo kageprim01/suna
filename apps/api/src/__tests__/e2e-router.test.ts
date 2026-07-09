@@ -229,7 +229,7 @@ describe('Router: health', () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.status).toBe('ok');
-    expect(body.service).toBe('kortix-router');
+    expect(body.service).toBe('agentica-router');
     expect(body.timestamp).toBeDefined();
     expect(body.billing_enabled).toBeDefined();
   });

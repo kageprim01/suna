@@ -468,7 +468,7 @@ const STRIPE_PRICES_DEV: StripePriceConfig = {
 };
 
 function getStripePrices(): StripePriceConfig {
-  switch (config.INTERNAL_KORTIX_ENV) {
+  switch (config.INTERNAL_AGENTICA_ENV) {
     case 'prod':
       return STRIPE_PRICES_PROD;
     case 'staging':

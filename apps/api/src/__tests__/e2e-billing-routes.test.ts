@@ -158,7 +158,7 @@ mock.module('../shared/stripe', () => ({
 mock.module('../config', () => ({
   config: {
     STRIPE_WEBHOOK_SECRET: 'whsec_test',
-    INTERNAL_KORTIX_ENV: 'staging',
+    INTERNAL_AGENTICA_ENV: 'staging',
     DATABASE_URL: '',
     FRONTEND_URL: 'http://localhost:3000',
     KORTIX_BILLING_INTERNAL_ENABLED: true,

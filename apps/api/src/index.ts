@@ -179,9 +179,9 @@ const corsOrigins = [
 
 // Preview env (ephemeral per-PR API): also allow the matching preview frontends.
 // Their origins are dynamic per PR (Vercel deploy URLs + *.preview.kortix.com
-// aliases) so they can't be enumerated above. Scoped to INTERNAL_KORTIX_ENV=preview
+// aliases) so they can't be enumerated above. Scoped to INTERNAL_AGENTICA_ENV=preview
 // only — dev/prod keep the strict static allowlist.
-const allowPreviewOrigins = config.INTERNAL_KORTIX_ENV === 'preview';
+const allowPreviewOrigins = config.INTERNAL_AGENTICA_ENV === 'preview';
 const PREVIEW_ORIGIN = /^https:\/\/[a-z0-9-]+\.(vercel\.app|preview\.kortix\.com)$/i;
 
 app.use(
@@ -310,7 +310,7 @@ app.use('*', async (c, next) => {
 });
 
 // Pretty JSON in dev mode for easier debugging
-if (config.INTERNAL_KORTIX_ENV === 'dev') {
+if (config.INTERNAL_AGENTICA_ENV === 'dev') {
   app.use('*', prettyJSON());
 }
 
@@ -375,7 +375,7 @@ const healthHandler = (c: any) =>
     service: 'agentica-api',
     version: API_VERSION,
     commit: API_COMMIT,
-    environment: config.INTERNAL_KORTIX_ENV,
+    environment: config.INTERNAL_AGENTICA_ENV,
     instance: API_INSTANCE,
     started_at: STARTED_AT,
     uptime_seconds: Math.round(process.uptime()),
@@ -834,7 +834,7 @@ console.log(`
 ║                  Agentica API Starting                     ║
 ╠═══════════════════════════════════════════════════════════╣
 ║  Port: ${config.PORT.toString().padEnd(49)}║
-║  Env:  ${config.INTERNAL_KORTIX_ENV.padEnd(49)}║
+║  Env:  ${config.INTERNAL_AGENTICA_ENV.padEnd(49)}║
 ╠═══════════════════════════════════════════════════════════╣
 ║  Services:                                                ║
 ║    /v1/router     (search, LLM, proxy)                    ║

@@ -43,7 +43,7 @@ Daytona sandboxes, drive the real UI in a browser, and assert behavior. Use it.
   proxy: `http://localhost:8008/v1/p/<external_id>/8000/...` (SSE event stream
   at `…/event`).
 - **Tunnel** — `scripts/dev-local.sh` (`pnpm dev`) auto-starts a cloudflared
-  quick tunnel so cloud sandboxes can call back to the local API (`KORTIX_URL`).
+  quick tunnel so cloud sandboxes can call back to the local API (`AGENTICA_URL`).
 
 Bring it up with `pnpm dev` from `suna/` (it loads `apps/api/.env` +
 `apps/web/.env`, starts Supabase, the API, the web app, and the tunnel). Check
@@ -137,14 +137,14 @@ See `tests/e2e/helpers/auth.ts` for the exact calls.
   errors from a React 19↔18 types mismatch — ignore those; grep for YOUR files.
 - `npx eslint <files>` should be clean.
 
-### Frontend design standard — Jay/Kortix bar
+### Frontend design standard — Jay/Agentica bar
 
 When touching any visual surface in `apps/web`, treat brand fit as a release
 gate, not polish:
 
-- Read `.claude/skills/kortix-design-system/SKILL.md` first and compose existing
+- Read `.claude/skills/agentica-design-system/SKILL.md` first and compose existing
   primitives from `@/components/ui/*` before inventing local chrome.
-- Match the current Jay Suthar / Kortix product aesthetic: calm neutral surfaces,
+- Match the current Jay Suthar / Agentica product aesthetic: calm neutral surfaces,
   dense-but-legible UI, black/white plus one earned accent, token-driven spacing,
   and no decorative color, glow, or one-off rounded boxes.
 - Use recent product surfaces as references before editing: `/design-system`,

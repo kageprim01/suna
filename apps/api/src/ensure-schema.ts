@@ -31,7 +31,7 @@ export async function ensureSchema(): Promise<void> {
     const reason =
       process.env.KORTIX_SKIP_ENSURE_SCHEMA === '1'
         ? 'KORTIX_SKIP_ENSURE_SCHEMA=1'
-        : `deployed env (INTERNAL_KORTIX_ENV=${config.INTERNAL_KORTIX_ENV})`;
+        : `deployed env (INTERNAL_AGENTICA_ENV=${config.INTERNAL_AGENTICA_ENV})`;
     console.log(
       `[schema] ${reason} — not auto-applying (migrations are managed by the deploy pipeline). Checking for drift...`,
     );

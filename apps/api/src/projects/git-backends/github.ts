@@ -81,7 +81,7 @@ async function managedAdminAuth(): Promise<GitHubAuthContext> {
     // under the configured org, so prod keeps the strict org-only path (no
     // lookup); only local dev detects a personal owner (cached via isOrgAccount).
     const ownerType =
-      config.INTERNAL_KORTIX_ENV === 'prod'
+      config.INTERNAL_AGENTICA_ENV === 'prod'
         ? 'Organization'
         : (await isOrgAccount(owner, { token: pat })) ? 'Organization' : 'User';
     return { token: pat, source: 'pat', owner, ownerType };

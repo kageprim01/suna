@@ -1,6 +1,6 @@
 ---
 name: product-marketing
-description: Creates and maintains the product marketing context doc at /product-marketing.md — the shared source other marketing skills (copywriting, cro, seo-audit, kortix-image) read first. Use when setting up, auto-drafting, updating, or checking product/marketing context.
+description: Creates and maintains the product marketing context doc at /product-marketing.md — the shared source other marketing skills (copywriting, cro, seo-audit, agentica-image) read first. Use when setting up, auto-drafting, updating, or checking product/marketing context.
 ---
 
 # Product Marketing Context
@@ -53,7 +53,7 @@ Casual phrasing counts — "make a product context doc for my app…" triggers t
 
 1. Check `/product-marketing.md`.
 2. Report whether it exists and **summarize its contents** if found.
-3. If missing, offer to create it and explain the value: other skills (copywriting, cro, seo-audit, kortix-image, …) read this doc first so their output stays on-product and consistent.
+3. If missing, offer to create it and explain the value: other skills (copywriting, cro, seo-audit, agentica-image, …) read this doc first so their output stays on-product and consistent.
 
 ## Sections
 

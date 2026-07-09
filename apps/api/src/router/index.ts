@@ -33,7 +33,7 @@ router.openapi(
   (c) => {
     return c.json({
       status: 'ok',
-      service: 'kortix-router',
+      service: 'agentica-router',
       timestamp: new Date().toISOString(),
       billing_enabled: config.KORTIX_BILLING_INTERNAL_ENABLED,
     });

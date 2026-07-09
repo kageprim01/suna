@@ -12,11 +12,11 @@ current `package.json` scripts.
 ## Current model
 
 - **Engine:** node-pg-migrate, invoked by `packages/db/scripts/migrate.ts`.
-- **Schema source:** `packages/db/src/schema/kortix.ts` for the Drizzle-modeled
-  `kortix` schema.
+- **Schema source:** `packages/db/src/schema/agentica.ts` for the Drizzle-modeled
+  `agentica` schema.
 - **Migration files:** immutable SQL files in `packages/db/migrations/`, named
   with a 17-digit UTC timestamp (`YYYYMMDDHHMMSSmmm_slug.sql`).
-- **Applied-state table:** `kortix_migrations.pgmigrations` (node-pg-migrate
+- **Applied-state table:** `agentica_migrations.pgmigrations` (node-pg-migrate
   tracks migration names; it does not checksum file contents).
 - **Deploy:** `deploy-dev.yml` and `deploy-prod.yml` run `pnpm --filter
   @kortix/db migrate` before the EKS GitOps rollout. The disabled Helm PreSync
@@ -39,13 +39,13 @@ current `package.json` scripts.
 | `pnpm migrate` | Apply pending migrations using node-pg-migrate. |
 | `pnpm migrate:status` | Dry-run/list pending migrations; exits non-zero if any are pending. |
 | `pnpm migrate:create <slug>` | Create an empty hand-written SQL migration. |
-| `pnpm migrate:generate <slug>` | Generate SQL from a `kortix.ts` schema change and update the Drizzle snapshot. |
+| `pnpm migrate:generate <slug>` | Generate SQL from a `agentica.ts` schema change and update the Drizzle snapshot. |
 | `pnpm migrate:fake` | Mark pending migrations as applied without running them (for baselining existing envs). |
 | `pnpm migrate:lint` | Validate migration filename/order rules. |
 
 ## Safe schema-change loop
 
-1. Edit `packages/db/src/schema/kortix.ts` for schema-shape changes, or create a
+1. Edit `packages/db/src/schema/agentica.ts` for schema-shape changes, or create a
    hand-written migration for data/RLS/functions/grants/custom SQL.
 2. Run `pnpm migrate:generate <slug>` or `pnpm migrate:create <slug>`.
 3. Read the SQL top-to-bottom. Stop on accidental `DROP`, unsafe type changes,

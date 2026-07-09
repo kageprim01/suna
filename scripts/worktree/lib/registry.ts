@@ -8,8 +8,8 @@ import type { Ports } from './ports';
 
 export type DbMode = 'shared' | 'isolated';
 
-export const KORTIX_HOME = process.env.KORTIX_HOME || join(homedir(), '.kortix');
-export const WT_HOME = join(KORTIX_HOME, 'worktrees');
+export const AGENTICA_HOME = process.env.AGENTICA_HOME || join(homedir(), '.agentica');
+export const WT_HOME = join(AGENTICA_HOME, 'worktrees');
 export const REGISTRY_PATH = join(WT_HOME, 'registry.json');
 const LOCK_PATH = join(WT_HOME, 'registry.lock');
 

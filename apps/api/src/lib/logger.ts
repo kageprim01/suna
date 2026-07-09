@@ -45,8 +45,8 @@ if (LOG_TOKEN) {
 // ─── Static enrichment (same for every log) ─────────────────────────────────
 
 const BASE_CONTEXT = {
-  service: 'kortix-api',
-  env: process.env.INTERNAL_KORTIX_ENV || 'dev',
+  service: 'agentica-api',
+  env: process.env.INTERNAL_AGENTICA_ENV || 'dev',
   version: process.env.SANDBOX_VERSION || 'dev',
 };
 

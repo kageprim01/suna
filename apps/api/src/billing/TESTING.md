@@ -270,13 +270,13 @@ bun test src/__tests__/billing/per-seat-pricing.test.ts \
 
 ## N. Pre-deploy checklist (cloud / prod)
 
-Before flipping `INTERNAL_KORTIX_ENV=prod`:
+Before flipping `INTERNAL_AGENTICA_ENV=prod`:
 
 - [ ] Create prod `per_seat` Stripe price ($20/mo) under prod product
 - [x] Prod per-seat price set: price_1TcrQJG6l1KZGqIry1K1cqZY (live "Kortix seat" $20/mo)
 - [ ] Configure prod webhook endpoint in Stripe Dashboard pointing at prod API URL
 - [ ] Copy prod webhook signing secret into prod env's `STRIPE_WEBHOOK_SECRET`
-- [ ] Verify `INTERNAL_KORTIX_ENV=prod` → `ensureSchema()` is a no-op (managed externally)
+- [ ] Verify `INTERNAL_AGENTICA_ENV=prod` → `ensureSchema()` is a no-op (managed externally)
 - [ ] Apply all migrations (88-92) via your prod migration pipeline (NOT auto-push)
 - [ ] Verify no schema collisions with prod's actual migration state
 - [ ] Set `NEXT_PUBLIC_BILLING_ENABLED=true` on the prod web build

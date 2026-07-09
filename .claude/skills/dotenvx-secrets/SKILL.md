@@ -14,8 +14,8 @@ There are **three environments**, each a separate encrypted file with its **own 
 | `pnpm` command | Env | File | API talks to | private key in `.env.keys` |
 | --- | --- | --- | --- | --- |
 | `pnpm dev` | **local** | `apps/api/.env` | 100% local stack (local Supabase in Docker, test Stripe) + runs web + tunnel | `DOTENV_PRIVATE_KEY` |
-| `pnpm dev:dev-env` | **dev** | `apps/api/.env.dev` | the **dev** stack — dev Supabase DB, **test** Stripe, dev keys (`dev-api.kortix.com`) | `DOTENV_PRIVATE_KEY_DEV` |
-| `pnpm dev:prod-env` | **prod** | `apps/api/.env.prod` | the **prod** stack — prod Supabase DB, **LIVE** Stripe, prod keys (`api.kortix.com`) | `DOTENV_PRIVATE_KEY_PROD` |
+| `pnpm dev:dev-env` | **dev** | `apps/api/.env.dev` | the **dev** stack — dev Supabase DB, **test** Stripe, dev keys (`dev-api.agentica.com`) | `DOTENV_PRIVATE_KEY_DEV` |
+| `pnpm dev:prod-env` | **prod** | `apps/api/.env.prod` | the **prod** stack — prod Supabase DB, **LIVE** Stripe, prod keys (`api.agentica.com`) | `DOTENV_PRIVATE_KEY_PROD` |
 
 - `pnpm dev` runs the **full local stack** (web + API + local Supabase + tunnel) via `scripts/dev-local.sh`.
 - `pnpm dev:dev-env` / `pnpm dev:prod-env` run the **API only**, locally, against the remote dev/prod backend (`dotenvx run -f apps/api/.env.<dev|prod> -- bun run --hot src/index.ts`). They do not start local Supabase.
@@ -76,7 +76,7 @@ If a guard fires, the fix is to **encrypt the value**, never to bypass it.
 
 `apps/web` has the **same three encrypted profiles** (`apps/web/.env` / `.env.dev` / `.env.prod`), own keypairs in `apps/web/.env.keys`, armed in Armor. All values are now public (`NEXT_PUBLIC_*`) — they're encrypted purely for a standardized flow. Decrypted the same way: `pnpm dev` (via `load_local_env`) and `pnpm dev:web` (wrapped in `dotenvx run -f .env`). Pull on a new machine: `cd apps/web && for f in .env .env.dev .env.prod; do dotenvx-armor pull -f "$f"; done`.
 
-Maintenance flags are **DB-backed** now (was Vercel Edge Config): stored in `kortix.platform_settings['maintenance_config']`, read via public `GET /v1/system/maintenance`, written via admin-only `PUT /v1/system/maintenance`, set from `/admin/utils`. The `EDGE_CONFIG`/`EDGE_CONFIG_ID`/`VERCEL_API_TOKEN` secrets + the `@vercel/edge-config` dep are gone.
+Maintenance flags are **DB-backed** now (was Vercel Edge Config): stored in `agentica.platform_settings['maintenance_config']`, read via public `GET /v1/system/maintenance`, written via admin-only `PUT /v1/system/maintenance`, set from `/admin/utils`. The `EDGE_CONFIG`/`EDGE_CONFIG_ID`/`VERCEL_API_TOKEN` secrets + the `@vercel/edge-config` dep are gone.
 
 ## Out of scope (not dotenvx-managed)
 

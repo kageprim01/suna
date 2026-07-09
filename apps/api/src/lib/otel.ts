@@ -80,8 +80,8 @@ export async function emitOtelSpan(input: OTelSpanInput): Promise<boolean> {
   const spanId = input.kind === 'SERVER' ? ctx.spanId : randomSpanId();
   const parentSpanId = input.kind === 'SERVER' ? ctx.parentSpanId : ctx.spanId;
   const attributes = {
-    service: 'kortix-api',
-    environment: process.env.INTERNAL_KORTIX_ENV || 'dev',
+    service: 'agentica-api',
+    environment: process.env.INTERNAL_AGENTICA_ENV || 'dev',
     version: process.env.SANDBOX_VERSION || 'dev',
     request_id: ctx.requestId,
     method: ctx.method,
@@ -98,13 +98,13 @@ export async function emitOtelSpan(input: OTelSpanInput): Promise<boolean> {
     resourceSpans: [{
       resource: {
         attributes: toOtelAttributes({
-          'service.name': 'kortix-api',
+          'service.name': 'agentica-api',
           'service.version': process.env.SANDBOX_VERSION || 'dev',
-          'deployment.environment': process.env.INTERNAL_KORTIX_ENV || 'dev',
+          'deployment.environment': process.env.INTERNAL_AGENTICA_ENV || 'dev',
         }),
       },
       scopeSpans: [{
-        scope: { name: 'kortix-api' },
+        scope: { name: 'agentica-api' },
         spans: [{
           traceId: ctx.traceId,
           spanId,

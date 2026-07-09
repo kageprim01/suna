@@ -19,7 +19,7 @@ import {
   lowestFreeSlot, sh, run, which, portInUse, repoRoot, defaultWorktreePath, branchExists,
   renderSupabaseProject, runMigrate, supa, supaStatusEnv, slotCredsFromStatus, apiLaunchEnv, webLaunchEnv, gatewayLaunchEnv,
   writeMarker, ensureDeps, checkDeps, pnpmStore, supaWorkdir, slotDir, startTunnel, startStripeListen, WT_HOME, REGISTRY_PATH,
-  startSupabaseDb, startSupabaseFullStack, hasKortixSchema, ensureRuntimeArtifacts, dbModeOf,
+  startSupabaseDb, startSupabaseFullStack, hasAgenticaSchema, ensureRuntimeArtifacts, dbModeOf,
   ensurePrimarySupabase, primaryCredsFromStatus, SHARED_SUPABASE_PORTS,
   type Registry, type SlotEntry, type Ports, type Tunnel, type StripeListen,
   type DbMode,
@@ -303,7 +303,7 @@ async function cmdCreate(a: Args) {
       if (tries === 5) die('could not find a free port block after 6 slots');
     }
     const ports = computePorts(slot);
-    const e: SlotEntry = { slot, projectId: `kortix-wt-${name}`, path: wtPath, branch, ports, dbMode: requestedDbMode, createdAt: new Date().toISOString(), status: 'created' };
+    const e: SlotEntry = { slot, projectId: `agentica-wt-${name}`, path: wtPath, branch, ports, dbMode: requestedDbMode, createdAt: new Date().toISOString(), status: 'created' };
     reg.slots[name] = e; saveRegistry(reg);
     return e;
   });
@@ -348,7 +348,7 @@ async function cmdCreate(a: Args) {
 
     step('Building schema (prereqs + pnpm migrate)');
     if (await runMigrate(wtPath, entry.ports) !== 0) die(`migrate failed — fix and re-run \`pnpm worktree create --name ${name}\``);
-    if (!hasKortixSchema(entry.ports)) die(`schema not built — \`pnpm migrate\` produced no kortix schema on branch "${branch}".\n  Check packages/db/migrations/*.sql exist on this branch and the Supabase prereqs applied (psql + Basejump).`);
+    if (!hasAgenticaSchema(entry.ports)) die(`schema not built — \`pnpm migrate\` produced no agentica schema on branch "${branch}".\n  Check packages/db/migrations/*.sql exist on this branch and the Supabase prereqs applied (psql + Basejump).`);
 
     step(`Starting isolated Supabase on api ${entry.ports.sbApi}`);
     if (await startSupabaseFullStack(name, entry.ports) !== 0) die('supabase start failed');
@@ -426,8 +426,8 @@ async function cmdStart(a: Args) {
       die('primary Supabase credentials are unavailable. Start the primary local stack once with `pnpm dev`, or recreate this worktree with `--db` for an isolated database.');
     }
     const sharedSchemaPorts = { ...e.ports, ...SHARED_SUPABASE_PORTS };
-    if (!hasKortixSchema(sharedSchemaPorts)) {
-      die('the shared primary Supabase DB does not have the kortix schema. Run the primary stack once to initialize it, or recreate this worktree with `--db` for an isolated database.');
+    if (!hasAgenticaSchema(sharedSchemaPorts)) {
+      die('the shared primary Supabase DB does not have the agentica schema. Run the primary stack once to initialize it, or recreate this worktree with `--db` for an isolated database.');
     }
     sub(`${creds.supabaseUrl} · ${creds.dbUrl}`);
   }

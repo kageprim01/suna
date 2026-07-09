@@ -9,7 +9,7 @@ Multi-instance dev environments for this monorepo. One command from a clean
 checkout provisions a collision-free app stack on its own branch: unique ports
 for web/api/gateway, its own `node_modules` + pnpm store, and a tunnel for cloud
 sandbox callbacks. By default the worktree uses the primary checkout's standard
-local Supabase DB (`kortix-local` on 54321/54322) so setup is fast and auth/data
+local Supabase DB (`agentica-local` on 54321/54322) so setup is fast and auth/data
 state is shared. Pass `--db` only when the work needs a separate Supabase
 project, schema, auth users, storage, or destructive data changes. The CLI lives
 at `scripts/worktree/cli.ts`, run via the root `package.json` script
@@ -54,7 +54,7 @@ pnpm worktree create --name <feat> --yes --no-start
   will hang your turn. `--no-start` provisions everything and returns.
 
 The new checkout lands at a **sibling** of the repo: `../suna-<feat>`
-(e.g. repo `…/kortix/suna` → worktree `…/kortix/suna-<feat>`). It is on a **new
+(e.g. repo `…/agentica/suna` → worktree `…/agentica/suna-<feat>`). It is on a **new
 branch `<feat>`** auto-created from your current `HEAD`. Do all subsequent
 edits, `git`, and runs against that path:
 
@@ -74,7 +74,7 @@ node-pg-migrate (`pnpm --filter @kortix/db migrate`; see
 `packages/db/MIGRATIONS.md`). The worktree runner still has an open bug from the
 cutover where it calls the old `db:migrate` script and emits Drizzle-era error
 text; if worktree schema setup fails there, track/fix
-https://github.com/kortix-ai/suna/issues/3630 rather than treating the old command
+https://github.com/kageprime/suna/issues/3630 rather than treating the old command
 as authoritative.
 
 ## All commands (non-interactive)
@@ -94,7 +94,7 @@ pnpm worktree create <n>        [flags]   # positional name also works
 | `--name <n>` / positional `<n>` | — (required) | Worktree name → branch name + slot identity. |
 | `--branch <b>` | `<n>` | Branch to use. If it already exists it's checked out; otherwise created from `--from`. |
 | `--from <ref>` | `HEAD` | Base ref for a newly created branch. Must carry current `packages/db/migrations` (see above). |
-| `--db` / `--with-db` / `--isolated-db` | off | Opt into the old full isolated Supabase project (`kortix-wt-<n>`) with its own containers/volumes/migrations. |
+| `--db` / `--with-db` / `--isolated-db` | off | Opt into the old full isolated Supabase project (`agentica-wt-<n>`) with its own containers/volumes/migrations. |
 | `--no-db` / `--shared-db` | on | Explicitly use the default shared primary Supabase DB. |
 | `--no-start` | off | **Provision only, don't boot servers.** Use this for agent/CI runs. |
 | `--yes` | off | Auto-install missing deps; non-interactive. |
@@ -105,7 +105,7 @@ What it does, in order: toolchain preflight → allocate the lowest free slot
 `--from`, or checkout existing `--branch`) → `pnpm install` into the worktree's
 own store → build runtime artifacts → (unless `--no-start`) boot the stack
 against the shared primary Supabase DB. With `--db`, it also renders an isolated
-Supabase project, starts it, applies database migrations, verifies the `kortix`
+Supabase project, starts it, applies database migrations, verifies the `agentica`
 schema exists, and starts that Supabase stack. Re-running `create` for an
 existing name resumes it idempotently; a worktree's DB mode is fixed until you
 `nuke` and recreate it.
@@ -117,7 +117,7 @@ pnpm worktree start <n> [--stripe] [--no-tunnel]
 ```
 
 In shared-DB mode, ensures the primary local Supabase is reachable, checks that
-the `kortix` schema exists, then runs **api + web in the foreground and blocks
+the `agentica` schema exists, then runs **api + web in the foreground and blocks
 until Ctrl+C**. In isolated-DB mode, starts that worktree's Supabase, applies
 pending migrations, then boots the app stack. Clean shutdown stops the worktree
 app servers, force-kills stragglers, and marks the worktree stopped. Requires
@@ -127,7 +127,7 @@ Docker running when Supabase needs to be reached or started.
   stack running to test, launch it as a background process and poll, or ask the
   user to run `pnpm worktree start <n>` in their own terminal.
 - A Cloudflare quick tunnel starts by default so cloud Daytona sandboxes can
-  call back to the local API (`KORTIX_URL` → the `*.trycloudflare.com` URL).
+  call back to the local API (`AGENTICA_URL` → the `*.trycloudflare.com` URL).
   `--no-tunnel` skips it; if `cloudflared` is missing it warns and continues.
 - `--stripe` turns billing **on** for the worktree and runs `stripe listen`
   forwarding test-mode webhooks to *this* worktree's API
@@ -211,7 +211,7 @@ containers. `--yes` auto-installs missing deps.
 | web | 3000 | **13000 + N·100** |
 | api | 8008 | **13008 + N·100** |
 | Supabase API / DB / Studio / Inbucket | local default | shared default: 54321 / 54322 / 54323 / 54324; with `--db`: 13321 / 13322 / 13323 / 13324 (+N·100) |
-| Supabase project | `kortix-local` | shared default: `kortix-local`; with `--db`: `kortix-wt-<n>` (own containers/volumes/network) |
+| Supabase project | `agentica-local` | shared default: `agentica-local`; with `--db`: `agentica-wt-<n>` (own containers/volumes/network) |
 | branch | your current branch | dedicated `<n>` (or `--branch`) |
 | deps | repo `node_modules` | own `node_modules` + pnpm store |
 
@@ -223,16 +223,16 @@ collide with each other or with `pnpm dev`.
 ## State & layout
 
 - Checkout: `../suna-<n>` (sibling of the repo root).
-- Control state: `~/.kortix/worktrees/` — `registry.json` (the slot ledger) and
+- Control state: `~/.agentica/worktrees/` — `registry.json` (the slot ledger) and
   a per-worktree dir holding the rendered Supabase config (`sb/`) and pnpm store.
   Lives entirely outside any checkout, so nothing dirties a tracked tree. Set
-  `KORTIX_HOME` to relocate it.
-- In-worktree marker: a gitignored `.kortix-worktree.json` (slot/ports/project/DB mode).
+  `AGENTICA_HOME` to relocate it.
+- In-worktree marker: a gitignored `.agentica-worktree.json` (slot/ports/project/DB mode).
 
 ## Scope & safety
 
 This is **local-dev tooling only** (`scripts/worktree/*`, invoked via `pnpm
 worktree`). It is not imported by any app, build, CI, or Docker image, and it
 never touches cloud/production infrastructure — production reads its env from
-AWS Secrets Manager, a separate path. The tunnel and `KORTIX_URL` injection
+AWS Secrets Manager, a separate path. The tunnel and `AGENTICA_URL` injection
 affect only the locally-spawned worktree API process.

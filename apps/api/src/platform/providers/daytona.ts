@@ -23,7 +23,7 @@ import { WarmRuntimeUnavailableError } from './index';
 // "we created it"; `kortix.env` pins the owning environment. The reaper lists
 // by exactly these labels (see listManagedRunningSandboxes).
 function managedSandboxLabels(): Record<string, string> {
-  return { 'kortix.managed': 'true', 'kortix.env': config.INTERNAL_KORTIX_ENV };
+  return { 'kortix.managed': 'true', 'kortix.env': config.INTERNAL_AGENTICA_ENV };
 }
 import type {
   SandboxProvider,

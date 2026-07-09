@@ -122,7 +122,7 @@ jobs:
           npm_config_engine_strict: "false"
 
       - name: Typecheck
-        run: pnpm --filter kortix-api typecheck
+        run: pnpm --filter agentica-api typecheck
 
   frontend-build:
     name: Frontend build

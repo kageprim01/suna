@@ -1,25 +1,25 @@
-# Kortix Glossary — Canonical Terms
+# Agentica Glossary — Canonical Terms
 
 Companion to `../SKILL.md`. Definitions trace to `suna/MANIFESTO.md` and `suna/README.md`. Style product nouns and config tokens in Roobert Mono (per brand-guidelines). Use these spellings exactly.
 
 ## Brand names
 
-- **Kortix** — the company and the platform. Lead with this everywhere.
-- **Suna** — the open-source repository the platform lives in (`kortix-ai/suna`). Some existing skills say "Kortix/Suna." In outward copy, prefer **Kortix** alone unless you specifically mean the repo.
-- **Kortix Cloud** — the managed hosting. Capitalize both words.
+- **Agentica** — the company and the platform. Lead with this everywhere.
+- **Suna** — the open-source repository the platform lives in (`kageprime/suna`). Some existing skills say "Agentica/Suna." In outward copy, prefer **Agentica** alone unless you specifically mean the repo.
+- **Agentica Cloud** — the managed hosting. Capitalize both words.
 - **Platinum.dev** — the compute floor under the platform (CPU/GPU sandboxes, inference, training). Lowercase `.dev`.
 
 ## Core objects
 
 - **Project** — a git repo that *is* the company: configuration plus accumulated state, all text, all version-controlled. Not "workspace" or "account."
   - Say: "your project is a repo you own." Not: "your workspace in our cloud."
-- **`kortix.toml`** — the Kortix layer of a project: sandbox image, cron/webhook triggers, channels, apps, connectors, required secrets, and where agent config lives. Mono.
+- **`agentica.toml`** — the Agentica layer of a project: sandbox image, cron/webhook triggers, channels, apps, connectors, required secrets, and where agent config lives. Mono.
 - **OpenCode config** — the runtime agents think in: agents, skills, commands, tools, plugins, models, providers.
 - **Session** — one unit of agent work, running in its own sandbox on its own branch, owned by whoever or whatever started it. Not "chat," "thread," or "conversation."
   - Say: "start a session." Not: "open a chat."
 - **Sandbox** — the disposable, microVM-isolated Linux machine a session runs in. The agent can install, run, and break anything; only what it commits survives. In external copy say "sandbox," not "container."
-- **`kortix-sandbox-agent-server`** — the daemon a sandbox boots with: clones the repo, cuts the branch, loads config into a live runtime, and exposes prompting/streaming/files/terminal. Mono. Mostly internal; rarely in marketing copy.
-- **Change request** — the reviewed merge back toward `main`; how work lands and how the company self-improves, one approved change at a time. CLI: `kortix cr`. Behaves like a pull request, but in product copy say "change request."
+- **`agentica-sandbox-agent-server`** — the daemon a sandbox boots with: clones the repo, cuts the branch, loads config into a live runtime, and exposes prompting/streaming/files/terminal. Mono. Mostly internal; rarely in marketing copy.
+- **Change request** — the reviewed merge back toward `main`; how work lands and how the company self-improves, one approved change at a time. CLI: `agentica cr`. Behaves like a pull request, but in product copy say "change request."
   - Say: "the agent opens a change request you approve." Not: "the agent deploys."
 
 ## The pieces you work with
@@ -41,7 +41,7 @@ Companion to `../SKILL.md`. Definitions trace to `suna/MANIFESTO.md` and `suna/R
 
 ## Capitalization & style quick rules
 
-- **Kortix**, **Suna**, **Kortix Cloud**, **Platinum.dev** — exactly as written above.
+- **Agentica**, **Suna**, **Agentica Cloud**, **Platinum.dev** — exactly as written above.
 - Product objects (project, session, sandbox, agent, skill, connector, secret, channel, trigger, memory, app, change request) are common nouns — lowercase in prose, capitalized only at sentence start or as table/UI labels.
-- Config tokens and commands in Roobert Mono: `kortix.toml`, `kortix init`, `kortix ship`, `kortix cr`, `main`.
+- Config tokens and commands in Roobert Mono: `agentica.toml`, `agentica init`, `agentica ship`, `agentica cr`, `main`.
 - "git repository" / "repo," "`main` branch," "change request" — lowercase.

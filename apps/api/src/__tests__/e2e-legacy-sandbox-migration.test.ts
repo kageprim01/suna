@@ -24,7 +24,7 @@ const TEST_DB_CONFIRMATION = 'I_UNDERSTAND_THIS_DELETES_TEST_DATA';
 const HAS_CONFIRMED_TEST_DB = Boolean(
   process.env.TEST_DATABASE_URL &&
   process.env.KORTIX_TEST_DB_CONFIRM === TEST_DB_CONFIRMATION &&
-  process.env.INTERNAL_KORTIX_ENV !== 'prod',
+  process.env.INTERNAL_AGENTICA_ENV !== 'prod',
 );
 const describeWithDb = HAS_CONFIRMED_TEST_DB ? describe : describe.skip;
 
@@ -118,7 +118,7 @@ async function runMigrationCli(args: string[]) {
         env: {
           ...process.env,
           DATABASE_URL: process.env.TEST_DATABASE_URL,
-          INTERNAL_KORTIX_ENV: 'dev',
+          INTERNAL_AGENTICA_ENV: 'dev',
           KORTIX_CLI_STDOUT: stdoutFile,
           KORTIX_CLI_STDERR: stderrFile,
         },

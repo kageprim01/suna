@@ -5,7 +5,7 @@ description: "The mandatory test-with-every-change discipline for this monorepo.
 
 # Testing — every change ships with tests
 
-Kortix is sold to enterprises: the suite must be flawless, deterministic, and auditable.
+Agentica is sold to enterprises: the suite must be flawless, deterministic, and auditable.
 This is the non-negotiable testing discipline. Companion docs: [`TESTING.md`](../../../TESTING.md),
 [`docs/TEST_ARCHITECTURE.md`](../../../docs/TEST_ARCHITECTURE.md), [`docs/CI_CD.md`](../../../docs/CI_CD.md),
 [`CONTRIBUTING.md`](../../../CONTRIBUTING.md). For API-route contract flows specifically, also load

@@ -1,13 +1,13 @@
 ---
 name: ke2e-tests
-description: "How Kortix end-to-end API tests work and the mandatory test-as-source-of-truth workflow. Load WHENEVER you add, change, or remove an API route, status code, auth gate, request/response shape, or status enum under apps/api/src/** — and whenever you touch anything under tests/ (the ke2e suite) or are asked to add test coverage, run the e2e suite, or understand why CI's coverage gate failed. The suite (tests/) is one clean black-box HTTP suite that runs against a LIVE deployed API with real services; spec/end-to-end.md + the route manifest are the source of truth, enforced by a coverage gate."
+description: "How Agentica end-to-end API tests work and the mandatory test-as-source-of-truth workflow. Load WHENEVER you add, change, or remove an API route, status code, auth gate, request/response shape, or status enum under apps/api/src/** — and whenever you touch anything under tests/ (the ke2e suite) or are asked to add test coverage, run the e2e suite, or understand why CI's coverage gate failed. The suite (tests/) is one clean black-box HTTP suite that runs against a LIVE deployed API with real services; spec/end-to-end.md + the route manifest are the source of truth, enforced by a coverage gate."
 ---
 
 # ke2e — test as source of truth
 
-Kortix has **one** end-to-end test suite at `suna/tests/` (the `ke2e` runner). It is
-black-box: it hits a **real, deployed API over HTTP** (`staging-api.kortix.com`,
-`dev-api.kortix.com`, local `localhost:8008/v1`, or prod) with **live services** (real Daytona, Freestyle, Stripe
+Agentica has **one** end-to-end test suite at `suna/tests/` (the `ke2e` runner). It is
+black-box: it hits a **real, deployed API over HTTP** (`staging-api.agentica.com`,
+`dev-api.agentica.com`, local `localhost:8008/v1`, or prod) with **live services** (real Daytona, Freestyle, Stripe
 test-mode, LLM) — no mocking, no in-process app. Every test maps **1:1** to a stable
 flow ID in `tests/spec/end-to-end.md`. A coverage gate makes that mapping enforceable,
 so the spec + tests stay the source of truth for what the API does.
@@ -34,7 +34,7 @@ the goal is, in the same change:
 4. **`cd tests && bun bin/ke2e.ts coverage`** must pass (no orphan flow, no unknown
    route, uncovered count within baseline).
 5. **Run the touched flow live** before opening the change request:
-   `cd tests && KE2E_API_URL=https://staging-api.kortix.com/v1 KE2E_OWNER_EMAIL=… KE2E_OWNER_PASSWORD=… KE2E_LIVE_CONFIRM=1 bun bin/ke2e.ts run --id PROJ-12` and confirm green before production promotion.
+   `cd tests && KE2E_API_URL=https://staging-api.agentica.com/v1 KE2E_OWNER_EMAIL=… KE2E_OWNER_PASSWORD=… KE2E_LIVE_CONFIRM=1 bun bin/ke2e.ts run --id PROJ-12` and confirm green before production promotion.
 
 **Never weaken an assertion to make a test pass.** If a test goes red, the code or the
 spec is wrong — fix that. If a route is genuinely impossible to test (truly un-automatable),
@@ -57,7 +57,7 @@ flow("SEC-2b", {
   const p = await ctx.fixtures.project();              // run-scoped, auto-torn-down
   await ctx.step("reserved name rejected", async () => {
     const r = await ctx.client.as(ctx.P.M_MANAGER)
-      .post("/v1/projects/:id/secrets", { name: "KORTIX_X", value: "v" }, { params: { id: p.id } });
+      .post("/v1/projects/:id/secrets", { name: "AGENTICA_X", value: "v" }, { params: { id: p.id } });
     r.status(400);
   });
 });
@@ -75,7 +75,7 @@ flow("SEC-2b", {
   `core/poll`. Timeouts are infra-retryable, not assertion failures.
 - **Capability-gated** routes (billing off, no Stripe, etc.): set `requires: ["stripe"]`
   so the flow self-skips with a reason instead of failing.
-- **Everything is programmatic** — no browser, no human. CLI flows spawn the `kortix`
+- **Everything is programmatic** — no browser, no human. CLI flows spawn the `agentica`
   binary; OAuth/signed-callback flows forge the valid signed state and POST the callback.
 
 ## Running
@@ -96,7 +96,7 @@ report doubles as living API docs). Secrets are redacted at capture; never un-re
 ## CI
 
 - **Pre-promote gate** (`promote.yml` / release PR): the full suite runs against
-  `staging-api.kortix.com` (the release-candidate commit) and must be GREEN
+  `staging-api.agentica.com` (the release-candidate commit) and must be GREEN
   before prod gets the release.
 - **Post-deploy smoke** (`deploy-prod.yml`): `--smoke` subset against prod.
 - **On PRs**: the suite's typecheck + `ke2e coverage` are required checks; the suite also

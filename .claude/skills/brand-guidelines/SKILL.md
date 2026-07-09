@@ -1,15 +1,15 @@
 ---
 name: brand-guidelines
-description: Applies official Kortix colors, type, and layout from kortix.com to decks, docs, slides, and other artifacts. Use when matching brand visuals, formatting deliverables, or checking work against company design standards.
+description: Applies official Agentica colors, type, and layout from agentica.com to decks, docs, slides, and other artifacts. Use when matching brand visuals, formatting deliverables, or checking work against company design standards.
 ---
 
-# Kortix Brand Styling
+# Agentica Brand Styling
 
 ## Overview
 
-This skill is the entry point for Kortix visual identity on [kortix.com](https://kortix.com)—colors, typography, accents, shadows, spacing, and motion for any branded output.
+This skill is the entry point for Agentica visual identity on [agentica.com](https://agentica.com)—colors, typography, accents, shadows, spacing, and motion for any branded output.
 
-**Keywords**: Kortix, kortix.com, brand identity, visual identity, brand colors, typography, Roobert, styling, layout, corporate design, post-processing
+**Keywords**: Agentica, agentica.com, brand identity, visual identity, brand colors, typography, Roobert, styling, layout, corporate design, post-processing
 
 ## Brand Guidelines
 
@@ -47,7 +47,7 @@ All values are hex, converted from the source OKLCH tokens. Build on a neutral b
 ### Typography
 
 - **Sans (headings & body):** Roobert — fallback to **Inter**, then system sans; never serif or decorative display
-- **Mono (code & product nouns):** Roobert Mono — `kortix.toml`, sessions, CLI, paths, identifiers; fallback to system mono
+- **Mono (code & product nouns):** Roobert Mono — `agentica.toml`, sessions, CLI, paths, identifiers; fallback to system mono
 - **Weights:** Regular, Medium, Semibold only (2–3 per surface); avoid Light at small sizes and Black except hero covers
 - **Scale:** Hero 56–72px / 40–54pt · Display 36–48px / 28–36pt · Heading 24–28px / 18–22pt · Body 16px / 11–12pt · Caption 12–14px / 9–10pt
 - **Note:** Roobert should be pre-installed for best results; it falls back cleanly to Inter when unavailable
@@ -63,7 +63,7 @@ Do not invent marks, alternate wordmarks, or decorative lockups.
 
 **Rules:**
 
-- **16:9 layouts (slides/covers):** use the Kortix **symbol only**, placed top-left. Use the full logo (symbol + wordmark) only when the full logo is explicitly requested.
+- **16:9 layouts (slides/covers):** use the Agentica **symbol only**, placed top-left. Use the full logo (symbol + wordmark) only when the full logo is explicitly requested.
 - **Light surfaces:** recolor fills to near-black `#0A0A0A`. Prefer the symbol alone unless the layout needs the full wordmark.
 - **Dark surfaces:** use white fills `#FAFAFA`. Never place the white logomark on light backgrounds.
 - **One mark per surface** — same placement discipline as accents (no competing logos).

@@ -1,4 +1,4 @@
-# Kortix Messaging — Narrative Source of Truth
+# Agentica Messaging — Narrative Source of Truth
 
 Deep-dive companion to `../SKILL.md`. Everything here traces to `suna/MANIFESTO.md` and `suna/README.md`. No invented facts, metrics, customers, or claims.
 
@@ -21,16 +21,16 @@ Two options on the table today, both bad:
 - **A toy.** Tools built to give models a past are demos — single-tenant, one machine, no isolation, no version history, no permissions worth the name, no security story beyond "trust us." You can't run forty at once, can't see what changed and roll it back, can't put one in front of an enterprise security team. Gorgeous in a launch video; they fold the moment a business leans its weight on them.
 - **A cage.** Crawl back to the model labs, who host the polished version and keep your data, configuration, and model on their side of the wall — where it stays theirs and you rent access to your own operation forever.
 
-Kortix is what you build when you refuse both.
+Agentica is what you build when you refuse both.
 
 ## Product narrative (the arc)
 
-1. **A company is a git repository.** A Kortix project is a git repo, and the repo *is* the company — configuration and accumulated state in one place, all text, all under version control, readable by a person and editable by an agent. Two files define it: `kortix.toml` (the Kortix layer) and the OpenCode config (the runtime agents think in). Everything past that is files. You can `grep` your entire company.
-2. **It ships like code.** `kortix init` turns any directory into a Kortix; `kortix ship` checks it compiles, asks for missing secrets, pushes it up, and runs it. The repo behaves the same on your laptop as in the cloud. Local dev and the live system stop being different categories.
-3. **Work runs in isolated sessions.** Start a session and a sandbox boots from one snapshot running the `kortix-sandbox-agent-server` daemon: it clones the repo, cuts a fresh branch, and hands you a ready machine. The agent works fully walled off; when it wants to keep something, it commits and opens a change request back toward `main`, and a human decides whether it lands.
+1. **A company is a git repository.** A Agentica project is a git repo, and the repo *is* the company — configuration and accumulated state in one place, all text, all under version control, readable by a person and editable by an agent. Two files define it: `agentica.toml` (the Agentica layer) and the OpenCode config (the runtime agents think in). Everything past that is files. You can `grep` your entire company.
+2. **It ships like code.** `agentica init` turns any directory into a Agentica; `agentica ship` checks it compiles, asks for missing secrets, pushes it up, and runs it. The repo behaves the same on your laptop as in the cloud. Local dev and the live system stop being different categories.
+3. **Work runs in isolated sessions.** Start a session and a sandbox boots from one snapshot running the `agentica-sandbox-agent-server` daemon: it clones the repo, cuts a fresh branch, and hands you a ready machine. The agent works fully walled off; when it wants to keep something, it commits and opens a change request back toward `main`, and a human decides whether it lands.
 4. **It scales to a workforce.** Because each session is its own sandbox on its own branch, you can run thousands in parallel without them touching each other — fifty coding agents, fifty doing outreach. The only genuinely shared thing is the world outside. This parallel, isolated workforce is the part nobody else has.
 5. **It improves itself.** `main` is always up. Triggers fire in the night. Any agent can edit its own configuration and propose the change, so the company files patches against itself — all tracked — and gets better at being a company over time instead of freezing on the day you set it up.
-6. **It feels easy.** Anyone can open it day one from the web, their phone, or a Slack thread, like any chat app. Most people never see a `kortix.toml`. The interface and the code are the same system from two angles — click or edit a file, identical change.
+6. **It feels easy.** Anyone can open it day one from the web, their phone, or a Slack thread, like any chat app. Most people never see a `agentica.toml`. The interface and the code are the same system from two angles — click or edit a file, identical change.
 
 ## Message house
 
@@ -53,7 +53,7 @@ Use these; don't invent others.
 - Every session in its own disposable Linux sandbox on its own branch; work reaches `main` only through an approved change request.
 - A real account/user/group model with per-resource permissions for people and agents; a secrets manager (encrypted, injected at runtime, never exposed); a full audit trail; human approval gates; on-prem, VPC, or air-gapped deployment.
 - Bring your own models — any provider, your own keys — or the ChatGPT, Claude, or Cursor subscription you already pay for.
-- Open source and self-hostable; runs on Kortix Cloud, your servers, or fully on-prem.
+- Open source and self-hostable; runs on Agentica Cloud, your servers, or fully on-prem.
 - Three ways work runs: on-demand, human-assisted, and automated.
 
 ## Sanctioned analogies
@@ -66,4 +66,4 @@ Use sparingly and only as stated. Don't stack multiple analogies in one breath.
 
 ## Business model (context, not external copy)
 
-Open source and self-hostable underneath; a cloud charging for seats and compute; single-tenant deployments for those who must self-run; a marketplace of agents, skills, and importable projects; and **Platinum.dev**, the compute floor (CPU/GPU sandboxes, inference, training). The platform proves itself by running Kortix's own companies in public.
+Open source and self-hostable underneath; a cloud charging for seats and compute; single-tenant deployments for those who must self-run; a marketplace of agents, skills, and importable projects; and **Platinum.dev**, the compute floor (CPU/GPU sandboxes, inference, training). The platform proves itself by running Agentica's own companies in public.

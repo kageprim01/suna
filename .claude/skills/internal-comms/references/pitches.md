@@ -1,4 +1,4 @@
-# Kortix Audience Pitches
+# Agentica Audience Pitches
 
 Companion to `../SKILL.md`. Three primary audiences (Developers, Companies, Enterprise) and one bonus (Agencies & consultancies). All facts trace to `suna/MANIFESTO.md` and `suna/README.md`.
 
@@ -8,8 +8,8 @@ Each pitch: **who → pain → promise → proof/mechanism → sanctioned phrase
 
 - **Who:** Engineers already running coding agents (OpenCode, Claude, Codex) who want them in the cloud, in the background, with state that sticks.
 - **Pain:** Agents stuck on one laptop; no shared state, no isolation, no preview per change; every tool wants its own setup.
-- **Promise:** A managed cloud for OpenCode, Claude, and Codex agents. One `kortix.toml`, one config, one repo for the state that sticks — and you're running background coding agents.
-- **Proof / mechanism:** `kortix init`, `kortix ship` — that's the loop. Every PR gets a preview you can click through. Have your local agent spin up cloud sessions and go wide. Bring the subscription you already pay for.
+- **Promise:** A managed cloud for OpenCode, Claude, and Codex agents. One `agentica.toml`, one config, one repo for the state that sticks — and you're running background coding agents.
+- **Proof / mechanism:** `agentica init`, `agentica ship` — that's the loop. Every PR gets a preview you can click through. Have your local agent spin up cloud sessions and go wide. Bring the subscription you already pay for.
 - **Sanctioned phrases:** "managed cloud for your coding agents," "background agents with a preview per change," "one repo for the state that sticks," "bring your own subscription."
 - **Don't say:** "replaces your IDE," "no more code," or anything implying autonomous merge without review — work lands via change request.
 
@@ -36,6 +36,6 @@ Each pitch: **who → pain → promise → proof/mechanism → sanctioned phrase
 - **Who:** Firms bringing AI into their clients who need a platform to bet on.
 - **Pain:** Rebuilding the same AI plumbing per client; no durable platform; reselling someone else's locked box.
 - **Promise:** One horizontal platform sold through verticalized partners with their own front ends and their own starter templates. A franchise for the part of the economy that's about to get rebuilt.
-- **Proof / mechanism:** Partners handle distribution and clients; Kortix provides the technology, the training, and the playbook. Importable projects, agents, and skills via the marketplace.
+- **Proof / mechanism:** Partners handle distribution and clients; Agentica provides the technology, the training, and the playbook. Importable projects, agents, and skills via the marketplace.
 - **Sanctioned phrases:** "one horizontal platform, verticalized partners," "the technology, the training, and the playbook," "a franchise for the AI rebuild."
 - **Don't say:** specific revenue-share or partner terms unless given as fact.

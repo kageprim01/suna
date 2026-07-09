@@ -6,13 +6,13 @@
  * Supabase set), its own Supabase project (namespaced containers/volumes/
  * networks), its own node_modules + pnpm store, and explicit per-process env —
  * so any number of worktrees run at once without ever colliding, and the
- * primary `pnpm dev` (ports 3000/8008/5432x, project `kortix-local`) is never
+ * primary `pnpm dev` (ports 3000/8008/5432x, project `agentica-local`) is never
  * touched.
  *
- * State lives entirely under $KORTIX_HOME (default ~/.kortix), OUTSIDE any
+ * State lives entirely under $AGENTICA_HOME (default ~/.agentica), OUTSIDE any
  * checkout, so the registry is shared across all worktrees and nothing dirties
  * a tracked tree. The only in-worktree artifact is the gitignored
- * `.kortix-worktree.json` marker.
+ * `.agentica-worktree.json` marker.
  *
  * The implementation is split into focused modules under ./lib/; this file is
  * the single import surface (cli.ts and the tests import from here).

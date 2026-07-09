@@ -17,7 +17,7 @@ export {
   projectAccessRequestStatusEnum,
   apiKeyStatusEnum,
   apiKeyTypeEnum,
-  // Kortix tables — accounts
+  // Agentica tables — accounts
   accounts,
   accountMembers,
   accountInvitations,
@@ -32,7 +32,7 @@ export {
   gatewayRequestLogs,
   gatewayApiKeys,
   gatewayBudgets,
-  // Kortix tables
+  // Agentica tables
   projects,
   projectGitConnections,
   projectGitCredentials,
@@ -85,7 +85,7 @@ export {
   sandboxInvitesRelations,
   deploymentsRelations,
   kortixApiKeysRelations,
-  // Billing / Credits (moved from public → kortix schema)
+  // Billing / Credits (moved from public → agentica schema)
   billingCustomers,
   creditAccounts,
   creditLedger,
@@ -171,8 +171,8 @@ export {
   executorProjectPoliciesRelations,
   executorProjectSettingsRelations,
   projectSecretGrantsRelations,
-} from './schema/kortix';
-export type { AgentGrant } from './schema/kortix';
+} from './schema/agentica';
+export type { AgentGrant } from './schema/agentica';
 
 export type {
   TunnelMachineInfo,
@@ -180,7 +180,7 @@ export type {
   TunnelShellScope,
   TunnelNetworkScope,
   TunnelPermissionScope,
-} from './schema/kortix';
+} from './schema/agentica';
 
 // Public/basejump tables
 export {

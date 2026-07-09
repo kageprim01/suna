@@ -13,7 +13,7 @@ export const SANDBOX_VERSION = process.env.SANDBOX_VERSION || 'unknown';
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 export type SandboxProviderName = 'daytona' | 'local_docker' | 'platinum';
-type InternalKortixEnv = 'dev' | 'staging' | 'prod' | 'preview';
+type InternalAgenticaEnv = 'dev' | 'staging' | 'prod' | 'preview';
 
 // ─── Zod Helpers ────────────────────────────────────────────────────────────
 
@@ -78,7 +78,7 @@ const envSchema = z.object({
   // ── Internal Deployment Controls (optional, safe defaults for self-hosted) ─
   // `preview` = ephemeral per-PR API on EKS (shares the dev data plane, never
   // migrates it, workers off, allows preview frontends in CORS). See ensure-schema.ts + the CORS block in index.ts.
-  INTERNAL_KORTIX_ENV:              z.enum(['dev', 'staging', 'prod', 'preview']).optional().default('dev'),
+  INTERNAL_AGENTICA_ENV:            z.enum(['dev', 'staging', 'prod', 'preview']).optional().default('dev'),
   // Master switch: turns on real billing (Stripe + credit ledger), makes
   // KORTIX_URL fatal-required, mounts the proxy-auth gate, hides /v1/setup.
   // Set to true on managed/cloud deployments; leave false for self-host + dev.
@@ -549,7 +549,7 @@ export const config = {
   PORT: env.PORT,
 
   // ─── Internal Deployment Controls ─────────────────────────────────────────
-  INTERNAL_KORTIX_ENV: env.INTERNAL_KORTIX_ENV as InternalKortixEnv,
+  INTERNAL_AGENTICA_ENV: env.INTERNAL_AGENTICA_ENV as InternalAgenticaEnv,
   // Single master switch — see schema docstring above.
   KORTIX_BILLING_INTERNAL_ENABLED: env.KORTIX_BILLING_INTERNAL_ENABLED,
   KORTIX_APPS_EXPERIMENTAL: env.KORTIX_APPS_EXPERIMENTAL,

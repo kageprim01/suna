@@ -14,7 +14,7 @@ import * as Sentry from '@sentry/bun';
 // ─── Configuration ──────────────────────────────────────────────────────────
 
 const SENTRY_DSN = process.env.BETTERSTACK_API_SENTRY_DSN;
-const ENV = process.env.INTERNAL_KORTIX_ENV || 'dev';
+const ENV = process.env.INTERNAL_AGENTICA_ENV || 'dev';
 const VERSION = process.env.SANDBOX_VERSION || 'dev';
 
 // ─── Initialize ─────────────────────────────────────────────────────────────
@@ -23,7 +23,7 @@ if (SENTRY_DSN) {
   Sentry.init({
     dsn: SENTRY_DSN,
     environment: ENV,
-    release: `kortix-api@${VERSION}`,
+    release: `agentica-api@${VERSION}`,
 
     // Capture 100% of errors, sample 20% of transactions for performance
     tracesSampleRate: ENV === 'prod' ? 0.2 : 1.0,
@@ -69,7 +69,7 @@ if (SENTRY_DSN) {
     },
   });
 
-  console.log(`[sentry] Initialized (env=${ENV}, release=kortix-api@${VERSION})`);
+  console.log(`[sentry] Initialized (env=${ENV}, release=agentica-api@${VERSION})`);
 } else {
   console.log('[sentry] Disabled (BETTERSTACK_API_SENTRY_DSN not set)');
 }

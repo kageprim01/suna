@@ -73,7 +73,7 @@ export function registerGlobalMocks() {
     config: {
       STRIPE_WEBHOOK_SECRET: 'whsec_test',
       KORTIX_BILLING_INTERNAL_ENABLED: true,
-      INTERNAL_KORTIX_ENV: 'staging',
+      INTERNAL_AGENTICA_ENV: 'staging',
     },
   }));
 
