@@ -146,7 +146,7 @@ export async function getWarmCountsBySlug(
 ): Promise<Map<string, { ready: number; warming: number }>> {
   const res = await db.execute(sql`
     SELECT COALESCE(metadata->>'warmSpareSlug', ${DEFAULT_SANDBOX_SLUG}) AS slug, pool_state, count(*)::int AS n
-    FROM kortix.session_sandboxes
+    FROM agentica.session_sandboxes
     WHERE project_id = ${projectId} AND pool_state IN ('parked', 'booting')
     GROUP BY 1, 2
   `);
@@ -321,10 +321,10 @@ interface ClaimedSpare {
  *  could claim a default-image spare). */
 async function claimSpare(projectId: string, slug: string): Promise<ClaimedSpare | null> {
   const res = await db.execute(sql`
-    UPDATE kortix.session_sandboxes
+    UPDATE agentica.session_sandboxes
     SET pool_state = 'claiming', updated_at = now()
     WHERE sandbox_id = (
-      SELECT s.sandbox_id FROM kortix.session_sandboxes s
+      SELECT s.sandbox_id FROM agentica.session_sandboxes s
       WHERE s.project_id = ${projectId}
         AND s.pool_state = 'parked'
         AND COALESCE(s.metadata->>'warmSpareSlug', ${DEFAULT_SANDBOX_SLUG}) = ${slug}

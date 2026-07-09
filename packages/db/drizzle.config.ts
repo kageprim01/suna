@@ -1,18 +1,18 @@
 import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
-  schema: ['./src/schema/kortix.ts'],
+  schema: ['./src/schema/agentica.ts'],
   out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: {
     url: process.env.DATABASE_URL!,
   },
-  schemaFilter: ['kortix'],
+  schemaFilter: ['agentica'],
   // Only manage these specific tables. basejump.* and api_keys are managed
   // externally (the 0000_bootstrap baseline) and excluded from drizzle.
-  // Credit/billing tables are now under kortix.* schema.
+  // Credit/billing tables are now under agentica.* schema.
   tablesFilter: [
-    'kortix.*',
+    'agentica.*',
   ],
   // Timestamp-prefixed migration filenames (e.g. 20260605T120000_add_foo.sql)
   // instead of sequential 0001/0002 — so two engineers branching off main don't

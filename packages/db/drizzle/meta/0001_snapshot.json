@@ -4,9 +4,9 @@
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "kortix.access_allowlist": {
+    "agentica.access_allowlist": {
       "name": "access_allowlist",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "id": {
           "name": "id",
@@ -71,9 +71,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.access_requests": {
+    "agentica.access_requests": {
       "name": "access_requests",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "id": {
           "name": "id",
@@ -103,7 +103,7 @@
         "status": {
           "name": "status",
           "type": "access_request_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'pending'"
@@ -162,9 +162,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.account_deletion_requests": {
+    "agentica.account_deletion_requests": {
       "name": "account_deletion_requests",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "id": {
           "name": "id",
@@ -232,9 +232,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.account_github_installation_states": {
+    "agentica.account_github_installation_states": {
       "name": "account_github_installation_states",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "state_nonce": {
           "name": "state_nonce",
@@ -317,7 +317,7 @@
           "name": "account_github_installation_states_account_id_accounts_account_id_fk",
           "tableFrom": "account_github_installation_states",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -334,9 +334,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.account_github_installations": {
+    "agentica.account_github_installations": {
       "name": "account_github_installations",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "installation_row_id": {
           "name": "installation_row_id",
@@ -463,7 +463,7 @@
           "name": "account_github_installations_account_id_accounts_account_id_fk",
           "tableFrom": "account_github_installations",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -480,9 +480,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.account_group_members": {
+    "agentica.account_group_members": {
       "name": "account_group_members",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "group_id": {
           "name": "group_id",
@@ -532,7 +532,7 @@
           "name": "account_group_members_group_id_account_groups_group_id_fk",
           "tableFrom": "account_group_members",
           "tableTo": "account_groups",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "group_id"
           ],
@@ -557,9 +557,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.account_groups": {
+    "agentica.account_groups": {
       "name": "account_groups",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "group_id": {
           "name": "group_id",
@@ -589,7 +589,7 @@
         "source": {
           "name": "source",
           "type": "account_group_source",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'manual'"
@@ -664,7 +664,7 @@
           "name": "account_groups_account_id_accounts_account_id_fk",
           "tableFrom": "account_groups",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -681,9 +681,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.account_invitations": {
+    "agentica.account_invitations": {
       "name": "account_invitations",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "invite_id": {
           "name": "invite_id",
@@ -713,7 +713,7 @@
         "initial_role": {
           "name": "initial_role",
           "type": "account_role",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'member'"
@@ -818,7 +818,7 @@
           "name": "account_invitations_account_id_accounts_account_id_fk",
           "tableFrom": "account_invitations",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -835,9 +835,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.account_members": {
+    "agentica.account_members": {
       "name": "account_members",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "user_id": {
           "name": "user_id",
@@ -854,7 +854,7 @@
         "account_role": {
           "name": "account_role",
           "type": "account_role",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'owner'"
@@ -938,7 +938,7 @@
           "name": "account_members_account_id_accounts_account_id_fk",
           "tableFrom": "account_members",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -963,9 +963,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.account_session_activity": {
+    "agentica.account_session_activity": {
       "name": "account_session_activity",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "account_id": {
           "name": "account_id",
@@ -1073,7 +1073,7 @@
           "name": "account_session_activity_account_id_accounts_account_id_fk",
           "tableFrom": "account_session_activity",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -1099,9 +1099,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.account_sso_group_mappings": {
+    "agentica.account_sso_group_mappings": {
       "name": "account_sso_group_mappings",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "mapping_id": {
           "name": "mapping_id",
@@ -1206,7 +1206,7 @@
           "name": "account_sso_group_mappings_account_id_accounts_account_id_fk",
           "tableFrom": "account_sso_group_mappings",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -1220,7 +1220,7 @@
           "name": "account_sso_group_mappings_sso_provider_id_account_sso_providers_sso_provider_id_fk",
           "tableFrom": "account_sso_group_mappings",
           "tableTo": "account_sso_providers",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "sso_provider_id"
           ],
@@ -1234,7 +1234,7 @@
           "name": "account_sso_group_mappings_group_id_account_groups_group_id_fk",
           "tableFrom": "account_sso_group_mappings",
           "tableTo": "account_groups",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "group_id"
           ],
@@ -1251,9 +1251,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.account_sso_providers": {
+    "agentica.account_sso_providers": {
       "name": "account_sso_providers",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "sso_provider_id": {
           "name": "sso_provider_id",
@@ -1373,7 +1373,7 @@
           "name": "account_sso_providers_account_id_accounts_account_id_fk",
           "tableFrom": "account_sso_providers",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -1390,9 +1390,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.account_tokens": {
+    "agentica.account_tokens": {
       "name": "account_tokens",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "token_id": {
           "name": "token_id",
@@ -1440,7 +1440,7 @@
         "status": {
           "name": "status",
           "type": "api_key_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'active'"
@@ -1553,7 +1553,7 @@
           "name": "account_tokens_account_id_accounts_account_id_fk",
           "tableFrom": "account_tokens",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -1567,7 +1567,7 @@
           "name": "account_tokens_project_id_projects_project_id_fk",
           "tableFrom": "account_tokens",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -1584,9 +1584,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.accounts": {
+    "agentica.accounts": {
       "name": "accounts",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "account_id": {
           "name": "account_id",
@@ -1675,9 +1675,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.audit_events": {
+    "agentica.audit_events": {
       "name": "audit_events",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "event_id": {
           "name": "event_id",
@@ -1825,7 +1825,7 @@
           "name": "audit_events_account_id_accounts_account_id_fk",
           "tableFrom": "audit_events",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -1842,9 +1842,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.audit_webhooks": {
+    "agentica.audit_webhooks": {
       "name": "audit_webhooks",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "webhook_id": {
           "name": "webhook_id",
@@ -1972,7 +1972,7 @@
           "name": "audit_webhooks_account_id_accounts_account_id_fk",
           "tableFrom": "audit_webhooks",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -1989,9 +1989,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.billing_customers": {
+    "agentica.billing_customers": {
       "name": "billing_customers",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "account_id": {
           "name": "account_id",
@@ -2048,9 +2048,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.change_requests": {
+    "agentica.change_requests": {
       "name": "change_requests",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "cr_id": {
           "name": "cr_id",
@@ -2105,7 +2105,7 @@
         "status": {
           "name": "status",
           "type": "change_request_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'open'"
@@ -2265,7 +2265,7 @@
           "name": "change_requests_account_id_accounts_account_id_fk",
           "tableFrom": "change_requests",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -2279,7 +2279,7 @@
           "name": "change_requests_project_id_projects_project_id_fk",
           "tableFrom": "change_requests",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -2293,7 +2293,7 @@
           "name": "change_requests_origin_session_id_project_sessions_session_id_fk",
           "tableFrom": "change_requests",
           "tableTo": "project_sessions",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "origin_session_id"
           ],
@@ -2310,9 +2310,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.chat_channel_bindings": {
+    "agentica.chat_channel_bindings": {
       "name": "chat_channel_bindings",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "binding_id": {
           "name": "binding_id",
@@ -2420,7 +2420,7 @@
           "name": "chat_channel_bindings_project_id_projects_project_id_fk",
           "tableFrom": "chat_channel_bindings",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -2437,9 +2437,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.chat_event_dedup": {
+    "agentica.chat_event_dedup": {
       "name": "chat_event_dedup",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "event_id": {
           "name": "event_id",
@@ -2478,9 +2478,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.chat_installs": {
+    "agentica.chat_installs": {
       "name": "chat_installs",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "install_id": {
           "name": "install_id",
@@ -2585,7 +2585,7 @@
           "name": "chat_installs_project_id_projects_project_id_fk",
           "tableFrom": "chat_installs",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -2602,9 +2602,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.chat_threads": {
+    "agentica.chat_threads": {
       "name": "chat_threads",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "thread_row_id": {
           "name": "thread_row_id",
@@ -2722,7 +2722,7 @@
           "name": "chat_threads_project_id_projects_project_id_fk",
           "tableFrom": "chat_threads",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -2736,7 +2736,7 @@
           "name": "chat_threads_session_id_project_sessions_session_id_fk",
           "tableFrom": "chat_threads",
           "tableTo": "project_sessions",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "session_id"
           ],
@@ -2753,9 +2753,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.chat_turn_streams": {
+    "agentica.chat_turn_streams": {
       "name": "chat_turn_streams",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "session_id": {
           "name": "session_id",
@@ -2865,9 +2865,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.credit_accounts": {
+    "agentica.credit_accounts": {
       "name": "credit_accounts",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "account_id": {
           "name": "account_id",
@@ -3249,9 +3249,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.credit_ledger": {
+    "agentica.credit_ledger": {
       "name": "credit_ledger",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "id": {
           "name": "id",
@@ -3366,7 +3366,7 @@
             }
           ],
           "isUnique": false,
-          "where": "\"kortix\".\"credit_ledger\".\"idempotency_key\" IS NOT NULL",
+          "where": "\"agentica\".\"credit_ledger\".\"idempotency_key\" IS NOT NULL",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -3387,9 +3387,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.credit_purchases": {
+    "agentica.credit_purchases": {
       "name": "credit_purchases",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "id": {
           "name": "id",
@@ -3483,9 +3483,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.credit_usage": {
+    "agentica.credit_usage": {
       "name": "credit_usage",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "id": {
           "name": "id",
@@ -3548,9 +3548,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.deployments": {
+    "agentica.deployments": {
       "name": "deployments",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "deployment_id": {
           "name": "deployment_id",
@@ -3598,7 +3598,7 @@
         "status": {
           "name": "status",
           "type": "deployment_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'pending'"
@@ -3606,7 +3606,7 @@
         "source_type": {
           "name": "source_type",
           "type": "deployment_source",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true
         },
@@ -3798,7 +3798,7 @@
           "name": "deployments_sandbox_id_sandboxes_sandbox_id_fk",
           "tableFrom": "deployments",
           "tableTo": "sandboxes",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "sandbox_id"
           ],
@@ -3815,9 +3815,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.executor_connector_actions": {
+    "agentica.executor_connector_actions": {
       "name": "executor_connector_actions",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "action_id": {
           "name": "action_id",
@@ -3865,7 +3865,7 @@
         "risk": {
           "name": "risk",
           "type": "executor_risk",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'read'"
@@ -3935,7 +3935,7 @@
           "name": "executor_connector_actions_connector_id_executor_connectors_connector_id_fk",
           "tableFrom": "executor_connector_actions",
           "tableTo": "executor_connectors",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "connector_id"
           ],
@@ -3952,9 +3952,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.executor_connector_grants": {
+    "agentica.executor_connector_grants": {
       "name": "executor_connector_grants",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "grant_id": {
           "name": "grant_id",
@@ -3972,7 +3972,7 @@
         "principal_type": {
           "name": "principal_type",
           "type": "secret_grant_principal",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true
         },
@@ -4039,7 +4039,7 @@
           "name": "executor_connector_grants_connector_id_executor_connectors_connector_id_fk",
           "tableFrom": "executor_connector_grants",
           "tableTo": "executor_connectors",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "connector_id"
           ],
@@ -4056,9 +4056,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.executor_connector_policies": {
+    "agentica.executor_connector_policies": {
       "name": "executor_connector_policies",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "policy_id": {
           "name": "policy_id",
@@ -4082,7 +4082,7 @@
         "action": {
           "name": "action",
           "type": "executor_policy_action",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true
         },
@@ -4123,7 +4123,7 @@
           "name": "executor_connector_policies_connector_id_executor_connectors_connector_id_fk",
           "tableFrom": "executor_connector_policies",
           "tableTo": "executor_connectors",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "connector_id"
           ],
@@ -4140,9 +4140,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.executor_connectors": {
+    "agentica.executor_connectors": {
       "name": "executor_connectors",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "connector_id": {
           "name": "connector_id",
@@ -4178,7 +4178,7 @@
         "provider_type": {
           "name": "provider_type",
           "type": "executor_connector_provider",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true
         },
@@ -4205,7 +4205,7 @@
         "share_scope": {
           "name": "share_scope",
           "type": "secret_share_scope",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'project'"
@@ -4213,7 +4213,7 @@
         "credential_mode": {
           "name": "credential_mode",
           "type": "executor_credential_mode",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'shared'"
@@ -4227,7 +4227,7 @@
         "status": {
           "name": "status",
           "type": "executor_connector_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'active'"
@@ -4317,7 +4317,7 @@
           "name": "executor_connectors_account_id_accounts_account_id_fk",
           "tableFrom": "executor_connectors",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -4331,7 +4331,7 @@
           "name": "executor_connectors_project_id_projects_project_id_fk",
           "tableFrom": "executor_connectors",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -4348,9 +4348,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.executor_credentials": {
+    "agentica.executor_credentials": {
       "name": "executor_credentials",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "credential_id": {
           "name": "credential_id",
@@ -4448,7 +4448,7 @@
           "name": "executor_credentials_connector_id_executor_connectors_connector_id_fk",
           "tableFrom": "executor_credentials",
           "tableTo": "executor_connectors",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "connector_id"
           ],
@@ -4465,9 +4465,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.executor_executions": {
+    "agentica.executor_executions": {
       "name": "executor_executions",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "execution_id": {
           "name": "execution_id",
@@ -4515,14 +4515,14 @@
         "status": {
           "name": "status",
           "type": "executor_execution_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true
         },
         "risk": {
           "name": "risk",
           "type": "executor_risk",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": false
         },
@@ -4610,7 +4610,7 @@
           "name": "executor_executions_account_id_accounts_account_id_fk",
           "tableFrom": "executor_executions",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -4624,7 +4624,7 @@
           "name": "executor_executions_project_id_projects_project_id_fk",
           "tableFrom": "executor_executions",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -4638,7 +4638,7 @@
           "name": "executor_executions_connector_id_executor_connectors_connector_id_fk",
           "tableFrom": "executor_executions",
           "tableTo": "executor_connectors",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "connector_id"
           ],
@@ -4655,9 +4655,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.executor_project_policies": {
+    "agentica.executor_project_policies": {
       "name": "executor_project_policies",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "policy_id": {
           "name": "policy_id",
@@ -4681,7 +4681,7 @@
         "action": {
           "name": "action",
           "type": "executor_policy_action",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true
         },
@@ -4722,7 +4722,7 @@
           "name": "executor_project_policies_project_id_projects_project_id_fk",
           "tableFrom": "executor_project_policies",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -4739,9 +4739,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.executor_project_settings": {
+    "agentica.executor_project_settings": {
       "name": "executor_project_settings",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "project_id": {
           "name": "project_id",
@@ -4752,7 +4752,7 @@
         "default_mode": {
           "name": "default_mode",
           "type": "executor_default_mode",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'allow_all'"
@@ -4771,7 +4771,7 @@
           "name": "executor_project_settings_project_id_projects_project_id_fk",
           "tableFrom": "executor_project_settings",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -4788,9 +4788,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.api_keys": {
+    "agentica.api_keys": {
       "name": "api_keys",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "key_id": {
           "name": "key_id",
@@ -4838,7 +4838,7 @@
         "type": {
           "name": "type",
           "type": "api_key_type",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'user'"
@@ -4846,7 +4846,7 @@
         "status": {
           "name": "status",
           "type": "api_key_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'active'"
@@ -4940,9 +4940,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.legacy_sandbox_migrations": {
+    "agentica.legacy_sandbox_migrations": {
       "name": "legacy_sandbox_migrations",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "migration_id": {
           "name": "migration_id",
@@ -5176,9 +5176,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.oauth_access_tokens": {
+    "agentica.oauth_access_tokens": {
       "name": "oauth_access_tokens",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "id": {
           "name": "id",
@@ -5290,7 +5290,7 @@
           "name": "oauth_access_tokens_client_id_oauth_clients_client_id_fk",
           "tableFrom": "oauth_access_tokens",
           "tableTo": "oauth_clients",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "client_id"
           ],
@@ -5307,9 +5307,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.oauth_authorization_codes": {
+    "agentica.oauth_authorization_codes": {
       "name": "oauth_authorization_codes",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "id": {
           "name": "id",
@@ -5440,7 +5440,7 @@
           "name": "oauth_authorization_codes_client_id_oauth_clients_client_id_fk",
           "tableFrom": "oauth_authorization_codes",
           "tableTo": "oauth_clients",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "client_id"
           ],
@@ -5457,9 +5457,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.oauth_clients": {
+    "agentica.oauth_clients": {
       "name": "oauth_clients",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "client_id": {
           "name": "client_id",
@@ -5517,9 +5517,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.oauth_refresh_tokens": {
+    "agentica.oauth_refresh_tokens": {
       "name": "oauth_refresh_tokens",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "id": {
           "name": "id",
@@ -5615,7 +5615,7 @@
           "name": "oauth_refresh_tokens_access_token_id_oauth_access_tokens_id_fk",
           "tableFrom": "oauth_refresh_tokens",
           "tableTo": "oauth_access_tokens",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "access_token_id"
           ],
@@ -5629,7 +5629,7 @@
           "name": "oauth_refresh_tokens_client_id_oauth_clients_client_id_fk",
           "tableFrom": "oauth_refresh_tokens",
           "tableTo": "oauth_clients",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "client_id"
           ],
@@ -5646,9 +5646,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.platform_settings": {
+    "agentica.platform_settings": {
       "name": "platform_settings",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "key": {
           "name": "key",
@@ -5678,9 +5678,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.platform_user_roles": {
+    "agentica.platform_user_roles": {
       "name": "platform_user_roles",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "id": {
           "name": "id",
@@ -5698,7 +5698,7 @@
         "role": {
           "name": "role",
           "type": "platform_role",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'user'"
@@ -5756,9 +5756,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.pool_resources": {
+    "agentica.pool_resources": {
       "name": "pool_resources",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "id": {
           "name": "id",
@@ -5770,7 +5770,7 @@
         "provider": {
           "name": "provider",
           "type": "sandbox_provider",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true
         },
@@ -5851,9 +5851,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.pool_sandboxes": {
+    "agentica.pool_sandboxes": {
       "name": "pool_sandboxes",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "id": {
           "name": "id",
@@ -5871,7 +5871,7 @@
         "provider": {
           "name": "provider",
           "type": "sandbox_provider",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true
         },
@@ -5971,7 +5971,7 @@
           "name": "pool_sandboxes_resource_id_pool_resources_id_fk",
           "tableFrom": "pool_sandboxes",
           "tableTo": "pool_resources",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "resource_id"
           ],
@@ -5988,9 +5988,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.project_git_connections": {
+    "agentica.project_git_connections": {
       "name": "project_git_connections",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "connection_id": {
           "name": "connection_id",
@@ -6218,7 +6218,7 @@
           "name": "project_git_connections_account_id_accounts_account_id_fk",
           "tableFrom": "project_git_connections",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -6232,7 +6232,7 @@
           "name": "project_git_connections_project_id_projects_project_id_fk",
           "tableFrom": "project_git_connections",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -6249,9 +6249,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.project_git_credentials": {
+    "agentica.project_git_credentials": {
       "name": "project_git_credentials",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "credential_id": {
           "name": "credential_id",
@@ -6355,7 +6355,7 @@
           "name": "project_git_credentials_account_id_accounts_account_id_fk",
           "tableFrom": "project_git_credentials",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -6369,7 +6369,7 @@
           "name": "project_git_credentials_project_id_projects_project_id_fk",
           "tableFrom": "project_git_credentials",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -6386,9 +6386,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.project_group_grants": {
+    "agentica.project_group_grants": {
       "name": "project_group_grants",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "project_id": {
           "name": "project_id",
@@ -6411,7 +6411,7 @@
         "role": {
           "name": "role",
           "type": "project_role",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'viewer'"
@@ -6495,7 +6495,7 @@
           "name": "project_group_grants_project_id_projects_project_id_fk",
           "tableFrom": "project_group_grants",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -6509,7 +6509,7 @@
           "name": "project_group_grants_group_id_account_groups_group_id_fk",
           "tableFrom": "project_group_grants",
           "tableTo": "account_groups",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "group_id"
           ],
@@ -6523,7 +6523,7 @@
           "name": "project_group_grants_account_id_accounts_account_id_fk",
           "tableFrom": "project_group_grants",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -6548,9 +6548,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.project_members": {
+    "agentica.project_members": {
       "name": "project_members",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "account_id": {
           "name": "account_id",
@@ -6573,7 +6573,7 @@
         "project_role": {
           "name": "project_role",
           "type": "project_role",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'viewer'"
@@ -6669,7 +6669,7 @@
           "name": "project_members_account_id_accounts_account_id_fk",
           "tableFrom": "project_members",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -6683,7 +6683,7 @@
           "name": "project_members_project_id_projects_project_id_fk",
           "tableFrom": "project_members",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -6700,9 +6700,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.project_secret_grants": {
+    "agentica.project_secret_grants": {
       "name": "project_secret_grants",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "grant_id": {
           "name": "grant_id",
@@ -6720,7 +6720,7 @@
         "principal_type": {
           "name": "principal_type",
           "type": "secret_grant_principal",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true
         },
@@ -6787,7 +6787,7 @@
           "name": "project_secret_grants_secret_id_project_secrets_secret_id_fk",
           "tableFrom": "project_secret_grants",
           "tableTo": "project_secrets",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "secret_id"
           ],
@@ -6804,9 +6804,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.project_secrets": {
+    "agentica.project_secrets": {
       "name": "project_secrets",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "secret_id": {
           "name": "secret_id",
@@ -6836,7 +6836,7 @@
         "scope": {
           "name": "scope",
           "type": "project_secret_scope",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'runtime'"
@@ -6844,7 +6844,7 @@
         "share_scope": {
           "name": "share_scope",
           "type": "secret_share_scope",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'project'"
@@ -6916,7 +6916,7 @@
             }
           ],
           "isUnique": true,
-          "where": "\"kortix\".\"project_secrets\".\"owner_user_id\" is null",
+          "where": "\"agentica\".\"project_secrets\".\"owner_user_id\" is null",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -6944,7 +6944,7 @@
             }
           ],
           "isUnique": true,
-          "where": "\"kortix\".\"project_secrets\".\"owner_user_id\" is not null",
+          "where": "\"agentica\".\"project_secrets\".\"owner_user_id\" is not null",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -6955,7 +6955,7 @@
           "name": "project_secrets_project_id_projects_project_id_fk",
           "tableFrom": "project_secrets",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -6972,9 +6972,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.project_session_grants": {
+    "agentica.project_session_grants": {
       "name": "project_session_grants",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "grant_id": {
           "name": "grant_id",
@@ -6992,7 +6992,7 @@
         "principal_type": {
           "name": "principal_type",
           "type": "secret_grant_principal",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true
         },
@@ -7059,7 +7059,7 @@
           "name": "project_session_grants_session_id_project_sessions_session_id_fk",
           "tableFrom": "project_session_grants",
           "tableTo": "project_sessions",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "session_id"
           ],
@@ -7076,9 +7076,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.project_sessions": {
+    "agentica.project_sessions": {
       "name": "project_sessions",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "session_id": {
           "name": "session_id",
@@ -7114,7 +7114,7 @@
         "sandbox_provider": {
           "name": "sandbox_provider",
           "type": "sandbox_provider",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'daytona'"
@@ -7147,7 +7147,7 @@
         "status": {
           "name": "status",
           "type": "project_session_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'queued'"
@@ -7167,7 +7167,7 @@
         "visibility": {
           "name": "visibility",
           "type": "project_session_visibility",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'private'"
@@ -7282,7 +7282,7 @@
           "name": "project_sessions_account_id_accounts_account_id_fk",
           "tableFrom": "project_sessions",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -7296,7 +7296,7 @@
           "name": "project_sessions_project_id_projects_project_id_fk",
           "tableFrom": "project_sessions",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -7313,9 +7313,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.project_snapshot_builds": {
+    "agentica.project_snapshot_builds": {
       "name": "project_snapshot_builds",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "build_id": {
           "name": "build_id",
@@ -7455,7 +7455,7 @@
           "name": "project_snapshot_builds_account_id_accounts_account_id_fk",
           "tableFrom": "project_snapshot_builds",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -7469,7 +7469,7 @@
           "name": "project_snapshot_builds_project_id_projects_project_id_fk",
           "tableFrom": "project_snapshot_builds",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -7486,9 +7486,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.project_trigger_runtime": {
+    "agentica.project_trigger_runtime": {
       "name": "project_trigger_runtime",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "project_id": {
           "name": "project_id",
@@ -7522,7 +7522,7 @@
           "name": "project_trigger_runtime_project_id_projects_project_id_fk",
           "tableFrom": "project_trigger_runtime",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -7547,9 +7547,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.projects": {
+    "agentica.projects": {
       "name": "projects",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "project_id": {
           "name": "project_id",
@@ -7593,7 +7593,7 @@
         "status": {
           "name": "status",
           "type": "project_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'active'"
@@ -7699,7 +7699,7 @@
           "name": "projects_account_id_accounts_account_id_fk",
           "tableFrom": "projects",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -7716,9 +7716,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.sandbox_compute_sessions": {
+    "agentica.sandbox_compute_sessions": {
       "name": "sandbox_compute_sessions",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "id": {
           "name": "id",
@@ -7871,7 +7871,7 @@
             }
           ],
           "isUnique": false,
-          "where": "\"kortix\".\"sandbox_compute_sessions\".\"ended_at\" IS NULL",
+          "where": "\"agentica\".\"sandbox_compute_sessions\".\"ended_at\" IS NULL",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -7887,7 +7887,7 @@
             }
           ],
           "isUnique": false,
-          "where": "\"kortix\".\"sandbox_compute_sessions\".\"state\" = 'active'",
+          "where": "\"agentica\".\"sandbox_compute_sessions\".\"state\" = 'active'",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -7900,9 +7900,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.sandbox_invites": {
+    "agentica.sandbox_invites": {
       "name": "sandbox_invites",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "invite_id": {
           "name": "invite_id",
@@ -7938,7 +7938,7 @@
         "initial_role": {
           "name": "initial_role",
           "type": "account_role",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'member'"
@@ -8016,7 +8016,7 @@
           "name": "sandbox_invites_sandbox_id_sandboxes_sandbox_id_fk",
           "tableFrom": "sandbox_invites",
           "tableTo": "sandboxes",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "sandbox_id"
           ],
@@ -8033,9 +8033,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.sandbox_member_scopes": {
+    "agentica.sandbox_member_scopes": {
       "name": "sandbox_member_scopes",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "sandbox_id": {
           "name": "sandbox_id",
@@ -8058,7 +8058,7 @@
         "effect": {
           "name": "effect",
           "type": "scope_effect",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true
         },
@@ -8131,7 +8131,7 @@
           "name": "sandbox_member_scopes_sandbox_id_sandboxes_sandbox_id_fk",
           "tableFrom": "sandbox_member_scopes",
           "tableTo": "sandboxes",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "sandbox_id"
           ],
@@ -8148,9 +8148,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.sandbox_members": {
+    "agentica.sandbox_members": {
       "name": "sandbox_members",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "sandbox_id": {
           "name": "sandbox_id",
@@ -8255,7 +8255,7 @@
           "name": "sandbox_members_sandbox_id_sandboxes_sandbox_id_fk",
           "tableFrom": "sandbox_members",
           "tableTo": "sandboxes",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "sandbox_id"
           ],
@@ -8272,9 +8272,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.sandbox_templates": {
+    "agentica.sandbox_templates": {
       "name": "sandbox_templates",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "template_id": {
           "name": "template_id",
@@ -8481,7 +8481,7 @@
           "name": "sandbox_templates_project_id_projects_project_id_fk",
           "tableFrom": "sandbox_templates",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -8495,7 +8495,7 @@
           "name": "sandbox_templates_account_id_accounts_account_id_fk",
           "tableFrom": "sandbox_templates",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -8512,9 +8512,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.sandboxes": {
+    "agentica.sandboxes": {
       "name": "sandboxes",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "sandbox_id": {
           "name": "sandbox_id",
@@ -8538,7 +8538,7 @@
         "provider": {
           "name": "provider",
           "type": "sandbox_provider",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'daytona'"
@@ -8552,7 +8552,7 @@
         "status": {
           "name": "status",
           "type": "sandbox_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'provisioning'"
@@ -8665,9 +8665,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.scim_tokens": {
+    "agentica.scim_tokens": {
       "name": "scim_tokens",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "token_id": {
           "name": "token_id",
@@ -8769,7 +8769,7 @@
           "name": "scim_tokens_account_id_accounts_account_id_fk",
           "tableFrom": "scim_tokens",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -8786,9 +8786,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.server_entries": {
+    "agentica.server_entries": {
       "name": "server_entries",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "entry_id": {
           "name": "entry_id",
@@ -8831,7 +8831,7 @@
         "provider": {
           "name": "provider",
           "type": "sandbox_provider",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": false
         },
@@ -8922,9 +8922,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.service_accounts": {
+    "agentica.service_accounts": {
       "name": "service_accounts",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "service_account_id": {
           "name": "service_account_id",
@@ -9066,7 +9066,7 @@
           "name": "service_accounts_account_id_accounts_account_id_fk",
           "tableFrom": "service_accounts",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -9083,9 +9083,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.session_sandboxes": {
+    "agentica.session_sandboxes": {
       "name": "session_sandboxes",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "sandbox_id": {
           "name": "sandbox_id",
@@ -9114,7 +9114,7 @@
         "provider": {
           "name": "provider",
           "type": "sandbox_provider",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'daytona'"
@@ -9134,7 +9134,7 @@
         "status": {
           "name": "status",
           "type": "session_sandbox_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'provisioning'"
@@ -9293,9 +9293,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.stripe_webhook_events_processed": {
+    "agentica.stripe_webhook_events_processed": {
       "name": "stripe_webhook_events_processed",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "event_id": {
           "name": "event_id",
@@ -9341,9 +9341,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.tunnel_audit_logs": {
+    "agentica.tunnel_audit_logs": {
       "name": "tunnel_audit_logs",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "log_id": {
           "name": "log_id",
@@ -9367,7 +9367,7 @@
         "capability": {
           "name": "capability",
           "type": "tunnel_capability",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true
         },
@@ -9483,7 +9483,7 @@
           "name": "tunnel_audit_logs_tunnel_id_tunnel_connections_tunnel_id_fk",
           "tableFrom": "tunnel_audit_logs",
           "tableTo": "tunnel_connections",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "tunnel_id"
           ],
@@ -9500,9 +9500,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.tunnel_connections": {
+    "agentica.tunnel_connections": {
       "name": "tunnel_connections",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "tunnel_id": {
           "name": "tunnel_id",
@@ -9532,7 +9532,7 @@
         "status": {
           "name": "status",
           "type": "tunnel_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'offline'"
@@ -9630,7 +9630,7 @@
           "name": "tunnel_connections_sandbox_id_sandboxes_sandbox_id_fk",
           "tableFrom": "tunnel_connections",
           "tableTo": "sandboxes",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "sandbox_id"
           ],
@@ -9647,9 +9647,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.tunnel_device_auth_requests": {
+    "agentica.tunnel_device_auth_requests": {
       "name": "tunnel_device_auth_requests",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "id": {
           "name": "id",
@@ -9673,7 +9673,7 @@
         "status": {
           "name": "status",
           "type": "tunnel_device_auth_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'pending'"
@@ -9775,7 +9775,7 @@
           "name": "tunnel_device_auth_requests_tunnel_id_tunnel_connections_tunnel_id_fk",
           "tableFrom": "tunnel_device_auth_requests",
           "tableTo": "tunnel_connections",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "tunnel_id"
           ],
@@ -9792,9 +9792,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.tunnel_permission_requests": {
+    "agentica.tunnel_permission_requests": {
       "name": "tunnel_permission_requests",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "request_id": {
           "name": "request_id",
@@ -9818,7 +9818,7 @@
         "capability": {
           "name": "capability",
           "type": "tunnel_capability",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true
         },
@@ -9838,7 +9838,7 @@
         "status": {
           "name": "status",
           "type": "tunnel_permission_request_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'pending'"
@@ -9910,7 +9910,7 @@
           "name": "tunnel_permission_requests_tunnel_id_tunnel_connections_tunnel_id_fk",
           "tableFrom": "tunnel_permission_requests",
           "tableTo": "tunnel_connections",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "tunnel_id"
           ],
@@ -9927,9 +9927,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.tunnel_permissions": {
+    "agentica.tunnel_permissions": {
       "name": "tunnel_permissions",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "permission_id": {
           "name": "permission_id",
@@ -9953,7 +9953,7 @@
         "capability": {
           "name": "capability",
           "type": "tunnel_capability",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true
         },
@@ -9967,7 +9967,7 @@
         "status": {
           "name": "status",
           "type": "tunnel_permission_status",
-          "typeSchema": "kortix",
+          "typeSchema": "agentica",
           "primaryKey": false,
           "notNull": true,
           "default": "'active'"
@@ -10060,7 +10060,7 @@
           "name": "tunnel_permissions_tunnel_id_tunnel_connections_tunnel_id_fk",
           "tableFrom": "tunnel_permissions",
           "tableTo": "tunnel_connections",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "tunnel_id"
           ],
@@ -10077,9 +10077,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.usage_events": {
+    "agentica.usage_events": {
       "name": "usage_events",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "event_id": {
           "name": "event_id",
@@ -10278,7 +10278,7 @@
           "name": "usage_events_account_id_accounts_account_id_fk",
           "tableFrom": "usage_events",
           "tableTo": "accounts",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "account_id"
           ],
@@ -10292,7 +10292,7 @@
           "name": "usage_events_project_id_projects_project_id_fk",
           "tableFrom": "usage_events",
           "tableTo": "projects",
-          "schemaTo": "kortix",
+          "schemaTo": "agentica",
           "columnsFrom": [
             "project_id"
           ],
@@ -10309,9 +10309,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.worker_leader_lease": {
+    "agentica.worker_leader_lease": {
       "name": "worker_leader_lease",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "lock_key": {
           "name": "lock_key",
@@ -10347,9 +10347,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "kortix.yolo_member_tokens": {
+    "agentica.yolo_member_tokens": {
       "name": "yolo_member_tokens",
-      "schema": "kortix",
+      "schema": "agentica",
       "columns": {
         "user_id": {
           "name": "user_id",
@@ -10407,7 +10407,7 @@
             }
           ],
           "isUnique": false,
-          "where": "\"kortix\".\"yolo_member_tokens\".\"revoked_at\" IS NULL",
+          "where": "\"agentica\".\"yolo_member_tokens\".\"revoked_at\" IS NULL",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -10445,61 +10445,61 @@
     }
   },
   "enums": {
-    "kortix.access_request_status": {
+    "agentica.access_request_status": {
       "name": "access_request_status",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "pending",
         "approved",
         "rejected"
       ]
     },
-    "kortix.account_group_source": {
+    "agentica.account_group_source": {
       "name": "account_group_source",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "manual",
         "scim"
       ]
     },
-    "kortix.account_role": {
+    "agentica.account_role": {
       "name": "account_role",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "owner",
         "admin",
         "member"
       ]
     },
-    "kortix.api_key_status": {
+    "agentica.api_key_status": {
       "name": "api_key_status",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "active",
         "revoked",
         "expired"
       ]
     },
-    "kortix.api_key_type": {
+    "agentica.api_key_type": {
       "name": "api_key_type",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "user",
         "sandbox"
       ]
     },
-    "kortix.change_request_status": {
+    "agentica.change_request_status": {
       "name": "change_request_status",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "open",
         "merged",
         "closed"
       ]
     },
-    "kortix.deployment_source": {
+    "agentica.deployment_source": {
       "name": "deployment_source",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "git",
         "code",
@@ -10507,9 +10507,9 @@
         "tar"
       ]
     },
-    "kortix.deployment_status": {
+    "agentica.deployment_status": {
       "name": "deployment_status",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "pending",
         "building",
@@ -10519,9 +10519,9 @@
         "stopped"
       ]
     },
-    "kortix.executor_connector_provider": {
+    "agentica.executor_connector_provider": {
       "name": "executor_connector_provider",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "pipedream",
         "mcp",
@@ -10530,9 +10530,9 @@
         "http"
       ]
     },
-    "kortix.executor_connector_status": {
+    "agentica.executor_connector_status": {
       "name": "executor_connector_status",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "active",
         "disabled",
@@ -10540,25 +10540,25 @@
         "error"
       ]
     },
-    "kortix.executor_credential_mode": {
+    "agentica.executor_credential_mode": {
       "name": "executor_credential_mode",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "shared",
         "per_user"
       ]
     },
-    "kortix.executor_default_mode": {
+    "agentica.executor_default_mode": {
       "name": "executor_default_mode",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "risk",
         "allow_all"
       ]
     },
-    "kortix.executor_execution_status": {
+    "agentica.executor_execution_status": {
       "name": "executor_execution_status",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "ok",
         "error",
@@ -10566,53 +10566,53 @@
         "pending_approval"
       ]
     },
-    "kortix.executor_policy_action": {
+    "agentica.executor_policy_action": {
       "name": "executor_policy_action",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "always_run",
         "require_approval",
         "block"
       ]
     },
-    "kortix.executor_risk": {
+    "agentica.executor_risk": {
       "name": "executor_risk",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "read",
         "write",
         "destructive"
       ]
     },
-    "kortix.platform_role": {
+    "agentica.platform_role": {
       "name": "platform_role",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "user",
         "admin",
         "super_admin"
       ]
     },
-    "kortix.project_role": {
+    "agentica.project_role": {
       "name": "project_role",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "manager",
         "editor",
         "viewer"
       ]
     },
-    "kortix.project_secret_scope": {
+    "agentica.project_secret_scope": {
       "name": "project_secret_scope",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "runtime",
         "connector"
       ]
     },
-    "kortix.project_session_status": {
+    "agentica.project_session_status": {
       "name": "project_session_status",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "queued",
         "branching",
@@ -10623,35 +10623,35 @@
         "completed"
       ]
     },
-    "kortix.project_session_visibility": {
+    "agentica.project_session_visibility": {
       "name": "project_session_visibility",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "private",
         "project",
         "restricted"
       ]
     },
-    "kortix.project_status": {
+    "agentica.project_status": {
       "name": "project_status",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "active",
         "archived"
       ]
     },
-    "kortix.sandbox_provider": {
+    "agentica.sandbox_provider": {
       "name": "sandbox_provider",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "daytona",
         "local_docker",
         "justavps"
       ]
     },
-    "kortix.sandbox_status": {
+    "agentica.sandbox_status": {
       "name": "sandbox_status",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "provisioning",
         "active",
@@ -10661,33 +10661,33 @@
         "error"
       ]
     },
-    "kortix.scope_effect": {
+    "agentica.scope_effect": {
       "name": "scope_effect",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "grant",
         "revoke"
       ]
     },
-    "kortix.secret_grant_principal": {
+    "agentica.secret_grant_principal": {
       "name": "secret_grant_principal",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "member",
         "group"
       ]
     },
-    "kortix.secret_share_scope": {
+    "agentica.secret_share_scope": {
       "name": "secret_share_scope",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "project",
         "restricted"
       ]
     },
-    "kortix.session_sandbox_status": {
+    "agentica.session_sandbox_status": {
       "name": "session_sandbox_status",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "provisioning",
         "active",
@@ -10696,9 +10696,9 @@
         "archived"
       ]
     },
-    "kortix.tunnel_capability": {
+    "agentica.tunnel_capability": {
       "name": "tunnel_capability",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "filesystem",
         "shell",
@@ -10709,9 +10709,9 @@
         "gpu"
       ]
     },
-    "kortix.tunnel_device_auth_status": {
+    "agentica.tunnel_device_auth_status": {
       "name": "tunnel_device_auth_status",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "pending",
         "approved",
@@ -10719,9 +10719,9 @@
         "expired"
       ]
     },
-    "kortix.tunnel_permission_request_status": {
+    "agentica.tunnel_permission_request_status": {
       "name": "tunnel_permission_request_status",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "pending",
         "approved",
@@ -10729,18 +10729,18 @@
         "expired"
       ]
     },
-    "kortix.tunnel_permission_status": {
+    "agentica.tunnel_permission_status": {
       "name": "tunnel_permission_status",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "active",
         "revoked",
         "expired"
       ]
     },
-    "kortix.tunnel_status": {
+    "agentica.tunnel_status": {
       "name": "tunnel_status",
-      "schema": "kortix",
+      "schema": "agentica",
       "values": [
         "online",
         "offline",
@@ -10749,7 +10749,7 @@
     }
   },
   "schemas": {
-    "kortix": "kortix"
+    "agentica": "agentica"
   },
   "sequences": {},
   "roles": {},

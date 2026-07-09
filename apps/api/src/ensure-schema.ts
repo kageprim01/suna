@@ -74,7 +74,7 @@ async function warnIfCriticalTablesMissing(): Promise<void> {
   if (!config.DATABASE_URL) return;
   // Critical tables for IAM + auth + vault paths. Keep this list
   // small and stable — extending it for every new migration would be
-  // noise. We check only tables in the `kortix` schema (no tuple
+  // noise. We check only tables in the `agentica` schema (no tuple
   // joins, no driver-specific helpers) so the query stays portable.
   const required = [
     'account_groups',
@@ -92,13 +92,13 @@ async function warnIfCriticalTablesMissing(): Promise<void> {
     const rows = (await db`
       SELECT table_name
       FROM information_schema.tables
-      WHERE table_schema = 'kortix' AND table_name IN ${db(required)}
+      WHERE table_schema = 'agentica' AND table_name IN ${db(required)}
     `) as Array<{ table_name: string }>;
     const present = new Set(rows.map((r) => r.table_name));
     const missing = required.filter((n) => !present.has(n));
     if (missing.length > 0) {
       console.warn('[schema] ⚠ KORTIX_SKIP_ENSURE_SCHEMA=1 but critical tables are missing:');
-      for (const m of missing) console.warn(`[schema]   • kortix.${m}`);
+      for (const m of missing) console.warn(`[schema]   • agentica.${m}`);
       console.warn('[schema] Run `pnpm migrate` or remove the env flag to auto-apply.');
     }
   } catch (err) {

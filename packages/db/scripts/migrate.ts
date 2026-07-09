@@ -15,7 +15,7 @@ import { join } from 'node:path';
  *   bun scripts/migrate.ts status             list pending (dry-run, no writes)
  *   bun scripts/migrate.ts down [--count=N]   roll back N (default 1)
  *   bun scripts/migrate.ts fake               mark pending as applied without running (baseline)
- *   bun scripts/migrate.ts bootstrap          fresh-DB: install non-kortix prereqs, then `up`
+ *   bun scripts/migrate.ts bootstrap          fresh-DB: install non-agentica prereqs, then `up`
  *
  * DB URL: $DATABASE_URL, or --target=<env> (reads <ENV>_DB_URL / DATABASE_URL
  * from apps/api/.env so secrets never go through the shell).
@@ -77,7 +77,7 @@ const fmtUrl = (u: string) => {
  * oldest pending migration) so the real `up` that follows applies just the
  * genuinely-new migrations. A fresh DB has no schema → no-op → `up` creates it.
  *
- * Trigger is conservative: the managed schema sentinel (`kortix.accounts`) is
+ * Trigger is conservative: the managed schema sentinel (`agentica.accounts`) is
  * present AND the tracking table has no rows yet (never baselined). After the
  * fake records the baseline, this never fires again.
  */
@@ -86,7 +86,7 @@ async function autoBaselineIfNeeded(base: Record<string, unknown>, databaseUrl: 
   await client.connect();
   try {
     const { rows: [schema] } = await client.query<{ exists: boolean }>(
-      "select to_regclass('kortix.accounts') is not null as exists",
+      "select to_regclass('agentica.accounts') is not null as exists",
     );
     if (!schema?.exists) return; // fresh DB → let `up` run the baseline for real
 
@@ -108,9 +108,9 @@ async function autoBaselineIfNeeded(base: Record<string, unknown>, databaseUrl: 
 }
 
 /**
- * Self-host only: install the NON-kortix prerequisites (the basejump account
+ * Self-host only: install the NON-agentica prerequisites (the basejump account
  * framework + public credit RPCs + the auth.users signup triggers) on a FRESH
- * database, BEFORE the kortix baseline migration runs. The baseline's RLS
+ * database, BEFORE the agentica baseline migration runs. The baseline's RLS
  * policies and functions reference `basejump.account_user`, so without this the
  * very first `up` fails with `relation "basejump.account_user" does not exist`.
  *
@@ -150,7 +150,7 @@ async function selfHostBootstrapIfFresh(databaseUrl: string): Promise<void> {
     if (!existsSync(BOOTSTRAP_SQL)) {
       throw new Error(`bootstrap SQL missing at ${BOOTSTRAP_SQL} (is packages/db/drizzle bundled in the image?)`);
     }
-    console.log('[migrate] fresh database — installing non-kortix prerequisites (basejump + credit RPCs + signup triggers)…');
+    console.log('[migrate] fresh database — installing non-agentica prerequisites (basejump + credit RPCs + signup triggers)…');
     const text = readFileSync(BOOTSTRAP_SQL, 'utf-8');
     let applied = 0;
     let skippedStorage = 0;

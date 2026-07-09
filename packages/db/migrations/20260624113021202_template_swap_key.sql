@@ -14,7 +14,7 @@
 -- pre-snapshot agent-swap branch (this replaces a hand-written migration that
 -- bypassed drizzle's snapshot — see drizzle/meta/20260624113021_snapshot.json).
 
-ALTER TABLE "kortix"."sandbox_templates" ADD COLUMN IF NOT EXISTS "swap_key" text;
+ALTER TABLE "agentica"."sandbox_templates" ADD COLUMN IF NOT EXISTS "swap_key" text;
 
 -- Down Migration
-ALTER TABLE "kortix"."sandbox_templates" DROP COLUMN IF EXISTS "swap_key";
+ALTER TABLE "agentica"."sandbox_templates" DROP COLUMN IF EXISTS "swap_key";

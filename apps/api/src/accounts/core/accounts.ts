@@ -220,7 +220,7 @@ export function registerAccountRoutes(): void {
       try {
         const res = await db.execute<{ n: number }>(sql`
       SELECT COUNT(*)::int AS n
-      FROM kortix.account_members am
+      FROM agentica.account_members am
       WHERE am.account_id = ${accountId}::uuid
         AND NOT (
           am.user_id = am.account_id

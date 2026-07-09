@@ -29,7 +29,7 @@ import pg from 'pg';
 
 export type SchemaObjects = { tables: Set<string>; columns: Set<string>; enumValues: Set<string> };
 
-const SCHEMA = 'kortix';
+const SCHEMA = 'agentica';
 
 const OBJECTS_SQL = `
   SELECT 'T'::text AS k, table_name AS a, ''::text AS b

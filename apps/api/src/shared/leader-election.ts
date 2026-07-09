@@ -9,7 +9,7 @@
  * paid agent sessions + duplicate external side effects), the warm pool is
  * over-provisioned, etc.
  *
- * We elect a single leader with a TTL lease row in `kortix.worker_leader_lease`.
+ * We elect a single leader with a TTL lease row in `agentica.worker_leader_lease`.
  * One atomic UPSERT both acquires (when the row is absent or its lease expired)
  * and renews (when we already own it); a non-owning live lease yields no row, so
  * the caller knows it lost. The leader renews well within the TTL; if it dies or
@@ -119,7 +119,7 @@ async function ensureLeaseTable(): Promise<void> {
   // migration) we swallow the error and let the upsert be the real gate.
   try {
     await sql.unsafe(`
-      CREATE TABLE IF NOT EXISTS kortix.worker_leader_lease (
+      CREATE TABLE IF NOT EXISTS agentica.worker_leader_lease (
         lock_key   text PRIMARY KEY,
         owner_id   text        NOT NULL,
         expires_at timestamptz NOT NULL,
@@ -139,7 +139,7 @@ async function acquireOrRenew(): Promise<boolean> {
   await ensureLeaseTable();
   const ttlSec = Math.ceil(TTL_MS / 1000);
   const rows = await sql<{ owner_id: string }[]>`
-    INSERT INTO kortix.worker_leader_lease AS l (lock_key, owner_id, expires_at, updated_at)
+    INSERT INTO agentica.worker_leader_lease AS l (lock_key, owner_id, expires_at, updated_at)
     VALUES (${LOCK_KEY}, ${ownerId}, now() + make_interval(secs => ${ttlSec}), now())
     ON CONFLICT (lock_key) DO UPDATE
       SET owner_id   = EXCLUDED.owner_id,
@@ -271,7 +271,7 @@ export async function stopLeaderElection(): Promise<void> {
   await demote('shutdown');
   try {
     if (sql && wasLeader) {
-      await sql`DELETE FROM kortix.worker_leader_lease WHERE lock_key = ${LOCK_KEY} AND owner_id = ${ownerId}`;
+      await sql`DELETE FROM agentica.worker_leader_lease WHERE lock_key = ${LOCK_KEY} AND owner_id = ${ownerId}`;
     }
   } catch (err) {
     logger.warn('[leader] lease release on shutdown failed', { error: err instanceof Error ? err.message : String(err) });

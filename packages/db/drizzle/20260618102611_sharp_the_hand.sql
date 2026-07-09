@@ -1,11 +1,11 @@
-CREATE TABLE "kortix"."gateway_api_keys" (
+CREATE TABLE "agentica"."gateway_api_keys" (
 	"key_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"project_id" uuid NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"key_prefix" varchar(24) NOT NULL,
 	"secret_key_hash" varchar(128) NOT NULL,
-	"status" "kortix"."api_key_status" DEFAULT 'active' NOT NULL,
+	"status" "agentica"."api_key_status" DEFAULT 'active' NOT NULL,
 	"created_by" uuid,
 	"last_used_at" timestamp with time zone,
 	"expires_at" timestamp with time zone,
@@ -13,7 +13,7 @@ CREATE TABLE "kortix"."gateway_api_keys" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."gateway_request_logs" (
+CREATE TABLE "agentica"."gateway_request_logs" (
 	"log_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"request_id" text NOT NULL,
 	"account_id" uuid NOT NULL,
@@ -43,15 +43,15 @@ CREATE TABLE "kortix"."gateway_request_logs" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "kortix"."gateway_api_keys" ADD CONSTRAINT "gateway_api_keys_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."gateway_api_keys" ADD CONSTRAINT "gateway_api_keys_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."gateway_request_logs" ADD CONSTRAINT "gateway_request_logs_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."gateway_request_logs" ADD CONSTRAINT "gateway_request_logs_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_gateway_keys_secret_hash" ON "kortix"."gateway_api_keys" USING btree ("secret_key_hash");--> statement-breakpoint
-CREATE INDEX "idx_gateway_keys_project" ON "kortix"."gateway_api_keys" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "idx_gateway_keys_account" ON "kortix"."gateway_api_keys" USING btree ("account_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_gateway_logs_request_id" ON "kortix"."gateway_request_logs" USING btree ("request_id");--> statement-breakpoint
-CREATE INDEX "idx_gateway_logs_account_time" ON "kortix"."gateway_request_logs" USING btree ("account_id","created_at");--> statement-breakpoint
-CREATE INDEX "idx_gateway_logs_project_time" ON "kortix"."gateway_request_logs" USING btree ("project_id","created_at");--> statement-breakpoint
-CREATE INDEX "idx_gateway_logs_model" ON "kortix"."gateway_request_logs" USING btree ("provider","resolved_model");--> statement-breakpoint
-CREATE INDEX "idx_gateway_logs_account_ok" ON "kortix"."gateway_request_logs" USING btree ("account_id","ok");
+ALTER TABLE "agentica"."gateway_api_keys" ADD CONSTRAINT "gateway_api_keys_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."gateway_api_keys" ADD CONSTRAINT "gateway_api_keys_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."gateway_request_logs" ADD CONSTRAINT "gateway_request_logs_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."gateway_request_logs" ADD CONSTRAINT "gateway_request_logs_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_gateway_keys_secret_hash" ON "agentica"."gateway_api_keys" USING btree ("secret_key_hash");--> statement-breakpoint
+CREATE INDEX "idx_gateway_keys_project" ON "agentica"."gateway_api_keys" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX "idx_gateway_keys_account" ON "agentica"."gateway_api_keys" USING btree ("account_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_gateway_logs_request_id" ON "agentica"."gateway_request_logs" USING btree ("request_id");--> statement-breakpoint
+CREATE INDEX "idx_gateway_logs_account_time" ON "agentica"."gateway_request_logs" USING btree ("account_id","created_at");--> statement-breakpoint
+CREATE INDEX "idx_gateway_logs_project_time" ON "agentica"."gateway_request_logs" USING btree ("project_id","created_at");--> statement-breakpoint
+CREATE INDEX "idx_gateway_logs_model" ON "agentica"."gateway_request_logs" USING btree ("provider","resolved_model");--> statement-breakpoint
+CREATE INDEX "idx_gateway_logs_account_ok" ON "agentica"."gateway_request_logs" USING btree ("account_id","ok");

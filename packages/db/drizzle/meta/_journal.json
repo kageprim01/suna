@@ -13,14 +13,14 @@
       "idx": 1,
       "version": "7",
       "when": 1780609667531,
-      "tag": "0001_kortix_baseline",
+      "tag": "0001_agentica_baseline",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
       "when": 1780609913608,
-      "tag": "0002_kortix_grants",
+      "tag": "0002_agentica_grants",
       "breakpoints": true
     },
     {

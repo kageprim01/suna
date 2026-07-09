@@ -2,7 +2,7 @@
 -- Profile pictures: a public "avatars" Storage bucket + per-user RLS.
 --
 -- Split out from the baseline because it targets Supabase-managed `storage.*`
--- (a platform schema), not our `kortix` schema. Guarded: if the storage schema
+-- (a platform schema), not our `agentica` schema. Guarded: if the storage schema
 -- isn't present (storage disabled, or a fresh DB before the storage service has
 -- initialised), it no-ops instead of failing the run.
 

@@ -3,7 +3,7 @@
  *
  * The user clicks "Migrate" in /projects exactly once; from then on the
  * migration is owned by the backend and CANNOT be cancelled. It must complete
- * even across crashes/redeploys, so the DB row (kortix.legacy_sandbox_migrations)
+ * even across crashes/redeploys, so the DB row (legacy_sandbox_migrations)
  * is the source of truth, not the running process.
  *
  * Shape:

@@ -583,7 +583,7 @@ adminApp.openapi(
       status: sessionSandboxes.status, lastUsedAt: sessionSandboxes.lastUsedAt,
     }).from(sessionSandboxes).where(conds.length ? and(...conds) : undefined)
       .orderBy(desc(sessionSandboxes.updatedAt)).limit(limit);
-    const byProvider = await db.execute(sql`SELECT provider AS provider, count(*)::int AS count FROM kortix.session_sandboxes WHERE status <> 'archived' GROUP BY provider`);
+    const byProvider = await db.execute(sql`SELECT provider AS provider, count(*)::int AS count FROM agentica.session_sandboxes WHERE status <> 'archived' GROUP BY provider`);
     return c.json({ sandboxes: rows, byProvider: (byProvider as any).rows ?? byProvider });
   },
 );

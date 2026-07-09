@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import { spawnSync } from 'node:child_process';
 /**
- * Thin handoff: drizzle-kit generates the SQL from kortix.ts; node-pg-migrate
+ * Thin handoff: drizzle-kit generates the SQL from agentica.ts; node-pg-migrate
  * applies it. This script is the only glue between the two — it runs
  * `drizzle-kit generate`, then renames the produced file into migrations/ with
  * a node-pg-migrate-native 17-digit UTC timestamp (YYYYMMDDHHMMSSmmm).
@@ -57,7 +57,7 @@ if (res.status !== 0) process.exit(res.status ?? 1);
 
 const created = readdirSync(DRIZZLE_DIR).filter((f) => f.endsWith('.sql') && !before.has(f));
 if (created.length === 0) {
-  console.log('\nNo schema changes detected — kortix.ts matches the snapshot. Nothing generated.');
+  console.log('\nNo schema changes detected — agentica.ts matches the snapshot. Nothing generated.');
   console.log(
     `For hand-written SQL: node-pg-migrate create ${slug} -m migrations -j sql --migration-filename-format utc`,
   );

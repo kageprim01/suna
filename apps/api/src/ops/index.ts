@@ -44,7 +44,7 @@ async function recentAuditEvents() {
     occurred_at: Date | string;
   }>(await db.execute(sql`
     SELECT event_id, account_id, actor_user_id, action, resource_type, resource_id, occurred_at
-    FROM kortix.audit_events
+    FROM agentica.audit_events
     ORDER BY occurred_at DESC
     LIMIT 10
   `));
@@ -76,7 +76,7 @@ async function usageLast24h() {
       COALESCE(sum(output_tokens), 0)::int AS output_tokens,
       COALESCE(sum(cached_tokens), 0)::int AS cached_tokens,
       COALESCE(sum(cost_usd), 0)::text AS cost_usd
-    FROM kortix.usage_events
+    FROM agentica.usage_events
     WHERE created_at >= now() - interval '24 hours'
     GROUP BY provider
     ORDER BY calls DESC
@@ -132,26 +132,26 @@ opsApp.openapi(
     usage,
     recentAudit,
   ] = await Promise.all([
-    oneCount(sql`SELECT count(*)::int AS count FROM kortix.accounts`),
-    oneCount(sql`SELECT count(*)::int AS count FROM kortix.projects`),
+    oneCount(sql`SELECT count(*)::int AS count FROM agentica.accounts`),
+    oneCount(sql`SELECT count(*)::int AS count FROM agentica.projects`),
     oneCount(sql`
       SELECT count(*)::int AS count
-      FROM kortix.sandboxes
+      FROM agentica.sandboxes
       WHERE status IN ('provisioning', 'active', 'stopped', 'error')
     `),
     groupCounts(sql`
       SELECT status AS key, count(*)::int AS count
-      FROM kortix.project_sessions
+      FROM agentica.project_sessions
       GROUP BY status
     `),
     groupCounts(sql`
       SELECT status AS key, count(*)::int AS count
-      FROM kortix.session_sandboxes
+      FROM agentica.session_sandboxes
       GROUP BY status
     `),
     groupCounts(sql`
       SELECT provider AS key, count(*)::int AS count
-      FROM kortix.session_sandboxes
+      FROM agentica.session_sandboxes
       GROUP BY provider
     `),
     // Triggers are file-defined (kortix.toml) now; the project_trigger_events
@@ -160,12 +160,12 @@ opsApp.openapi(
     Promise.resolve<Record<string, number>>({}),
     oneCount(sql`
       SELECT count(*)::int AS count
-      FROM kortix.audit_events
+      FROM agentica.audit_events
       WHERE occurred_at >= now() - interval '24 hours'
     `),
     groupCounts(sql`
       SELECT status AS key, count(*)::int AS count
-      FROM kortix.legacy_sandbox_migrations
+      FROM agentica.legacy_sandbox_migrations
       GROUP BY status
     `),
     usageLast24h(),

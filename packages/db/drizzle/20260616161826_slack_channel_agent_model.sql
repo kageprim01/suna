@@ -1,2 +1,2 @@
-ALTER TABLE "kortix"."chat_channel_bindings" ADD COLUMN "agent_name" varchar(128);--> statement-breakpoint
-ALTER TABLE "kortix"."chat_channel_bindings" ADD COLUMN "opencode_model" varchar(128);
+ALTER TABLE "agentica"."chat_channel_bindings" ADD COLUMN "agent_name" varchar(128);--> statement-breakpoint
+ALTER TABLE "agentica"."chat_channel_bindings" ADD COLUMN "opencode_model" varchar(128);

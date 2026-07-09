@@ -1,38 +1,38 @@
-CREATE SCHEMA "kortix";
+CREATE SCHEMA "agentica";
 --> statement-breakpoint
-CREATE TYPE "kortix"."access_request_status" AS ENUM('pending', 'approved', 'rejected');--> statement-breakpoint
-CREATE TYPE "kortix"."account_group_source" AS ENUM('manual', 'scim');--> statement-breakpoint
-CREATE TYPE "kortix"."account_role" AS ENUM('owner', 'admin', 'member');--> statement-breakpoint
-CREATE TYPE "kortix"."api_key_status" AS ENUM('active', 'revoked', 'expired');--> statement-breakpoint
-CREATE TYPE "kortix"."api_key_type" AS ENUM('user', 'sandbox');--> statement-breakpoint
-CREATE TYPE "kortix"."change_request_status" AS ENUM('open', 'merged', 'closed');--> statement-breakpoint
-CREATE TYPE "kortix"."deployment_source" AS ENUM('git', 'code', 'files', 'tar');--> statement-breakpoint
-CREATE TYPE "kortix"."deployment_status" AS ENUM('pending', 'building', 'deploying', 'active', 'failed', 'stopped');--> statement-breakpoint
-CREATE TYPE "kortix"."executor_connector_provider" AS ENUM('pipedream', 'mcp', 'openapi', 'graphql', 'http');--> statement-breakpoint
-CREATE TYPE "kortix"."executor_connector_status" AS ENUM('active', 'disabled', 'needs_auth', 'error');--> statement-breakpoint
-CREATE TYPE "kortix"."executor_credential_mode" AS ENUM('shared', 'per_user');--> statement-breakpoint
-CREATE TYPE "kortix"."executor_default_mode" AS ENUM('risk', 'allow_all');--> statement-breakpoint
-CREATE TYPE "kortix"."executor_execution_status" AS ENUM('ok', 'error', 'denied', 'pending_approval');--> statement-breakpoint
-CREATE TYPE "kortix"."executor_policy_action" AS ENUM('always_run', 'require_approval', 'block');--> statement-breakpoint
-CREATE TYPE "kortix"."executor_risk" AS ENUM('read', 'write', 'destructive');--> statement-breakpoint
-CREATE TYPE "kortix"."platform_role" AS ENUM('user', 'admin', 'super_admin');--> statement-breakpoint
-CREATE TYPE "kortix"."project_role" AS ENUM('manager', 'editor', 'viewer');--> statement-breakpoint
-CREATE TYPE "kortix"."project_secret_scope" AS ENUM('runtime', 'connector');--> statement-breakpoint
-CREATE TYPE "kortix"."project_session_status" AS ENUM('queued', 'branching', 'provisioning', 'running', 'stopped', 'failed', 'completed');--> statement-breakpoint
-CREATE TYPE "kortix"."project_session_visibility" AS ENUM('private', 'project', 'restricted');--> statement-breakpoint
-CREATE TYPE "kortix"."project_status" AS ENUM('active', 'archived');--> statement-breakpoint
-CREATE TYPE "kortix"."sandbox_provider" AS ENUM('daytona', 'local_docker', 'justavps');--> statement-breakpoint
-CREATE TYPE "kortix"."sandbox_status" AS ENUM('provisioning', 'active', 'stopped', 'archived', 'pooled', 'error');--> statement-breakpoint
-CREATE TYPE "kortix"."scope_effect" AS ENUM('grant', 'revoke');--> statement-breakpoint
-CREATE TYPE "kortix"."secret_grant_principal" AS ENUM('member', 'group');--> statement-breakpoint
-CREATE TYPE "kortix"."secret_share_scope" AS ENUM('project', 'restricted');--> statement-breakpoint
-CREATE TYPE "kortix"."session_sandbox_status" AS ENUM('provisioning', 'active', 'stopped', 'error', 'archived');--> statement-breakpoint
-CREATE TYPE "kortix"."tunnel_capability" AS ENUM('filesystem', 'shell', 'network', 'apps', 'hardware', 'desktop', 'gpu');--> statement-breakpoint
-CREATE TYPE "kortix"."tunnel_device_auth_status" AS ENUM('pending', 'approved', 'denied', 'expired');--> statement-breakpoint
-CREATE TYPE "kortix"."tunnel_permission_request_status" AS ENUM('pending', 'approved', 'denied', 'expired');--> statement-breakpoint
-CREATE TYPE "kortix"."tunnel_permission_status" AS ENUM('active', 'revoked', 'expired');--> statement-breakpoint
-CREATE TYPE "kortix"."tunnel_status" AS ENUM('online', 'offline', 'connecting');--> statement-breakpoint
-CREATE TABLE "kortix"."access_allowlist" (
+CREATE TYPE "agentica"."access_request_status" AS ENUM('pending', 'approved', 'rejected');--> statement-breakpoint
+CREATE TYPE "agentica"."account_group_source" AS ENUM('manual', 'scim');--> statement-breakpoint
+CREATE TYPE "agentica"."account_role" AS ENUM('owner', 'admin', 'member');--> statement-breakpoint
+CREATE TYPE "agentica"."api_key_status" AS ENUM('active', 'revoked', 'expired');--> statement-breakpoint
+CREATE TYPE "agentica"."api_key_type" AS ENUM('user', 'sandbox');--> statement-breakpoint
+CREATE TYPE "agentica"."change_request_status" AS ENUM('open', 'merged', 'closed');--> statement-breakpoint
+CREATE TYPE "agentica"."deployment_source" AS ENUM('git', 'code', 'files', 'tar');--> statement-breakpoint
+CREATE TYPE "agentica"."deployment_status" AS ENUM('pending', 'building', 'deploying', 'active', 'failed', 'stopped');--> statement-breakpoint
+CREATE TYPE "agentica"."executor_connector_provider" AS ENUM('pipedream', 'mcp', 'openapi', 'graphql', 'http');--> statement-breakpoint
+CREATE TYPE "agentica"."executor_connector_status" AS ENUM('active', 'disabled', 'needs_auth', 'error');--> statement-breakpoint
+CREATE TYPE "agentica"."executor_credential_mode" AS ENUM('shared', 'per_user');--> statement-breakpoint
+CREATE TYPE "agentica"."executor_default_mode" AS ENUM('risk', 'allow_all');--> statement-breakpoint
+CREATE TYPE "agentica"."executor_execution_status" AS ENUM('ok', 'error', 'denied', 'pending_approval');--> statement-breakpoint
+CREATE TYPE "agentica"."executor_policy_action" AS ENUM('always_run', 'require_approval', 'block');--> statement-breakpoint
+CREATE TYPE "agentica"."executor_risk" AS ENUM('read', 'write', 'destructive');--> statement-breakpoint
+CREATE TYPE "agentica"."platform_role" AS ENUM('user', 'admin', 'super_admin');--> statement-breakpoint
+CREATE TYPE "agentica"."project_role" AS ENUM('manager', 'editor', 'viewer');--> statement-breakpoint
+CREATE TYPE "agentica"."project_secret_scope" AS ENUM('runtime', 'connector');--> statement-breakpoint
+CREATE TYPE "agentica"."project_session_status" AS ENUM('queued', 'branching', 'provisioning', 'running', 'stopped', 'failed', 'completed');--> statement-breakpoint
+CREATE TYPE "agentica"."project_session_visibility" AS ENUM('private', 'project', 'restricted');--> statement-breakpoint
+CREATE TYPE "agentica"."project_status" AS ENUM('active', 'archived');--> statement-breakpoint
+CREATE TYPE "agentica"."sandbox_provider" AS ENUM('daytona', 'local_docker', 'justavps');--> statement-breakpoint
+CREATE TYPE "agentica"."sandbox_status" AS ENUM('provisioning', 'active', 'stopped', 'archived', 'pooled', 'error');--> statement-breakpoint
+CREATE TYPE "agentica"."scope_effect" AS ENUM('grant', 'revoke');--> statement-breakpoint
+CREATE TYPE "agentica"."secret_grant_principal" AS ENUM('member', 'group');--> statement-breakpoint
+CREATE TYPE "agentica"."secret_share_scope" AS ENUM('project', 'restricted');--> statement-breakpoint
+CREATE TYPE "agentica"."session_sandbox_status" AS ENUM('provisioning', 'active', 'stopped', 'error', 'archived');--> statement-breakpoint
+CREATE TYPE "agentica"."tunnel_capability" AS ENUM('filesystem', 'shell', 'network', 'apps', 'hardware', 'desktop', 'gpu');--> statement-breakpoint
+CREATE TYPE "agentica"."tunnel_device_auth_status" AS ENUM('pending', 'approved', 'denied', 'expired');--> statement-breakpoint
+CREATE TYPE "agentica"."tunnel_permission_request_status" AS ENUM('pending', 'approved', 'denied', 'expired');--> statement-breakpoint
+CREATE TYPE "agentica"."tunnel_permission_status" AS ENUM('active', 'revoked', 'expired');--> statement-breakpoint
+CREATE TYPE "agentica"."tunnel_status" AS ENUM('online', 'offline', 'connecting');--> statement-breakpoint
+CREATE TABLE "agentica"."access_allowlist" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"entry_type" varchar(20) NOT NULL,
 	"value" varchar(255) NOT NULL,
@@ -40,17 +40,17 @@ CREATE TABLE "kortix"."access_allowlist" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."access_requests" (
+CREATE TABLE "agentica"."access_requests" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"email" varchar(255) NOT NULL,
 	"company" varchar(255),
 	"use_case" text,
-	"status" "kortix"."access_request_status" DEFAULT 'pending' NOT NULL,
+	"status" "agentica"."access_request_status" DEFAULT 'pending' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."account_deletion_requests" (
+CREATE TABLE "agentica"."account_deletion_requests" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE "kortix"."account_deletion_requests" (
 	"cancelled_at" timestamp with time zone
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."account_github_installation_states" (
+CREATE TABLE "agentica"."account_github_installation_states" (
 	"state_nonce" text PRIMARY KEY NOT NULL,
 	"account_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE "kortix"."account_github_installation_states" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."account_github_installations" (
+CREATE TABLE "agentica"."account_github_installations" (
 	"installation_row_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"installation_id" text NOT NULL,
@@ -85,7 +85,7 @@ CREATE TABLE "kortix"."account_github_installations" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."account_group_members" (
+CREATE TABLE "agentica"."account_group_members" (
 	"group_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
 	"added_by" uuid,
@@ -93,41 +93,41 @@ CREATE TABLE "kortix"."account_group_members" (
 	CONSTRAINT "account_group_members_group_id_user_id_pk" PRIMARY KEY("group_id","user_id")
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."account_groups" (
+CREATE TABLE "agentica"."account_groups" (
 	"group_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"name" varchar(128) NOT NULL,
 	"description" text,
-	"source" "kortix"."account_group_source" DEFAULT 'manual' NOT NULL,
+	"source" "agentica"."account_group_source" DEFAULT 'manual' NOT NULL,
 	"external_id" text,
 	"created_by" uuid,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."account_invitations" (
+CREATE TABLE "agentica"."account_invitations" (
 	"invite_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"email" varchar(255) NOT NULL,
 	"invited_by" uuid,
-	"initial_role" "kortix"."account_role" DEFAULT 'member' NOT NULL,
+	"initial_role" "agentica"."account_role" DEFAULT 'member' NOT NULL,
 	"bootstrap_grants" jsonb,
 	"accepted_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"expires_at" timestamp with time zone DEFAULT now() + interval '14 days' NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."account_members" (
+CREATE TABLE "agentica"."account_members" (
 	"user_id" uuid NOT NULL,
 	"account_id" uuid NOT NULL,
-	"account_role" "kortix"."account_role" DEFAULT 'owner' NOT NULL,
+	"account_role" "agentica"."account_role" DEFAULT 'owner' NOT NULL,
 	"is_super_admin" boolean DEFAULT false NOT NULL,
 	"scim_external_id" text,
 	"joined_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "account_members_user_id_account_id_pk" PRIMARY KEY("user_id","account_id")
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."account_session_activity" (
+CREATE TABLE "agentica"."account_session_activity" (
 	"account_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
 	"session_id" uuid NOT NULL,
@@ -141,7 +141,7 @@ CREATE TABLE "kortix"."account_session_activity" (
 	CONSTRAINT "account_session_activity_account_id_user_id_session_id_pk" PRIMARY KEY("account_id","user_id","session_id")
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."account_sso_group_mappings" (
+CREATE TABLE "agentica"."account_sso_group_mappings" (
 	"mapping_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"sso_provider_id" uuid NOT NULL,
@@ -151,7 +151,7 @@ CREATE TABLE "kortix"."account_sso_group_mappings" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."account_sso_providers" (
+CREATE TABLE "agentica"."account_sso_providers" (
 	"sso_provider_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"supabase_sso_provider_id" uuid NOT NULL,
@@ -164,7 +164,7 @@ CREATE TABLE "kortix"."account_sso_providers" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."account_tokens" (
+CREATE TABLE "agentica"."account_tokens" (
 	"token_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
@@ -172,14 +172,14 @@ CREATE TABLE "kortix"."account_tokens" (
 	"name" varchar(255) NOT NULL,
 	"public_key" varchar(64) NOT NULL,
 	"secret_key_hash" varchar(128) NOT NULL,
-	"status" "kortix"."api_key_status" DEFAULT 'active' NOT NULL,
+	"status" "agentica"."api_key_status" DEFAULT 'active' NOT NULL,
 	"expires_at" timestamp with time zone,
 	"last_used_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"revoked_at" timestamp with time zone
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."accounts" (
+CREATE TABLE "agentica"."accounts" (
 	"account_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"setup_complete_at" timestamp with time zone,
@@ -194,7 +194,7 @@ CREATE TABLE "kortix"."accounts" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."audit_events" (
+CREATE TABLE "agentica"."audit_events" (
 	"event_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid,
 	"actor_user_id" uuid,
@@ -209,7 +209,7 @@ CREATE TABLE "kortix"."audit_events" (
 	"occurred_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."audit_webhooks" (
+CREATE TABLE "agentica"."audit_webhooks" (
 	"webhook_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"url" text NOT NULL,
@@ -225,7 +225,7 @@ CREATE TABLE "kortix"."audit_webhooks" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."billing_customers" (
+CREATE TABLE "agentica"."billing_customers" (
 	"account_id" uuid NOT NULL,
 	"id" text PRIMARY KEY NOT NULL,
 	"email" text,
@@ -233,7 +233,7 @@ CREATE TABLE "kortix"."billing_customers" (
 	"provider" text
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."change_requests" (
+CREATE TABLE "agentica"."change_requests" (
 	"cr_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"project_id" uuid NOT NULL,
@@ -242,7 +242,7 @@ CREATE TABLE "kortix"."change_requests" (
 	"description" text DEFAULT '' NOT NULL,
 	"base_ref" text NOT NULL,
 	"head_ref" text NOT NULL,
-	"status" "kortix"."change_request_status" DEFAULT 'open' NOT NULL,
+	"status" "agentica"."change_request_status" DEFAULT 'open' NOT NULL,
 	"head_commit_sha" text,
 	"base_commit_sha" text,
 	"origin_session_id" text,
@@ -257,7 +257,7 @@ CREATE TABLE "kortix"."change_requests" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."chat_channel_bindings" (
+CREATE TABLE "agentica"."chat_channel_bindings" (
 	"binding_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"project_id" uuid,
 	"platform" varchar(32) NOT NULL,
@@ -269,12 +269,12 @@ CREATE TABLE "kortix"."chat_channel_bindings" (
 	"installed_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."chat_event_dedup" (
+CREATE TABLE "agentica"."chat_event_dedup" (
 	"event_id" text PRIMARY KEY NOT NULL,
 	"expires_at" timestamp with time zone NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."chat_installs" (
+CREATE TABLE "agentica"."chat_installs" (
 	"install_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"platform" varchar(32) NOT NULL,
 	"workspace_id" varchar(128) NOT NULL,
@@ -282,7 +282,7 @@ CREATE TABLE "kortix"."chat_installs" (
 	"connected_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."chat_threads" (
+CREATE TABLE "agentica"."chat_threads" (
 	"thread_row_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"project_id" uuid NOT NULL,
 	"platform" varchar(32) NOT NULL,
@@ -293,7 +293,7 @@ CREATE TABLE "kortix"."chat_threads" (
 	"last_message_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."chat_turn_streams" (
+CREATE TABLE "agentica"."chat_turn_streams" (
 	"session_id" text PRIMARY KEY NOT NULL,
 	"project_id" uuid NOT NULL,
 	"team_id" varchar(128) NOT NULL,
@@ -309,7 +309,7 @@ CREATE TABLE "kortix"."chat_turn_streams" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."credit_accounts" (
+CREATE TABLE "agentica"."credit_accounts" (
 	"account_id" uuid PRIMARY KEY NOT NULL,
 	"balance" numeric(12, 4) DEFAULT '0' NOT NULL,
 	"lifetime_granted" numeric(12, 4) DEFAULT '0' NOT NULL,
@@ -365,7 +365,7 @@ CREATE TABLE "kortix"."credit_accounts" (
 	"auto_topup_disabled_reason" text
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."credit_ledger" (
+CREATE TABLE "agentica"."credit_ledger" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"amount" numeric(12, 4) NOT NULL,
@@ -385,7 +385,7 @@ CREATE TABLE "kortix"."credit_ledger" (
 	CONSTRAINT "kortix_unique_stripe_event" UNIQUE("stripe_event_id")
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."credit_purchases" (
+CREATE TABLE "agentica"."credit_purchases" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"amount_dollars" numeric(10, 2) NOT NULL,
@@ -401,7 +401,7 @@ CREATE TABLE "kortix"."credit_purchases" (
 	"revenuecat_product_id" varchar(255)
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."credit_usage" (
+CREATE TABLE "agentica"."credit_usage" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"amount_dollars" numeric(10, 2) NOT NULL,
@@ -412,7 +412,7 @@ CREATE TABLE "kortix"."credit_usage" (
 	"metadata" jsonb DEFAULT '{}'::jsonb
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."deployments" (
+CREATE TABLE "agentica"."deployments" (
 	"deployment_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"sandbox_id" uuid,
@@ -420,8 +420,8 @@ CREATE TABLE "kortix"."deployments" (
 	"app_slug" varchar(128),
 	"provider" varchar(32),
 	"freestyle_id" text,
-	"status" "kortix"."deployment_status" DEFAULT 'pending' NOT NULL,
-	"source_type" "kortix"."deployment_source" NOT NULL,
+	"status" "agentica"."deployment_status" DEFAULT 'pending' NOT NULL,
+	"source_type" "agentica"."deployment_source" NOT NULL,
 	"source_ref" text,
 	"framework" varchar(50),
 	"domains" jsonb DEFAULT '[]'::jsonb,
@@ -436,7 +436,7 @@ CREATE TABLE "kortix"."deployments" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."executor_connector_actions" (
+CREATE TABLE "agentica"."executor_connector_actions" (
 	"action_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"connector_id" uuid NOT NULL,
 	"path" varchar(512) NOT NULL,
@@ -444,50 +444,50 @@ CREATE TABLE "kortix"."executor_connector_actions" (
 	"description" text,
 	"input_schema" jsonb,
 	"output_schema" jsonb,
-	"risk" "kortix"."executor_risk" DEFAULT 'read' NOT NULL,
+	"risk" "agentica"."executor_risk" DEFAULT 'read' NOT NULL,
 	"binding" jsonb DEFAULT '{}'::jsonb NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."executor_connector_grants" (
+CREATE TABLE "agentica"."executor_connector_grants" (
 	"grant_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"connector_id" uuid NOT NULL,
-	"principal_type" "kortix"."secret_grant_principal" NOT NULL,
+	"principal_type" "agentica"."secret_grant_principal" NOT NULL,
 	"principal_id" uuid NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."executor_connector_policies" (
+CREATE TABLE "agentica"."executor_connector_policies" (
 	"policy_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"connector_id" uuid NOT NULL,
 	"match" varchar(512) NOT NULL,
-	"action" "kortix"."executor_policy_action" NOT NULL,
+	"action" "agentica"."executor_policy_action" NOT NULL,
 	"position" integer DEFAULT 0 NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."executor_connectors" (
+CREATE TABLE "agentica"."executor_connectors" (
 	"connector_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"project_id" uuid NOT NULL,
 	"slug" varchar(128) NOT NULL,
 	"name" varchar(255) NOT NULL,
-	"provider_type" "kortix"."executor_connector_provider" NOT NULL,
+	"provider_type" "agentica"."executor_connector_provider" NOT NULL,
 	"enabled" boolean DEFAULT true NOT NULL,
 	"config" jsonb DEFAULT '{}'::jsonb NOT NULL,
 	"auth_secret" varchar(64),
-	"share_scope" "kortix"."secret_share_scope" DEFAULT 'project' NOT NULL,
-	"credential_mode" "kortix"."executor_credential_mode" DEFAULT 'shared' NOT NULL,
+	"share_scope" "agentica"."secret_share_scope" DEFAULT 'project' NOT NULL,
+	"credential_mode" "agentica"."executor_credential_mode" DEFAULT 'shared' NOT NULL,
 	"manifest_hash" varchar(64),
-	"status" "kortix"."executor_connector_status" DEFAULT 'active' NOT NULL,
+	"status" "agentica"."executor_connector_status" DEFAULT 'active' NOT NULL,
 	"last_error" text,
 	"last_synced_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."executor_credentials" (
+CREATE TABLE "agentica"."executor_credentials" (
 	"credential_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"connector_id" uuid NOT NULL,
 	"user_id" uuid,
@@ -498,7 +498,7 @@ CREATE TABLE "kortix"."executor_credentials" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."executor_executions" (
+CREATE TABLE "agentica"."executor_executions" (
 	"execution_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"project_id" uuid NOT NULL,
@@ -506,8 +506,8 @@ CREATE TABLE "kortix"."executor_executions" (
 	"action_path" varchar(512) NOT NULL,
 	"acting_user_id" uuid,
 	"session_id" uuid,
-	"status" "kortix"."executor_execution_status" NOT NULL,
-	"risk" "kortix"."executor_risk",
+	"status" "agentica"."executor_execution_status" NOT NULL,
+	"risk" "agentica"."executor_risk",
 	"request_digest" varchar(64),
 	"result_summary" jsonb,
 	"approved_by" uuid,
@@ -515,22 +515,22 @@ CREATE TABLE "kortix"."executor_executions" (
 	"resolved_at" timestamp with time zone
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."executor_project_policies" (
+CREATE TABLE "agentica"."executor_project_policies" (
 	"policy_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"project_id" uuid NOT NULL,
 	"match" varchar(512) NOT NULL,
-	"action" "kortix"."executor_policy_action" NOT NULL,
+	"action" "agentica"."executor_policy_action" NOT NULL,
 	"position" integer DEFAULT 0 NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."executor_project_settings" (
+CREATE TABLE "agentica"."executor_project_settings" (
 	"project_id" uuid PRIMARY KEY NOT NULL,
-	"default_mode" "kortix"."executor_default_mode" DEFAULT 'allow_all' NOT NULL,
+	"default_mode" "agentica"."executor_default_mode" DEFAULT 'allow_all' NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."api_keys" (
+CREATE TABLE "agentica"."api_keys" (
 	"key_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"sandbox_id" uuid NOT NULL,
 	"account_id" uuid NOT NULL,
@@ -538,14 +538,14 @@ CREATE TABLE "kortix"."api_keys" (
 	"secret_key_hash" varchar(128) NOT NULL,
 	"title" varchar(255) NOT NULL,
 	"description" text,
-	"type" "kortix"."api_key_type" DEFAULT 'user' NOT NULL,
-	"status" "kortix"."api_key_status" DEFAULT 'active' NOT NULL,
+	"type" "agentica"."api_key_type" DEFAULT 'user' NOT NULL,
+	"status" "agentica"."api_key_status" DEFAULT 'active' NOT NULL,
 	"expires_at" timestamp with time zone,
 	"last_used_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."legacy_sandbox_migrations" (
+CREATE TABLE "agentica"."legacy_sandbox_migrations" (
 	"migration_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"run_id" text NOT NULL,
 	"sandbox_id" uuid NOT NULL,
@@ -570,7 +570,7 @@ CREATE TABLE "kortix"."legacy_sandbox_migrations" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."oauth_access_tokens" (
+CREATE TABLE "agentica"."oauth_access_tokens" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"token_hash" varchar(128) NOT NULL,
 	"client_id" uuid NOT NULL,
@@ -582,7 +582,7 @@ CREATE TABLE "kortix"."oauth_access_tokens" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."oauth_authorization_codes" (
+CREATE TABLE "agentica"."oauth_authorization_codes" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"code" varchar(128) NOT NULL,
 	"client_id" uuid NOT NULL,
@@ -597,7 +597,7 @@ CREATE TABLE "kortix"."oauth_authorization_codes" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."oauth_clients" (
+CREATE TABLE "agentica"."oauth_clients" (
 	"client_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"client_secret_hash" varchar(128) NOT NULL,
 	"name" varchar(255) NOT NULL,
@@ -607,7 +607,7 @@ CREATE TABLE "kortix"."oauth_clients" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."oauth_refresh_tokens" (
+CREATE TABLE "agentica"."oauth_refresh_tokens" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"token_hash" varchar(128) NOT NULL,
 	"access_token_id" uuid NOT NULL,
@@ -619,23 +619,23 @@ CREATE TABLE "kortix"."oauth_refresh_tokens" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."platform_settings" (
+CREATE TABLE "agentica"."platform_settings" (
 	"key" varchar(255) PRIMARY KEY NOT NULL,
 	"value" jsonb NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."platform_user_roles" (
+CREATE TABLE "agentica"."platform_user_roles" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
-	"role" "kortix"."platform_role" DEFAULT 'user' NOT NULL,
+	"role" "agentica"."platform_role" DEFAULT 'user' NOT NULL,
 	"granted_by" uuid,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."pool_resources" (
+CREATE TABLE "agentica"."pool_resources" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"provider" "kortix"."sandbox_provider" NOT NULL,
+	"provider" "agentica"."sandbox_provider" NOT NULL,
 	"server_type" varchar(64) NOT NULL,
 	"location" varchar(64) NOT NULL,
 	"desired_count" integer DEFAULT 2 NOT NULL,
@@ -644,10 +644,10 @@ CREATE TABLE "kortix"."pool_resources" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."pool_sandboxes" (
+CREATE TABLE "agentica"."pool_sandboxes" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"resource_id" uuid,
-	"provider" "kortix"."sandbox_provider" NOT NULL,
+	"provider" "agentica"."sandbox_provider" NOT NULL,
 	"external_id" text NOT NULL,
 	"base_url" text DEFAULT '' NOT NULL,
 	"server_type" varchar(64) NOT NULL,
@@ -658,7 +658,7 @@ CREATE TABLE "kortix"."pool_sandboxes" (
 	"ready_at" timestamp with time zone
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."project_git_connections" (
+CREATE TABLE "agentica"."project_git_connections" (
 	"connection_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"project_id" uuid NOT NULL,
@@ -685,7 +685,7 @@ CREATE TABLE "kortix"."project_git_connections" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."project_git_credentials" (
+CREATE TABLE "agentica"."project_git_credentials" (
 	"credential_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"project_id" uuid NOT NULL,
@@ -697,11 +697,11 @@ CREATE TABLE "kortix"."project_git_credentials" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."project_group_grants" (
+CREATE TABLE "agentica"."project_group_grants" (
 	"project_id" uuid NOT NULL,
 	"group_id" uuid NOT NULL,
 	"account_id" uuid NOT NULL,
-	"role" "kortix"."project_role" DEFAULT 'viewer' NOT NULL,
+	"role" "agentica"."project_role" DEFAULT 'viewer' NOT NULL,
 	"granted_by" uuid,
 	"expires_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
@@ -709,32 +709,32 @@ CREATE TABLE "kortix"."project_group_grants" (
 	CONSTRAINT "project_group_grants_project_id_group_id_pk" PRIMARY KEY("project_id","group_id")
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."project_members" (
+CREATE TABLE "agentica"."project_members" (
 	"account_id" uuid NOT NULL,
 	"project_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
-	"project_role" "kortix"."project_role" DEFAULT 'viewer' NOT NULL,
+	"project_role" "agentica"."project_role" DEFAULT 'viewer' NOT NULL,
 	"granted_by" uuid,
 	"expires_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."project_secret_grants" (
+CREATE TABLE "agentica"."project_secret_grants" (
 	"grant_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"secret_id" uuid NOT NULL,
-	"principal_type" "kortix"."secret_grant_principal" NOT NULL,
+	"principal_type" "agentica"."secret_grant_principal" NOT NULL,
 	"principal_id" uuid NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."project_secrets" (
+CREATE TABLE "agentica"."project_secrets" (
 	"secret_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"project_id" uuid NOT NULL,
 	"name" varchar(64) NOT NULL,
 	"value_enc" text NOT NULL,
-	"scope" "kortix"."project_secret_scope" DEFAULT 'runtime' NOT NULL,
-	"share_scope" "kortix"."secret_share_scope" DEFAULT 'project' NOT NULL,
+	"scope" "agentica"."project_secret_scope" DEFAULT 'runtime' NOT NULL,
+	"share_scope" "agentica"."secret_share_scope" DEFAULT 'project' NOT NULL,
 	"owner_user_id" uuid,
 	"active" boolean DEFAULT true NOT NULL,
 	"created_by" uuid,
@@ -742,35 +742,35 @@ CREATE TABLE "kortix"."project_secrets" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."project_session_grants" (
+CREATE TABLE "agentica"."project_session_grants" (
 	"grant_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"session_id" text NOT NULL,
-	"principal_type" "kortix"."secret_grant_principal" NOT NULL,
+	"principal_type" "agentica"."secret_grant_principal" NOT NULL,
 	"principal_id" uuid NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."project_sessions" (
+CREATE TABLE "agentica"."project_sessions" (
 	"session_id" text PRIMARY KEY NOT NULL,
 	"account_id" uuid NOT NULL,
 	"project_id" uuid NOT NULL,
 	"branch_name" text NOT NULL,
 	"base_ref" text DEFAULT 'main' NOT NULL,
-	"sandbox_provider" "kortix"."sandbox_provider" DEFAULT 'daytona' NOT NULL,
+	"sandbox_provider" "agentica"."sandbox_provider" DEFAULT 'daytona' NOT NULL,
 	"sandbox_id" text,
 	"sandbox_url" text,
 	"opencode_session_id" text,
 	"agent_name" text DEFAULT 'default' NOT NULL,
-	"status" "kortix"."project_session_status" DEFAULT 'queued' NOT NULL,
+	"status" "agentica"."project_session_status" DEFAULT 'queued' NOT NULL,
 	"error" text,
 	"created_by" uuid,
-	"visibility" "kortix"."project_session_visibility" DEFAULT 'private' NOT NULL,
+	"visibility" "agentica"."project_session_visibility" DEFAULT 'private' NOT NULL,
 	"metadata" jsonb DEFAULT '{}'::jsonb,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."project_snapshot_builds" (
+CREATE TABLE "agentica"."project_snapshot_builds" (
 	"build_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"project_id" uuid NOT NULL,
@@ -786,7 +786,7 @@ CREATE TABLE "kortix"."project_snapshot_builds" (
 	"finished_at" timestamp with time zone
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."project_trigger_runtime" (
+CREATE TABLE "agentica"."project_trigger_runtime" (
 	"project_id" uuid NOT NULL,
 	"slug" varchar(128) NOT NULL,
 	"last_fired_at" timestamp with time zone,
@@ -794,21 +794,21 @@ CREATE TABLE "kortix"."project_trigger_runtime" (
 	CONSTRAINT "project_trigger_runtime_project_id_slug_pk" PRIMARY KEY("project_id","slug")
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."projects" (
+CREATE TABLE "agentica"."projects" (
 	"project_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"repo_url" text NOT NULL,
 	"default_branch" varchar(255) DEFAULT 'main' NOT NULL,
 	"manifest_path" text DEFAULT 'kortix.toml' NOT NULL,
-	"status" "kortix"."project_status" DEFAULT 'active' NOT NULL,
+	"status" "agentica"."project_status" DEFAULT 'active' NOT NULL,
 	"metadata" jsonb DEFAULT '{}'::jsonb,
 	"last_opened_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."sandbox_compute_sessions" (
+CREATE TABLE "agentica"."sandbox_compute_sessions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"sandbox_id" uuid NOT NULL,
@@ -829,28 +829,28 @@ CREATE TABLE "kortix"."sandbox_compute_sessions" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."sandbox_invites" (
+CREATE TABLE "agentica"."sandbox_invites" (
 	"invite_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"sandbox_id" uuid NOT NULL,
 	"account_id" uuid NOT NULL,
 	"email" varchar(255) NOT NULL,
 	"invited_by" uuid,
-	"initial_role" "kortix"."account_role" DEFAULT 'member' NOT NULL,
+	"initial_role" "agentica"."account_role" DEFAULT 'member' NOT NULL,
 	"accepted_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"expires_at" timestamp with time zone DEFAULT now() + interval '14 days' NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."sandbox_member_scopes" (
+CREATE TABLE "agentica"."sandbox_member_scopes" (
 	"sandbox_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
 	"scope" text NOT NULL,
-	"effect" "kortix"."scope_effect" NOT NULL,
+	"effect" "agentica"."scope_effect" NOT NULL,
 	"granted_by" uuid,
 	"granted_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."sandbox_members" (
+CREATE TABLE "agentica"."sandbox_members" (
 	"sandbox_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
 	"added_by" uuid,
@@ -860,7 +860,7 @@ CREATE TABLE "kortix"."sandbox_members" (
 	"current_period_start" bigint
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."sandbox_templates" (
+CREATE TABLE "agentica"."sandbox_templates" (
 	"template_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"project_id" uuid,
 	"account_id" uuid,
@@ -886,13 +886,13 @@ CREATE TABLE "kortix"."sandbox_templates" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."sandboxes" (
+CREATE TABLE "agentica"."sandboxes" (
 	"sandbox_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"name" varchar(255) NOT NULL,
-	"provider" "kortix"."sandbox_provider" DEFAULT 'daytona' NOT NULL,
+	"provider" "agentica"."sandbox_provider" DEFAULT 'daytona' NOT NULL,
 	"external_id" text,
-	"status" "kortix"."sandbox_status" DEFAULT 'provisioning' NOT NULL,
+	"status" "agentica"."sandbox_status" DEFAULT 'provisioning' NOT NULL,
 	"base_url" text NOT NULL,
 	"config" jsonb DEFAULT '{}'::jsonb,
 	"metadata" jsonb DEFAULT '{}'::jsonb,
@@ -903,7 +903,7 @@ CREATE TABLE "kortix"."sandboxes" (
 	"stripe_subscription_item_id" text
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."scim_tokens" (
+CREATE TABLE "agentica"."scim_tokens" (
 	"token_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"name" varchar(128) NOT NULL,
@@ -916,21 +916,21 @@ CREATE TABLE "kortix"."scim_tokens" (
 	"expires_at" timestamp with time zone
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."server_entries" (
+CREATE TABLE "agentica"."server_entries" (
 	"entry_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"id" varchar(128) NOT NULL,
 	"account_id" uuid,
 	"label" varchar(255) NOT NULL,
 	"url" text NOT NULL,
 	"is_default" boolean DEFAULT false NOT NULL,
-	"provider" "kortix"."sandbox_provider",
+	"provider" "agentica"."sandbox_provider",
 	"sandbox_id" text,
 	"mapped_ports" jsonb,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."service_accounts" (
+CREATE TABLE "agentica"."service_accounts" (
 	"service_account_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"name" varchar(128) NOT NULL,
@@ -946,15 +946,15 @@ CREATE TABLE "kortix"."service_accounts" (
 	"disabled_by" uuid
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."session_sandboxes" (
+CREATE TABLE "agentica"."session_sandboxes" (
 	"sandbox_id" uuid PRIMARY KEY NOT NULL,
 	"session_id" text NOT NULL,
 	"account_id" uuid NOT NULL,
 	"project_id" uuid NOT NULL,
-	"provider" "kortix"."sandbox_provider" DEFAULT 'daytona' NOT NULL,
+	"provider" "agentica"."sandbox_provider" DEFAULT 'daytona' NOT NULL,
 	"external_id" text,
 	"base_url" text,
-	"status" "kortix"."session_sandbox_status" DEFAULT 'provisioning' NOT NULL,
+	"status" "agentica"."session_sandbox_status" DEFAULT 'provisioning' NOT NULL,
 	"config" jsonb DEFAULT '{}'::jsonb,
 	"metadata" jsonb DEFAULT '{}'::jsonb,
 	"pool_state" text,
@@ -964,17 +964,17 @@ CREATE TABLE "kortix"."session_sandboxes" (
 	CONSTRAINT "session_sandboxes_session_id_unique" UNIQUE("session_id")
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."stripe_webhook_events_processed" (
+CREATE TABLE "agentica"."stripe_webhook_events_processed" (
 	"event_id" text PRIMARY KEY NOT NULL,
 	"event_type" text NOT NULL,
 	"processed_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."tunnel_audit_logs" (
+CREATE TABLE "agentica"."tunnel_audit_logs" (
 	"log_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"tunnel_id" uuid NOT NULL,
 	"account_id" uuid NOT NULL,
-	"capability" "kortix"."tunnel_capability" NOT NULL,
+	"capability" "agentica"."tunnel_capability" NOT NULL,
 	"operation" varchar(100) NOT NULL,
 	"request_summary" jsonb DEFAULT '{}'::jsonb,
 	"success" boolean NOT NULL,
@@ -984,12 +984,12 @@ CREATE TABLE "kortix"."tunnel_audit_logs" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."tunnel_connections" (
+CREATE TABLE "agentica"."tunnel_connections" (
 	"tunnel_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"sandbox_id" uuid,
 	"name" varchar(255) NOT NULL,
-	"status" "kortix"."tunnel_status" DEFAULT 'offline' NOT NULL,
+	"status" "agentica"."tunnel_status" DEFAULT 'offline' NOT NULL,
 	"capabilities" jsonb DEFAULT '[]'::jsonb,
 	"machine_info" jsonb DEFAULT '{}'::jsonb,
 	"setup_token_hash" varchar(128),
@@ -998,11 +998,11 @@ CREATE TABLE "kortix"."tunnel_connections" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."tunnel_device_auth_requests" (
+CREATE TABLE "agentica"."tunnel_device_auth_requests" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"device_code" varchar(9) NOT NULL,
 	"device_secret_hash" varchar(128) NOT NULL,
-	"status" "kortix"."tunnel_device_auth_status" DEFAULT 'pending' NOT NULL,
+	"status" "agentica"."tunnel_device_auth_status" DEFAULT 'pending' NOT NULL,
 	"machine_hostname" varchar(255),
 	"account_id" uuid,
 	"tunnel_id" uuid,
@@ -1012,31 +1012,31 @@ CREATE TABLE "kortix"."tunnel_device_auth_requests" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."tunnel_permission_requests" (
+CREATE TABLE "agentica"."tunnel_permission_requests" (
 	"request_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"tunnel_id" uuid NOT NULL,
 	"account_id" uuid NOT NULL,
-	"capability" "kortix"."tunnel_capability" NOT NULL,
+	"capability" "agentica"."tunnel_capability" NOT NULL,
 	"requested_scope" jsonb DEFAULT '{}'::jsonb,
 	"reason" text,
-	"status" "kortix"."tunnel_permission_request_status" DEFAULT 'pending' NOT NULL,
+	"status" "agentica"."tunnel_permission_request_status" DEFAULT 'pending' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."tunnel_permissions" (
+CREATE TABLE "agentica"."tunnel_permissions" (
 	"permission_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"tunnel_id" uuid NOT NULL,
 	"account_id" uuid NOT NULL,
-	"capability" "kortix"."tunnel_capability" NOT NULL,
+	"capability" "agentica"."tunnel_capability" NOT NULL,
 	"scope" jsonb DEFAULT '{}'::jsonb,
-	"status" "kortix"."tunnel_permission_status" DEFAULT 'active' NOT NULL,
+	"status" "agentica"."tunnel_permission_status" DEFAULT 'active' NOT NULL,
 	"expires_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."usage_events" (
+CREATE TABLE "agentica"."usage_events" (
 	"event_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"account_id" uuid NOT NULL,
 	"project_id" uuid,
@@ -1056,14 +1056,14 @@ CREATE TABLE "kortix"."usage_events" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."worker_leader_lease" (
+CREATE TABLE "agentica"."worker_leader_lease" (
 	"lock_key" text PRIMARY KEY NOT NULL,
 	"owner_id" text NOT NULL,
 	"expires_at" timestamp with time zone NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."yolo_member_tokens" (
+CREATE TABLE "agentica"."yolo_member_tokens" (
 	"user_id" uuid NOT NULL,
 	"account_id" uuid NOT NULL,
 	"token_prefix" varchar(16) NOT NULL,
@@ -1074,255 +1074,255 @@ CREATE TABLE "kortix"."yolo_member_tokens" (
 	CONSTRAINT "yolo_member_tokens_user_id_account_id_pk" PRIMARY KEY("user_id","account_id")
 );
 --> statement-breakpoint
-ALTER TABLE "kortix"."account_github_installation_states" ADD CONSTRAINT "account_github_installation_states_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."account_github_installations" ADD CONSTRAINT "account_github_installations_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."account_group_members" ADD CONSTRAINT "account_group_members_group_id_account_groups_group_id_fk" FOREIGN KEY ("group_id") REFERENCES "kortix"."account_groups"("group_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."account_groups" ADD CONSTRAINT "account_groups_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."account_invitations" ADD CONSTRAINT "account_invitations_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."account_members" ADD CONSTRAINT "account_members_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."account_session_activity" ADD CONSTRAINT "account_session_activity_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."account_sso_group_mappings" ADD CONSTRAINT "account_sso_group_mappings_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."account_sso_group_mappings" ADD CONSTRAINT "account_sso_group_mappings_sso_provider_id_account_sso_providers_sso_provider_id_fk" FOREIGN KEY ("sso_provider_id") REFERENCES "kortix"."account_sso_providers"("sso_provider_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."account_sso_group_mappings" ADD CONSTRAINT "account_sso_group_mappings_group_id_account_groups_group_id_fk" FOREIGN KEY ("group_id") REFERENCES "kortix"."account_groups"("group_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."account_sso_providers" ADD CONSTRAINT "account_sso_providers_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."account_tokens" ADD CONSTRAINT "account_tokens_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."account_tokens" ADD CONSTRAINT "account_tokens_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."audit_events" ADD CONSTRAINT "audit_events_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."audit_webhooks" ADD CONSTRAINT "audit_webhooks_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."change_requests" ADD CONSTRAINT "change_requests_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."change_requests" ADD CONSTRAINT "change_requests_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."change_requests" ADD CONSTRAINT "change_requests_origin_session_id_project_sessions_session_id_fk" FOREIGN KEY ("origin_session_id") REFERENCES "kortix"."project_sessions"("session_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."chat_channel_bindings" ADD CONSTRAINT "chat_channel_bindings_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."chat_installs" ADD CONSTRAINT "chat_installs_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."chat_threads" ADD CONSTRAINT "chat_threads_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."chat_threads" ADD CONSTRAINT "chat_threads_session_id_project_sessions_session_id_fk" FOREIGN KEY ("session_id") REFERENCES "kortix"."project_sessions"("session_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."deployments" ADD CONSTRAINT "deployments_sandbox_id_sandboxes_sandbox_id_fk" FOREIGN KEY ("sandbox_id") REFERENCES "kortix"."sandboxes"("sandbox_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."executor_connector_actions" ADD CONSTRAINT "executor_connector_actions_connector_id_executor_connectors_connector_id_fk" FOREIGN KEY ("connector_id") REFERENCES "kortix"."executor_connectors"("connector_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."executor_connector_grants" ADD CONSTRAINT "executor_connector_grants_connector_id_executor_connectors_connector_id_fk" FOREIGN KEY ("connector_id") REFERENCES "kortix"."executor_connectors"("connector_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."executor_connector_policies" ADD CONSTRAINT "executor_connector_policies_connector_id_executor_connectors_connector_id_fk" FOREIGN KEY ("connector_id") REFERENCES "kortix"."executor_connectors"("connector_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."executor_connectors" ADD CONSTRAINT "executor_connectors_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."executor_connectors" ADD CONSTRAINT "executor_connectors_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."executor_credentials" ADD CONSTRAINT "executor_credentials_connector_id_executor_connectors_connector_id_fk" FOREIGN KEY ("connector_id") REFERENCES "kortix"."executor_connectors"("connector_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."executor_executions" ADD CONSTRAINT "executor_executions_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."executor_executions" ADD CONSTRAINT "executor_executions_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."executor_executions" ADD CONSTRAINT "executor_executions_connector_id_executor_connectors_connector_id_fk" FOREIGN KEY ("connector_id") REFERENCES "kortix"."executor_connectors"("connector_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."executor_project_policies" ADD CONSTRAINT "executor_project_policies_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."executor_project_settings" ADD CONSTRAINT "executor_project_settings_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."oauth_access_tokens" ADD CONSTRAINT "oauth_access_tokens_client_id_oauth_clients_client_id_fk" FOREIGN KEY ("client_id") REFERENCES "kortix"."oauth_clients"("client_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."oauth_authorization_codes" ADD CONSTRAINT "oauth_authorization_codes_client_id_oauth_clients_client_id_fk" FOREIGN KEY ("client_id") REFERENCES "kortix"."oauth_clients"("client_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."oauth_refresh_tokens" ADD CONSTRAINT "oauth_refresh_tokens_access_token_id_oauth_access_tokens_id_fk" FOREIGN KEY ("access_token_id") REFERENCES "kortix"."oauth_access_tokens"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."oauth_refresh_tokens" ADD CONSTRAINT "oauth_refresh_tokens_client_id_oauth_clients_client_id_fk" FOREIGN KEY ("client_id") REFERENCES "kortix"."oauth_clients"("client_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."pool_sandboxes" ADD CONSTRAINT "pool_sandboxes_resource_id_pool_resources_id_fk" FOREIGN KEY ("resource_id") REFERENCES "kortix"."pool_resources"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_git_connections" ADD CONSTRAINT "project_git_connections_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_git_connections" ADD CONSTRAINT "project_git_connections_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_git_credentials" ADD CONSTRAINT "project_git_credentials_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_git_credentials" ADD CONSTRAINT "project_git_credentials_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_group_grants" ADD CONSTRAINT "project_group_grants_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_group_grants" ADD CONSTRAINT "project_group_grants_group_id_account_groups_group_id_fk" FOREIGN KEY ("group_id") REFERENCES "kortix"."account_groups"("group_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_group_grants" ADD CONSTRAINT "project_group_grants_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_members" ADD CONSTRAINT "project_members_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_members" ADD CONSTRAINT "project_members_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_secret_grants" ADD CONSTRAINT "project_secret_grants_secret_id_project_secrets_secret_id_fk" FOREIGN KEY ("secret_id") REFERENCES "kortix"."project_secrets"("secret_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_secrets" ADD CONSTRAINT "project_secrets_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_session_grants" ADD CONSTRAINT "project_session_grants_session_id_project_sessions_session_id_fk" FOREIGN KEY ("session_id") REFERENCES "kortix"."project_sessions"("session_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_sessions" ADD CONSTRAINT "project_sessions_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_sessions" ADD CONSTRAINT "project_sessions_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_snapshot_builds" ADD CONSTRAINT "project_snapshot_builds_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_snapshot_builds" ADD CONSTRAINT "project_snapshot_builds_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_trigger_runtime" ADD CONSTRAINT "project_trigger_runtime_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."projects" ADD CONSTRAINT "projects_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."sandbox_invites" ADD CONSTRAINT "sandbox_invites_sandbox_id_sandboxes_sandbox_id_fk" FOREIGN KEY ("sandbox_id") REFERENCES "kortix"."sandboxes"("sandbox_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."sandbox_member_scopes" ADD CONSTRAINT "sandbox_member_scopes_sandbox_id_sandboxes_sandbox_id_fk" FOREIGN KEY ("sandbox_id") REFERENCES "kortix"."sandboxes"("sandbox_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."sandbox_members" ADD CONSTRAINT "sandbox_members_sandbox_id_sandboxes_sandbox_id_fk" FOREIGN KEY ("sandbox_id") REFERENCES "kortix"."sandboxes"("sandbox_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."sandbox_templates" ADD CONSTRAINT "sandbox_templates_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."sandbox_templates" ADD CONSTRAINT "sandbox_templates_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."scim_tokens" ADD CONSTRAINT "scim_tokens_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."service_accounts" ADD CONSTRAINT "service_accounts_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."tunnel_audit_logs" ADD CONSTRAINT "tunnel_audit_logs_tunnel_id_tunnel_connections_tunnel_id_fk" FOREIGN KEY ("tunnel_id") REFERENCES "kortix"."tunnel_connections"("tunnel_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."tunnel_connections" ADD CONSTRAINT "tunnel_connections_sandbox_id_sandboxes_sandbox_id_fk" FOREIGN KEY ("sandbox_id") REFERENCES "kortix"."sandboxes"("sandbox_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."tunnel_device_auth_requests" ADD CONSTRAINT "tunnel_device_auth_requests_tunnel_id_tunnel_connections_tunnel_id_fk" FOREIGN KEY ("tunnel_id") REFERENCES "kortix"."tunnel_connections"("tunnel_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."tunnel_permission_requests" ADD CONSTRAINT "tunnel_permission_requests_tunnel_id_tunnel_connections_tunnel_id_fk" FOREIGN KEY ("tunnel_id") REFERENCES "kortix"."tunnel_connections"("tunnel_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."tunnel_permissions" ADD CONSTRAINT "tunnel_permissions_tunnel_id_tunnel_connections_tunnel_id_fk" FOREIGN KEY ("tunnel_id") REFERENCES "kortix"."tunnel_connections"("tunnel_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."usage_events" ADD CONSTRAINT "usage_events_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."usage_events" ADD CONSTRAINT "usage_events_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_access_allowlist_type_value" ON "kortix"."access_allowlist" USING btree ("entry_type","value");--> statement-breakpoint
-CREATE INDEX "idx_access_requests_email" ON "kortix"."access_requests" USING btree ("email");--> statement-breakpoint
-CREATE INDEX "idx_access_requests_status" ON "kortix"."access_requests" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "idx_account_github_installation_states_account" ON "kortix"."account_github_installation_states" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_account_github_installation_states_expires_at" ON "kortix"."account_github_installation_states" USING btree ("expires_at");--> statement-breakpoint
-CREATE INDEX "idx_account_github_installations_account" ON "kortix"."account_github_installations" USING btree ("account_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_account_github_installations_account_installation" ON "kortix"."account_github_installations" USING btree ("account_id","installation_id");--> statement-breakpoint
-CREATE INDEX "idx_account_github_installations_owner" ON "kortix"."account_github_installations" USING btree ("owner_login");--> statement-breakpoint
-CREATE INDEX "idx_account_group_members_user" ON "kortix"."account_group_members" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "idx_account_groups_account" ON "kortix"."account_groups" USING btree ("account_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_account_groups_account_name" ON "kortix"."account_groups" USING btree ("account_id","name");--> statement-breakpoint
-CREATE INDEX "idx_account_invitations_email" ON "kortix"."account_invitations" USING btree ("email");--> statement-breakpoint
-CREATE INDEX "idx_account_invitations_account" ON "kortix"."account_invitations" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_account_invitations_expires_at" ON "kortix"."account_invitations" USING btree ("expires_at");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_account_invitations_pending" ON "kortix"."account_invitations" USING btree ("account_id","email");--> statement-breakpoint
-CREATE INDEX "idx_account_members_user_id" ON "kortix"."account_members" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "idx_account_members_account_id" ON "kortix"."account_members" USING btree ("account_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_account_members_user_account" ON "kortix"."account_members" USING btree ("user_id","account_id");--> statement-breakpoint
-CREATE INDEX "idx_account_session_activity_account" ON "kortix"."account_session_activity" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_account_session_activity_user" ON "kortix"."account_session_activity" USING btree ("account_id","user_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_account_sso_mappings_claim" ON "kortix"."account_sso_group_mappings" USING btree ("account_id","claim_value");--> statement-breakpoint
-CREATE INDEX "idx_account_sso_mappings_provider" ON "kortix"."account_sso_group_mappings" USING btree ("sso_provider_id");--> statement-breakpoint
-CREATE INDEX "idx_account_sso_mappings_group" ON "kortix"."account_sso_group_mappings" USING btree ("group_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_account_sso_providers_account" ON "kortix"."account_sso_providers" USING btree ("account_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_account_sso_providers_supabase" ON "kortix"."account_sso_providers" USING btree ("supabase_sso_provider_id");--> statement-breakpoint
-CREATE INDEX "idx_account_sso_providers_domain" ON "kortix"."account_sso_providers" USING btree ("primary_domain");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_account_tokens_public_key" ON "kortix"."account_tokens" USING btree ("public_key");--> statement-breakpoint
-CREATE INDEX "idx_account_tokens_secret_hash" ON "kortix"."account_tokens" USING btree ("secret_key_hash");--> statement-breakpoint
-CREATE INDEX "idx_account_tokens_account" ON "kortix"."account_tokens" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_account_tokens_user" ON "kortix"."account_tokens" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "idx_account_tokens_project" ON "kortix"."account_tokens" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "idx_audit_events_account_time" ON "kortix"."audit_events" USING btree ("account_id","occurred_at");--> statement-breakpoint
-CREATE INDEX "idx_audit_events_actor_time" ON "kortix"."audit_events" USING btree ("actor_user_id","occurred_at");--> statement-breakpoint
-CREATE INDEX "idx_audit_events_resource" ON "kortix"."audit_events" USING btree ("resource_type","resource_id");--> statement-breakpoint
-CREATE INDEX "idx_audit_webhooks_account" ON "kortix"."audit_webhooks" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_audit_webhooks_enabled" ON "kortix"."audit_webhooks" USING btree ("account_id","enabled");--> statement-breakpoint
-CREATE INDEX "idx_kortix_billing_customers_account_id" ON "kortix"."billing_customers" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_change_requests_account" ON "kortix"."change_requests" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_change_requests_project" ON "kortix"."change_requests" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "idx_change_requests_project_status" ON "kortix"."change_requests" USING btree ("project_id","status");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_change_requests_project_number" ON "kortix"."change_requests" USING btree ("project_id","number");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_chat_channel_bindings_channel" ON "kortix"."chat_channel_bindings" USING btree ("platform","workspace_id","channel_id");--> statement-breakpoint
-CREATE INDEX "idx_chat_channel_bindings_project" ON "kortix"."chat_channel_bindings" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "idx_chat_event_dedup_expiry" ON "kortix"."chat_event_dedup" USING btree ("expires_at");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_chat_installs_workspace_project" ON "kortix"."chat_installs" USING btree ("platform","workspace_id","project_id");--> statement-breakpoint
-CREATE INDEX "idx_chat_installs_workspace" ON "kortix"."chat_installs" USING btree ("platform","workspace_id");--> statement-breakpoint
-CREATE INDEX "idx_chat_installs_project" ON "kortix"."chat_installs" USING btree ("project_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_chat_threads_thread" ON "kortix"."chat_threads" USING btree ("platform","workspace_id","thread_id");--> statement-breakpoint
-CREATE INDEX "idx_chat_threads_project" ON "kortix"."chat_threads" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "idx_chat_threads_session" ON "kortix"."chat_threads" USING btree ("session_id");--> statement-breakpoint
-CREATE INDEX "idx_chat_turn_streams_expiry" ON "kortix"."chat_turn_streams" USING btree ("expires_at");--> statement-breakpoint
-CREATE INDEX "kortix_credit_accounts_account_id_idx" ON "kortix"."credit_accounts" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_credit_accounts_billing_model" ON "kortix"."credit_accounts" USING btree ("billing_model");--> statement-breakpoint
-CREATE INDEX "idx_kortix_credit_ledger_idempotency" ON "kortix"."credit_ledger" USING btree ("idempotency_key") WHERE "kortix"."credit_ledger"."idempotency_key" IS NOT NULL;--> statement-breakpoint
-CREATE INDEX "idx_deployments_account" ON "kortix"."deployments" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_deployments_sandbox" ON "kortix"."deployments" USING btree ("sandbox_id");--> statement-breakpoint
-CREATE INDEX "idx_deployments_status" ON "kortix"."deployments" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "idx_deployments_live_url" ON "kortix"."deployments" USING btree ("live_url");--> statement-breakpoint
-CREATE INDEX "idx_deployments_created" ON "kortix"."deployments" USING btree ("created_at");--> statement-breakpoint
-CREATE INDEX "idx_deployments_project_app" ON "kortix"."deployments" USING btree ("project_id","app_slug","created_at");--> statement-breakpoint
-CREATE INDEX "idx_executor_connector_actions_connector" ON "kortix"."executor_connector_actions" USING btree ("connector_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_executor_connector_actions_path" ON "kortix"."executor_connector_actions" USING btree ("connector_id","path");--> statement-breakpoint
-CREATE INDEX "idx_executor_connector_grants_connector" ON "kortix"."executor_connector_grants" USING btree ("connector_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_executor_connector_grants_unique" ON "kortix"."executor_connector_grants" USING btree ("connector_id","principal_type","principal_id");--> statement-breakpoint
-CREATE INDEX "idx_executor_connector_policies_connector" ON "kortix"."executor_connector_policies" USING btree ("connector_id");--> statement-breakpoint
-CREATE INDEX "idx_executor_connectors_project" ON "kortix"."executor_connectors" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "idx_executor_connectors_account" ON "kortix"."executor_connectors" USING btree ("account_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_executor_connectors_project_slug" ON "kortix"."executor_connectors" USING btree ("project_id","slug");--> statement-breakpoint
-CREATE INDEX "idx_executor_credentials_connector" ON "kortix"."executor_credentials" USING btree ("connector_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_executor_credentials_connector_user" ON "kortix"."executor_credentials" USING btree ("connector_id","user_id");--> statement-breakpoint
-CREATE INDEX "idx_executor_executions_project" ON "kortix"."executor_executions" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "idx_executor_executions_connector" ON "kortix"."executor_executions" USING btree ("connector_id");--> statement-breakpoint
-CREATE INDEX "idx_executor_executions_status" ON "kortix"."executor_executions" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "idx_executor_project_policies_project" ON "kortix"."executor_project_policies" USING btree ("project_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_kortix_api_keys_public_key" ON "kortix"."api_keys" USING btree ("public_key");--> statement-breakpoint
-CREATE INDEX "idx_kortix_api_keys_secret_hash" ON "kortix"."api_keys" USING btree ("secret_key_hash");--> statement-breakpoint
-CREATE INDEX "idx_kortix_api_keys_sandbox" ON "kortix"."api_keys" USING btree ("sandbox_id");--> statement-breakpoint
-CREATE INDEX "idx_kortix_api_keys_account" ON "kortix"."api_keys" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_legacy_sandbox_migrations_run" ON "kortix"."legacy_sandbox_migrations" USING btree ("run_id");--> statement-breakpoint
-CREATE INDEX "idx_legacy_sandbox_migrations_sandbox" ON "kortix"."legacy_sandbox_migrations" USING btree ("sandbox_id");--> statement-breakpoint
-CREATE INDEX "idx_legacy_sandbox_migrations_status" ON "kortix"."legacy_sandbox_migrations" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "idx_legacy_sandbox_migrations_account" ON "kortix"."legacy_sandbox_migrations" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_legacy_sandbox_migrations_heartbeat" ON "kortix"."legacy_sandbox_migrations" USING btree ("status","heartbeat_at");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_oauth_access_token_hash" ON "kortix"."oauth_access_tokens" USING btree ("token_hash");--> statement-breakpoint
-CREATE INDEX "idx_oauth_access_tokens_client" ON "kortix"."oauth_access_tokens" USING btree ("client_id");--> statement-breakpoint
-CREATE INDEX "idx_oauth_access_tokens_user" ON "kortix"."oauth_access_tokens" USING btree ("user_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_oauth_codes_code" ON "kortix"."oauth_authorization_codes" USING btree ("code");--> statement-breakpoint
-CREATE INDEX "idx_oauth_codes_client" ON "kortix"."oauth_authorization_codes" USING btree ("client_id");--> statement-breakpoint
-CREATE INDEX "idx_oauth_codes_expires" ON "kortix"."oauth_authorization_codes" USING btree ("expires_at");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_oauth_refresh_token_hash" ON "kortix"."oauth_refresh_tokens" USING btree ("token_hash");--> statement-breakpoint
-CREATE INDEX "idx_oauth_refresh_tokens_client" ON "kortix"."oauth_refresh_tokens" USING btree ("client_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_platform_user_roles_account_id" ON "kortix"."platform_user_roles" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_platform_user_roles_role" ON "kortix"."platform_user_roles" USING btree ("role");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_pool_resources_unique" ON "kortix"."pool_resources" USING btree ("provider","server_type","location");--> statement-breakpoint
-CREATE INDEX "idx_pool_sandboxes_claim" ON "kortix"."pool_sandboxes" USING btree ("status","created_at");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_pool_sandboxes_external_id_active" ON "kortix"."pool_sandboxes" USING btree ("external_id");--> statement-breakpoint
-CREATE INDEX "idx_project_git_connections_account" ON "kortix"."project_git_connections" USING btree ("account_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_project_git_connections_project" ON "kortix"."project_git_connections" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "idx_project_git_connections_provider_repo" ON "kortix"."project_git_connections" USING btree ("provider","external_repo_id");--> statement-breakpoint
-CREATE INDEX "idx_project_git_connections_status" ON "kortix"."project_git_connections" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "idx_project_git_credentials_account" ON "kortix"."project_git_credentials" USING btree ("account_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_project_git_credentials_project_provider" ON "kortix"."project_git_credentials" USING btree ("project_id","provider");--> statement-breakpoint
-CREATE INDEX "idx_project_group_grants_project" ON "kortix"."project_group_grants" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "idx_project_group_grants_group" ON "kortix"."project_group_grants" USING btree ("group_id");--> statement-breakpoint
-CREATE INDEX "idx_project_group_grants_account" ON "kortix"."project_group_grants" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_project_members_account_user" ON "kortix"."project_members" USING btree ("account_id","user_id");--> statement-breakpoint
-CREATE INDEX "idx_project_members_project" ON "kortix"."project_members" USING btree ("project_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_project_members_project_user" ON "kortix"."project_members" USING btree ("project_id","user_id");--> statement-breakpoint
-CREATE INDEX "idx_project_secret_grants_secret" ON "kortix"."project_secret_grants" USING btree ("secret_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_project_secret_grants_unique" ON "kortix"."project_secret_grants" USING btree ("secret_id","principal_type","principal_id");--> statement-breakpoint
-CREATE INDEX "idx_project_secrets_project" ON "kortix"."project_secrets" USING btree ("project_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_project_secrets_project_name_shared" ON "kortix"."project_secrets" USING btree ("project_id","name") WHERE "kortix"."project_secrets"."owner_user_id" is null;--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_project_secrets_project_name_owner" ON "kortix"."project_secrets" USING btree ("project_id","name","owner_user_id") WHERE "kortix"."project_secrets"."owner_user_id" is not null;--> statement-breakpoint
-CREATE INDEX "idx_project_session_grants_session" ON "kortix"."project_session_grants" USING btree ("session_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_project_session_grants_unique" ON "kortix"."project_session_grants" USING btree ("session_id","principal_type","principal_id");--> statement-breakpoint
-CREATE INDEX "idx_project_sessions_account" ON "kortix"."project_sessions" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_project_sessions_project" ON "kortix"."project_sessions" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "idx_project_sessions_status" ON "kortix"."project_sessions" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "idx_project_sessions_created_by" ON "kortix"."project_sessions" USING btree ("created_by");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_project_sessions_project_branch" ON "kortix"."project_sessions" USING btree ("project_id","branch_name");--> statement-breakpoint
-CREATE INDEX "idx_project_snapshot_builds_project_recent" ON "kortix"."project_snapshot_builds" USING btree ("project_id","started_at" DESC NULLS LAST);--> statement-breakpoint
-CREATE INDEX "idx_project_snapshot_builds_status" ON "kortix"."project_snapshot_builds" USING btree ("project_id","status","started_at" DESC NULLS LAST);--> statement-breakpoint
-CREATE INDEX "idx_projects_account" ON "kortix"."projects" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_projects_status" ON "kortix"."projects" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "idx_projects_updated" ON "kortix"."projects" USING btree ("updated_at");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_projects_account_repo" ON "kortix"."projects" USING btree ("account_id","repo_url");--> statement-breakpoint
-CREATE INDEX "idx_sandbox_compute_sessions_account_time" ON "kortix"."sandbox_compute_sessions" USING btree ("account_id","started_at");--> statement-breakpoint
-CREATE INDEX "idx_sandbox_compute_sessions_open" ON "kortix"."sandbox_compute_sessions" USING btree ("sandbox_id") WHERE "kortix"."sandbox_compute_sessions"."ended_at" IS NULL;--> statement-breakpoint
-CREATE INDEX "idx_sandbox_compute_sessions_last_billed" ON "kortix"."sandbox_compute_sessions" USING btree ("last_billed_at") WHERE "kortix"."sandbox_compute_sessions"."state" = 'active';--> statement-breakpoint
-CREATE INDEX "idx_sandbox_invites_email" ON "kortix"."sandbox_invites" USING btree ("email");--> statement-breakpoint
-CREATE INDEX "idx_sandbox_invites_sandbox" ON "kortix"."sandbox_invites" USING btree ("sandbox_id");--> statement-breakpoint
-CREATE INDEX "idx_sandbox_invites_expires_at" ON "kortix"."sandbox_invites" USING btree ("expires_at");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_sandbox_member_scopes_unique" ON "kortix"."sandbox_member_scopes" USING btree ("sandbox_id","user_id","scope");--> statement-breakpoint
-CREATE INDEX "idx_sandbox_member_scopes_lookup" ON "kortix"."sandbox_member_scopes" USING btree ("sandbox_id","user_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_sandbox_members_unique" ON "kortix"."sandbox_members" USING btree ("sandbox_id","user_id");--> statement-breakpoint
-CREATE INDEX "idx_sandbox_members_user" ON "kortix"."sandbox_members" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "idx_sandbox_members_sandbox" ON "kortix"."sandbox_members" USING btree ("sandbox_id");--> statement-breakpoint
-CREATE INDEX "idx_sandbox_templates_project" ON "kortix"."sandbox_templates" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "idx_sandbox_templates_shared" ON "kortix"."sandbox_templates" USING btree ("is_shared");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_sandbox_templates_project_slug" ON "kortix"."sandbox_templates" USING btree ("project_id","slug");--> statement-breakpoint
-CREATE INDEX "idx_sandboxes_account" ON "kortix"."sandboxes" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_sandboxes_external_id" ON "kortix"."sandboxes" USING btree ("external_id");--> statement-breakpoint
-CREATE INDEX "idx_sandboxes_status" ON "kortix"."sandboxes" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "idx_scim_tokens_account" ON "kortix"."scim_tokens" USING btree ("account_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_scim_tokens_secret_hash" ON "kortix"."scim_tokens" USING btree ("secret_hash");--> statement-breakpoint
-CREATE INDEX "idx_server_entries_default" ON "kortix"."server_entries" USING btree ("is_default");--> statement-breakpoint
-CREATE INDEX "idx_server_entries_account" ON "kortix"."server_entries" USING btree ("account_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_server_entries_account_id" ON "kortix"."server_entries" USING btree ("account_id","id");--> statement-breakpoint
-CREATE INDEX "idx_service_accounts_account" ON "kortix"."service_accounts" USING btree ("account_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_service_accounts_secret_hash" ON "kortix"."service_accounts" USING btree ("secret_hash");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_service_accounts_account_name" ON "kortix"."service_accounts" USING btree ("account_id","name");--> statement-breakpoint
-CREATE INDEX "idx_session_sandboxes_session" ON "kortix"."session_sandboxes" USING btree ("session_id");--> statement-breakpoint
-CREATE INDEX "idx_session_sandboxes_project" ON "kortix"."session_sandboxes" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "idx_session_sandboxes_account" ON "kortix"."session_sandboxes" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_session_sandboxes_status" ON "kortix"."session_sandboxes" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "idx_session_sandboxes_external_id" ON "kortix"."session_sandboxes" USING btree ("external_id");--> statement-breakpoint
-CREATE INDEX "idx_session_sandboxes_pool" ON "kortix"."session_sandboxes" USING btree ("project_id","pool_state");--> statement-breakpoint
-CREATE INDEX "idx_stripe_webhook_events_processed_at" ON "kortix"."stripe_webhook_events_processed" USING btree ("processed_at");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_audit_tunnel" ON "kortix"."tunnel_audit_logs" USING btree ("tunnel_id");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_audit_account" ON "kortix"."tunnel_audit_logs" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_audit_capability" ON "kortix"."tunnel_audit_logs" USING btree ("capability");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_audit_created" ON "kortix"."tunnel_audit_logs" USING btree ("created_at");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_connections_account" ON "kortix"."tunnel_connections" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_connections_sandbox" ON "kortix"."tunnel_connections" USING btree ("sandbox_id");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_connections_status" ON "kortix"."tunnel_connections" USING btree ("status");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_tunnel_device_auth_code" ON "kortix"."tunnel_device_auth_requests" USING btree ("device_code");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_device_auth_status" ON "kortix"."tunnel_device_auth_requests" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_device_auth_expires" ON "kortix"."tunnel_device_auth_requests" USING btree ("expires_at");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_perm_requests_tunnel" ON "kortix"."tunnel_permission_requests" USING btree ("tunnel_id");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_perm_requests_account" ON "kortix"."tunnel_permission_requests" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_perm_requests_status" ON "kortix"."tunnel_permission_requests" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_permissions_tunnel" ON "kortix"."tunnel_permissions" USING btree ("tunnel_id");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_permissions_account" ON "kortix"."tunnel_permissions" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_permissions_capability" ON "kortix"."tunnel_permissions" USING btree ("capability");--> statement-breakpoint
-CREATE INDEX "idx_tunnel_permissions_status" ON "kortix"."tunnel_permissions" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "idx_usage_events_account_time" ON "kortix"."usage_events" USING btree ("account_id","created_at");--> statement-breakpoint
-CREATE INDEX "idx_usage_events_project_time" ON "kortix"."usage_events" USING btree ("project_id","created_at");--> statement-breakpoint
-CREATE INDEX "idx_usage_events_session" ON "kortix"."usage_events" USING btree ("session_id");--> statement-breakpoint
-CREATE INDEX "idx_usage_events_model" ON "kortix"."usage_events" USING btree ("provider","model");--> statement-breakpoint
-CREATE INDEX "idx_yolo_member_tokens_prefix" ON "kortix"."yolo_member_tokens" USING btree ("token_prefix") WHERE "kortix"."yolo_member_tokens"."revoked_at" IS NULL;--> statement-breakpoint
-CREATE INDEX "idx_yolo_member_tokens_account" ON "kortix"."yolo_member_tokens" USING btree ("account_id");
+ALTER TABLE "agentica"."account_github_installation_states" ADD CONSTRAINT "account_github_installation_states_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."account_github_installations" ADD CONSTRAINT "account_github_installations_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."account_group_members" ADD CONSTRAINT "account_group_members_group_id_account_groups_group_id_fk" FOREIGN KEY ("group_id") REFERENCES "agentica"."account_groups"("group_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."account_groups" ADD CONSTRAINT "account_groups_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."account_invitations" ADD CONSTRAINT "account_invitations_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."account_members" ADD CONSTRAINT "account_members_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."account_session_activity" ADD CONSTRAINT "account_session_activity_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."account_sso_group_mappings" ADD CONSTRAINT "account_sso_group_mappings_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."account_sso_group_mappings" ADD CONSTRAINT "account_sso_group_mappings_sso_provider_id_account_sso_providers_sso_provider_id_fk" FOREIGN KEY ("sso_provider_id") REFERENCES "agentica"."account_sso_providers"("sso_provider_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."account_sso_group_mappings" ADD CONSTRAINT "account_sso_group_mappings_group_id_account_groups_group_id_fk" FOREIGN KEY ("group_id") REFERENCES "agentica"."account_groups"("group_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."account_sso_providers" ADD CONSTRAINT "account_sso_providers_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."account_tokens" ADD CONSTRAINT "account_tokens_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."account_tokens" ADD CONSTRAINT "account_tokens_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."audit_events" ADD CONSTRAINT "audit_events_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."audit_webhooks" ADD CONSTRAINT "audit_webhooks_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."change_requests" ADD CONSTRAINT "change_requests_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."change_requests" ADD CONSTRAINT "change_requests_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."change_requests" ADD CONSTRAINT "change_requests_origin_session_id_project_sessions_session_id_fk" FOREIGN KEY ("origin_session_id") REFERENCES "agentica"."project_sessions"("session_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."chat_channel_bindings" ADD CONSTRAINT "chat_channel_bindings_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."chat_installs" ADD CONSTRAINT "chat_installs_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."chat_threads" ADD CONSTRAINT "chat_threads_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."chat_threads" ADD CONSTRAINT "chat_threads_session_id_project_sessions_session_id_fk" FOREIGN KEY ("session_id") REFERENCES "agentica"."project_sessions"("session_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."deployments" ADD CONSTRAINT "deployments_sandbox_id_sandboxes_sandbox_id_fk" FOREIGN KEY ("sandbox_id") REFERENCES "agentica"."sandboxes"("sandbox_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."executor_connector_actions" ADD CONSTRAINT "executor_connector_actions_connector_id_executor_connectors_connector_id_fk" FOREIGN KEY ("connector_id") REFERENCES "agentica"."executor_connectors"("connector_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."executor_connector_grants" ADD CONSTRAINT "executor_connector_grants_connector_id_executor_connectors_connector_id_fk" FOREIGN KEY ("connector_id") REFERENCES "agentica"."executor_connectors"("connector_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."executor_connector_policies" ADD CONSTRAINT "executor_connector_policies_connector_id_executor_connectors_connector_id_fk" FOREIGN KEY ("connector_id") REFERENCES "agentica"."executor_connectors"("connector_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."executor_connectors" ADD CONSTRAINT "executor_connectors_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."executor_connectors" ADD CONSTRAINT "executor_connectors_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."executor_credentials" ADD CONSTRAINT "executor_credentials_connector_id_executor_connectors_connector_id_fk" FOREIGN KEY ("connector_id") REFERENCES "agentica"."executor_connectors"("connector_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."executor_executions" ADD CONSTRAINT "executor_executions_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."executor_executions" ADD CONSTRAINT "executor_executions_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."executor_executions" ADD CONSTRAINT "executor_executions_connector_id_executor_connectors_connector_id_fk" FOREIGN KEY ("connector_id") REFERENCES "agentica"."executor_connectors"("connector_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."executor_project_policies" ADD CONSTRAINT "executor_project_policies_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."executor_project_settings" ADD CONSTRAINT "executor_project_settings_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."oauth_access_tokens" ADD CONSTRAINT "oauth_access_tokens_client_id_oauth_clients_client_id_fk" FOREIGN KEY ("client_id") REFERENCES "agentica"."oauth_clients"("client_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."oauth_authorization_codes" ADD CONSTRAINT "oauth_authorization_codes_client_id_oauth_clients_client_id_fk" FOREIGN KEY ("client_id") REFERENCES "agentica"."oauth_clients"("client_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."oauth_refresh_tokens" ADD CONSTRAINT "oauth_refresh_tokens_access_token_id_oauth_access_tokens_id_fk" FOREIGN KEY ("access_token_id") REFERENCES "agentica"."oauth_access_tokens"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."oauth_refresh_tokens" ADD CONSTRAINT "oauth_refresh_tokens_client_id_oauth_clients_client_id_fk" FOREIGN KEY ("client_id") REFERENCES "agentica"."oauth_clients"("client_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."pool_sandboxes" ADD CONSTRAINT "pool_sandboxes_resource_id_pool_resources_id_fk" FOREIGN KEY ("resource_id") REFERENCES "agentica"."pool_resources"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_git_connections" ADD CONSTRAINT "project_git_connections_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_git_connections" ADD CONSTRAINT "project_git_connections_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_git_credentials" ADD CONSTRAINT "project_git_credentials_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_git_credentials" ADD CONSTRAINT "project_git_credentials_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_group_grants" ADD CONSTRAINT "project_group_grants_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_group_grants" ADD CONSTRAINT "project_group_grants_group_id_account_groups_group_id_fk" FOREIGN KEY ("group_id") REFERENCES "agentica"."account_groups"("group_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_group_grants" ADD CONSTRAINT "project_group_grants_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_members" ADD CONSTRAINT "project_members_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_members" ADD CONSTRAINT "project_members_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_secret_grants" ADD CONSTRAINT "project_secret_grants_secret_id_project_secrets_secret_id_fk" FOREIGN KEY ("secret_id") REFERENCES "agentica"."project_secrets"("secret_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_secrets" ADD CONSTRAINT "project_secrets_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_session_grants" ADD CONSTRAINT "project_session_grants_session_id_project_sessions_session_id_fk" FOREIGN KEY ("session_id") REFERENCES "agentica"."project_sessions"("session_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_sessions" ADD CONSTRAINT "project_sessions_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_sessions" ADD CONSTRAINT "project_sessions_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_snapshot_builds" ADD CONSTRAINT "project_snapshot_builds_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_snapshot_builds" ADD CONSTRAINT "project_snapshot_builds_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_trigger_runtime" ADD CONSTRAINT "project_trigger_runtime_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."projects" ADD CONSTRAINT "projects_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."sandbox_invites" ADD CONSTRAINT "sandbox_invites_sandbox_id_sandboxes_sandbox_id_fk" FOREIGN KEY ("sandbox_id") REFERENCES "agentica"."sandboxes"("sandbox_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."sandbox_member_scopes" ADD CONSTRAINT "sandbox_member_scopes_sandbox_id_sandboxes_sandbox_id_fk" FOREIGN KEY ("sandbox_id") REFERENCES "agentica"."sandboxes"("sandbox_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."sandbox_members" ADD CONSTRAINT "sandbox_members_sandbox_id_sandboxes_sandbox_id_fk" FOREIGN KEY ("sandbox_id") REFERENCES "agentica"."sandboxes"("sandbox_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."sandbox_templates" ADD CONSTRAINT "sandbox_templates_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."sandbox_templates" ADD CONSTRAINT "sandbox_templates_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."scim_tokens" ADD CONSTRAINT "scim_tokens_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."service_accounts" ADD CONSTRAINT "service_accounts_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."tunnel_audit_logs" ADD CONSTRAINT "tunnel_audit_logs_tunnel_id_tunnel_connections_tunnel_id_fk" FOREIGN KEY ("tunnel_id") REFERENCES "agentica"."tunnel_connections"("tunnel_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."tunnel_connections" ADD CONSTRAINT "tunnel_connections_sandbox_id_sandboxes_sandbox_id_fk" FOREIGN KEY ("sandbox_id") REFERENCES "agentica"."sandboxes"("sandbox_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."tunnel_device_auth_requests" ADD CONSTRAINT "tunnel_device_auth_requests_tunnel_id_tunnel_connections_tunnel_id_fk" FOREIGN KEY ("tunnel_id") REFERENCES "agentica"."tunnel_connections"("tunnel_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."tunnel_permission_requests" ADD CONSTRAINT "tunnel_permission_requests_tunnel_id_tunnel_connections_tunnel_id_fk" FOREIGN KEY ("tunnel_id") REFERENCES "agentica"."tunnel_connections"("tunnel_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."tunnel_permissions" ADD CONSTRAINT "tunnel_permissions_tunnel_id_tunnel_connections_tunnel_id_fk" FOREIGN KEY ("tunnel_id") REFERENCES "agentica"."tunnel_connections"("tunnel_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."usage_events" ADD CONSTRAINT "usage_events_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."usage_events" ADD CONSTRAINT "usage_events_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_access_allowlist_type_value" ON "agentica"."access_allowlist" USING btree ("entry_type","value");--> statement-breakpoint
+CREATE INDEX "idx_access_requests_email" ON "agentica"."access_requests" USING btree ("email");--> statement-breakpoint
+CREATE INDEX "idx_access_requests_status" ON "agentica"."access_requests" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "idx_account_github_installation_states_account" ON "agentica"."account_github_installation_states" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_account_github_installation_states_expires_at" ON "agentica"."account_github_installation_states" USING btree ("expires_at");--> statement-breakpoint
+CREATE INDEX "idx_account_github_installations_account" ON "agentica"."account_github_installations" USING btree ("account_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_account_github_installations_account_installation" ON "agentica"."account_github_installations" USING btree ("account_id","installation_id");--> statement-breakpoint
+CREATE INDEX "idx_account_github_installations_owner" ON "agentica"."account_github_installations" USING btree ("owner_login");--> statement-breakpoint
+CREATE INDEX "idx_account_group_members_user" ON "agentica"."account_group_members" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "idx_account_groups_account" ON "agentica"."account_groups" USING btree ("account_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_account_groups_account_name" ON "agentica"."account_groups" USING btree ("account_id","name");--> statement-breakpoint
+CREATE INDEX "idx_account_invitations_email" ON "agentica"."account_invitations" USING btree ("email");--> statement-breakpoint
+CREATE INDEX "idx_account_invitations_account" ON "agentica"."account_invitations" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_account_invitations_expires_at" ON "agentica"."account_invitations" USING btree ("expires_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_account_invitations_pending" ON "agentica"."account_invitations" USING btree ("account_id","email");--> statement-breakpoint
+CREATE INDEX "idx_account_members_user_id" ON "agentica"."account_members" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "idx_account_members_account_id" ON "agentica"."account_members" USING btree ("account_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_account_members_user_account" ON "agentica"."account_members" USING btree ("user_id","account_id");--> statement-breakpoint
+CREATE INDEX "idx_account_session_activity_account" ON "agentica"."account_session_activity" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_account_session_activity_user" ON "agentica"."account_session_activity" USING btree ("account_id","user_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_account_sso_mappings_claim" ON "agentica"."account_sso_group_mappings" USING btree ("account_id","claim_value");--> statement-breakpoint
+CREATE INDEX "idx_account_sso_mappings_provider" ON "agentica"."account_sso_group_mappings" USING btree ("sso_provider_id");--> statement-breakpoint
+CREATE INDEX "idx_account_sso_mappings_group" ON "agentica"."account_sso_group_mappings" USING btree ("group_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_account_sso_providers_account" ON "agentica"."account_sso_providers" USING btree ("account_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_account_sso_providers_supabase" ON "agentica"."account_sso_providers" USING btree ("supabase_sso_provider_id");--> statement-breakpoint
+CREATE INDEX "idx_account_sso_providers_domain" ON "agentica"."account_sso_providers" USING btree ("primary_domain");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_account_tokens_public_key" ON "agentica"."account_tokens" USING btree ("public_key");--> statement-breakpoint
+CREATE INDEX "idx_account_tokens_secret_hash" ON "agentica"."account_tokens" USING btree ("secret_key_hash");--> statement-breakpoint
+CREATE INDEX "idx_account_tokens_account" ON "agentica"."account_tokens" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_account_tokens_user" ON "agentica"."account_tokens" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "idx_account_tokens_project" ON "agentica"."account_tokens" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX "idx_audit_events_account_time" ON "agentica"."audit_events" USING btree ("account_id","occurred_at");--> statement-breakpoint
+CREATE INDEX "idx_audit_events_actor_time" ON "agentica"."audit_events" USING btree ("actor_user_id","occurred_at");--> statement-breakpoint
+CREATE INDEX "idx_audit_events_resource" ON "agentica"."audit_events" USING btree ("resource_type","resource_id");--> statement-breakpoint
+CREATE INDEX "idx_audit_webhooks_account" ON "agentica"."audit_webhooks" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_audit_webhooks_enabled" ON "agentica"."audit_webhooks" USING btree ("account_id","enabled");--> statement-breakpoint
+CREATE INDEX "idx_kortix_billing_customers_account_id" ON "agentica"."billing_customers" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_change_requests_account" ON "agentica"."change_requests" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_change_requests_project" ON "agentica"."change_requests" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX "idx_change_requests_project_status" ON "agentica"."change_requests" USING btree ("project_id","status");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_change_requests_project_number" ON "agentica"."change_requests" USING btree ("project_id","number");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_chat_channel_bindings_channel" ON "agentica"."chat_channel_bindings" USING btree ("platform","workspace_id","channel_id");--> statement-breakpoint
+CREATE INDEX "idx_chat_channel_bindings_project" ON "agentica"."chat_channel_bindings" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX "idx_chat_event_dedup_expiry" ON "agentica"."chat_event_dedup" USING btree ("expires_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_chat_installs_workspace_project" ON "agentica"."chat_installs" USING btree ("platform","workspace_id","project_id");--> statement-breakpoint
+CREATE INDEX "idx_chat_installs_workspace" ON "agentica"."chat_installs" USING btree ("platform","workspace_id");--> statement-breakpoint
+CREATE INDEX "idx_chat_installs_project" ON "agentica"."chat_installs" USING btree ("project_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_chat_threads_thread" ON "agentica"."chat_threads" USING btree ("platform","workspace_id","thread_id");--> statement-breakpoint
+CREATE INDEX "idx_chat_threads_project" ON "agentica"."chat_threads" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX "idx_chat_threads_session" ON "agentica"."chat_threads" USING btree ("session_id");--> statement-breakpoint
+CREATE INDEX "idx_chat_turn_streams_expiry" ON "agentica"."chat_turn_streams" USING btree ("expires_at");--> statement-breakpoint
+CREATE INDEX "kortix_credit_accounts_account_id_idx" ON "agentica"."credit_accounts" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_credit_accounts_billing_model" ON "agentica"."credit_accounts" USING btree ("billing_model");--> statement-breakpoint
+CREATE INDEX "idx_kortix_credit_ledger_idempotency" ON "agentica"."credit_ledger" USING btree ("idempotency_key") WHERE "agentica"."credit_ledger"."idempotency_key" IS NOT NULL;--> statement-breakpoint
+CREATE INDEX "idx_deployments_account" ON "agentica"."deployments" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_deployments_sandbox" ON "agentica"."deployments" USING btree ("sandbox_id");--> statement-breakpoint
+CREATE INDEX "idx_deployments_status" ON "agentica"."deployments" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "idx_deployments_live_url" ON "agentica"."deployments" USING btree ("live_url");--> statement-breakpoint
+CREATE INDEX "idx_deployments_created" ON "agentica"."deployments" USING btree ("created_at");--> statement-breakpoint
+CREATE INDEX "idx_deployments_project_app" ON "agentica"."deployments" USING btree ("project_id","app_slug","created_at");--> statement-breakpoint
+CREATE INDEX "idx_executor_connector_actions_connector" ON "agentica"."executor_connector_actions" USING btree ("connector_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_executor_connector_actions_path" ON "agentica"."executor_connector_actions" USING btree ("connector_id","path");--> statement-breakpoint
+CREATE INDEX "idx_executor_connector_grants_connector" ON "agentica"."executor_connector_grants" USING btree ("connector_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_executor_connector_grants_unique" ON "agentica"."executor_connector_grants" USING btree ("connector_id","principal_type","principal_id");--> statement-breakpoint
+CREATE INDEX "idx_executor_connector_policies_connector" ON "agentica"."executor_connector_policies" USING btree ("connector_id");--> statement-breakpoint
+CREATE INDEX "idx_executor_connectors_project" ON "agentica"."executor_connectors" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX "idx_executor_connectors_account" ON "agentica"."executor_connectors" USING btree ("account_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_executor_connectors_project_slug" ON "agentica"."executor_connectors" USING btree ("project_id","slug");--> statement-breakpoint
+CREATE INDEX "idx_executor_credentials_connector" ON "agentica"."executor_credentials" USING btree ("connector_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_executor_credentials_connector_user" ON "agentica"."executor_credentials" USING btree ("connector_id","user_id");--> statement-breakpoint
+CREATE INDEX "idx_executor_executions_project" ON "agentica"."executor_executions" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX "idx_executor_executions_connector" ON "agentica"."executor_executions" USING btree ("connector_id");--> statement-breakpoint
+CREATE INDEX "idx_executor_executions_status" ON "agentica"."executor_executions" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "idx_executor_project_policies_project" ON "agentica"."executor_project_policies" USING btree ("project_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_kortix_api_keys_public_key" ON "agentica"."api_keys" USING btree ("public_key");--> statement-breakpoint
+CREATE INDEX "idx_kortix_api_keys_secret_hash" ON "agentica"."api_keys" USING btree ("secret_key_hash");--> statement-breakpoint
+CREATE INDEX "idx_kortix_api_keys_sandbox" ON "agentica"."api_keys" USING btree ("sandbox_id");--> statement-breakpoint
+CREATE INDEX "idx_kortix_api_keys_account" ON "agentica"."api_keys" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_legacy_sandbox_migrations_run" ON "agentica"."legacy_sandbox_migrations" USING btree ("run_id");--> statement-breakpoint
+CREATE INDEX "idx_legacy_sandbox_migrations_sandbox" ON "agentica"."legacy_sandbox_migrations" USING btree ("sandbox_id");--> statement-breakpoint
+CREATE INDEX "idx_legacy_sandbox_migrations_status" ON "agentica"."legacy_sandbox_migrations" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "idx_legacy_sandbox_migrations_account" ON "agentica"."legacy_sandbox_migrations" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_legacy_sandbox_migrations_heartbeat" ON "agentica"."legacy_sandbox_migrations" USING btree ("status","heartbeat_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_oauth_access_token_hash" ON "agentica"."oauth_access_tokens" USING btree ("token_hash");--> statement-breakpoint
+CREATE INDEX "idx_oauth_access_tokens_client" ON "agentica"."oauth_access_tokens" USING btree ("client_id");--> statement-breakpoint
+CREATE INDEX "idx_oauth_access_tokens_user" ON "agentica"."oauth_access_tokens" USING btree ("user_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_oauth_codes_code" ON "agentica"."oauth_authorization_codes" USING btree ("code");--> statement-breakpoint
+CREATE INDEX "idx_oauth_codes_client" ON "agentica"."oauth_authorization_codes" USING btree ("client_id");--> statement-breakpoint
+CREATE INDEX "idx_oauth_codes_expires" ON "agentica"."oauth_authorization_codes" USING btree ("expires_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_oauth_refresh_token_hash" ON "agentica"."oauth_refresh_tokens" USING btree ("token_hash");--> statement-breakpoint
+CREATE INDEX "idx_oauth_refresh_tokens_client" ON "agentica"."oauth_refresh_tokens" USING btree ("client_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_platform_user_roles_account_id" ON "agentica"."platform_user_roles" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_platform_user_roles_role" ON "agentica"."platform_user_roles" USING btree ("role");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_pool_resources_unique" ON "agentica"."pool_resources" USING btree ("provider","server_type","location");--> statement-breakpoint
+CREATE INDEX "idx_pool_sandboxes_claim" ON "agentica"."pool_sandboxes" USING btree ("status","created_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_pool_sandboxes_external_id_active" ON "agentica"."pool_sandboxes" USING btree ("external_id");--> statement-breakpoint
+CREATE INDEX "idx_project_git_connections_account" ON "agentica"."project_git_connections" USING btree ("account_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_project_git_connections_project" ON "agentica"."project_git_connections" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX "idx_project_git_connections_provider_repo" ON "agentica"."project_git_connections" USING btree ("provider","external_repo_id");--> statement-breakpoint
+CREATE INDEX "idx_project_git_connections_status" ON "agentica"."project_git_connections" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "idx_project_git_credentials_account" ON "agentica"."project_git_credentials" USING btree ("account_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_project_git_credentials_project_provider" ON "agentica"."project_git_credentials" USING btree ("project_id","provider");--> statement-breakpoint
+CREATE INDEX "idx_project_group_grants_project" ON "agentica"."project_group_grants" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX "idx_project_group_grants_group" ON "agentica"."project_group_grants" USING btree ("group_id");--> statement-breakpoint
+CREATE INDEX "idx_project_group_grants_account" ON "agentica"."project_group_grants" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_project_members_account_user" ON "agentica"."project_members" USING btree ("account_id","user_id");--> statement-breakpoint
+CREATE INDEX "idx_project_members_project" ON "agentica"."project_members" USING btree ("project_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_project_members_project_user" ON "agentica"."project_members" USING btree ("project_id","user_id");--> statement-breakpoint
+CREATE INDEX "idx_project_secret_grants_secret" ON "agentica"."project_secret_grants" USING btree ("secret_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_project_secret_grants_unique" ON "agentica"."project_secret_grants" USING btree ("secret_id","principal_type","principal_id");--> statement-breakpoint
+CREATE INDEX "idx_project_secrets_project" ON "agentica"."project_secrets" USING btree ("project_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_project_secrets_project_name_shared" ON "agentica"."project_secrets" USING btree ("project_id","name") WHERE "agentica"."project_secrets"."owner_user_id" is null;--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_project_secrets_project_name_owner" ON "agentica"."project_secrets" USING btree ("project_id","name","owner_user_id") WHERE "agentica"."project_secrets"."owner_user_id" is not null;--> statement-breakpoint
+CREATE INDEX "idx_project_session_grants_session" ON "agentica"."project_session_grants" USING btree ("session_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_project_session_grants_unique" ON "agentica"."project_session_grants" USING btree ("session_id","principal_type","principal_id");--> statement-breakpoint
+CREATE INDEX "idx_project_sessions_account" ON "agentica"."project_sessions" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_project_sessions_project" ON "agentica"."project_sessions" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX "idx_project_sessions_status" ON "agentica"."project_sessions" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "idx_project_sessions_created_by" ON "agentica"."project_sessions" USING btree ("created_by");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_project_sessions_project_branch" ON "agentica"."project_sessions" USING btree ("project_id","branch_name");--> statement-breakpoint
+CREATE INDEX "idx_project_snapshot_builds_project_recent" ON "agentica"."project_snapshot_builds" USING btree ("project_id","started_at" DESC NULLS LAST);--> statement-breakpoint
+CREATE INDEX "idx_project_snapshot_builds_status" ON "agentica"."project_snapshot_builds" USING btree ("project_id","status","started_at" DESC NULLS LAST);--> statement-breakpoint
+CREATE INDEX "idx_projects_account" ON "agentica"."projects" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_projects_status" ON "agentica"."projects" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "idx_projects_updated" ON "agentica"."projects" USING btree ("updated_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_projects_account_repo" ON "agentica"."projects" USING btree ("account_id","repo_url");--> statement-breakpoint
+CREATE INDEX "idx_sandbox_compute_sessions_account_time" ON "agentica"."sandbox_compute_sessions" USING btree ("account_id","started_at");--> statement-breakpoint
+CREATE INDEX "idx_sandbox_compute_sessions_open" ON "agentica"."sandbox_compute_sessions" USING btree ("sandbox_id") WHERE "agentica"."sandbox_compute_sessions"."ended_at" IS NULL;--> statement-breakpoint
+CREATE INDEX "idx_sandbox_compute_sessions_last_billed" ON "agentica"."sandbox_compute_sessions" USING btree ("last_billed_at") WHERE "agentica"."sandbox_compute_sessions"."state" = 'active';--> statement-breakpoint
+CREATE INDEX "idx_sandbox_invites_email" ON "agentica"."sandbox_invites" USING btree ("email");--> statement-breakpoint
+CREATE INDEX "idx_sandbox_invites_sandbox" ON "agentica"."sandbox_invites" USING btree ("sandbox_id");--> statement-breakpoint
+CREATE INDEX "idx_sandbox_invites_expires_at" ON "agentica"."sandbox_invites" USING btree ("expires_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_sandbox_member_scopes_unique" ON "agentica"."sandbox_member_scopes" USING btree ("sandbox_id","user_id","scope");--> statement-breakpoint
+CREATE INDEX "idx_sandbox_member_scopes_lookup" ON "agentica"."sandbox_member_scopes" USING btree ("sandbox_id","user_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_sandbox_members_unique" ON "agentica"."sandbox_members" USING btree ("sandbox_id","user_id");--> statement-breakpoint
+CREATE INDEX "idx_sandbox_members_user" ON "agentica"."sandbox_members" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "idx_sandbox_members_sandbox" ON "agentica"."sandbox_members" USING btree ("sandbox_id");--> statement-breakpoint
+CREATE INDEX "idx_sandbox_templates_project" ON "agentica"."sandbox_templates" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX "idx_sandbox_templates_shared" ON "agentica"."sandbox_templates" USING btree ("is_shared");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_sandbox_templates_project_slug" ON "agentica"."sandbox_templates" USING btree ("project_id","slug");--> statement-breakpoint
+CREATE INDEX "idx_sandboxes_account" ON "agentica"."sandboxes" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_sandboxes_external_id" ON "agentica"."sandboxes" USING btree ("external_id");--> statement-breakpoint
+CREATE INDEX "idx_sandboxes_status" ON "agentica"."sandboxes" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "idx_scim_tokens_account" ON "agentica"."scim_tokens" USING btree ("account_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_scim_tokens_secret_hash" ON "agentica"."scim_tokens" USING btree ("secret_hash");--> statement-breakpoint
+CREATE INDEX "idx_server_entries_default" ON "agentica"."server_entries" USING btree ("is_default");--> statement-breakpoint
+CREATE INDEX "idx_server_entries_account" ON "agentica"."server_entries" USING btree ("account_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_server_entries_account_id" ON "agentica"."server_entries" USING btree ("account_id","id");--> statement-breakpoint
+CREATE INDEX "idx_service_accounts_account" ON "agentica"."service_accounts" USING btree ("account_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_service_accounts_secret_hash" ON "agentica"."service_accounts" USING btree ("secret_hash");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_service_accounts_account_name" ON "agentica"."service_accounts" USING btree ("account_id","name");--> statement-breakpoint
+CREATE INDEX "idx_session_sandboxes_session" ON "agentica"."session_sandboxes" USING btree ("session_id");--> statement-breakpoint
+CREATE INDEX "idx_session_sandboxes_project" ON "agentica"."session_sandboxes" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX "idx_session_sandboxes_account" ON "agentica"."session_sandboxes" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_session_sandboxes_status" ON "agentica"."session_sandboxes" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "idx_session_sandboxes_external_id" ON "agentica"."session_sandboxes" USING btree ("external_id");--> statement-breakpoint
+CREATE INDEX "idx_session_sandboxes_pool" ON "agentica"."session_sandboxes" USING btree ("project_id","pool_state");--> statement-breakpoint
+CREATE INDEX "idx_stripe_webhook_events_processed_at" ON "agentica"."stripe_webhook_events_processed" USING btree ("processed_at");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_audit_tunnel" ON "agentica"."tunnel_audit_logs" USING btree ("tunnel_id");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_audit_account" ON "agentica"."tunnel_audit_logs" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_audit_capability" ON "agentica"."tunnel_audit_logs" USING btree ("capability");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_audit_created" ON "agentica"."tunnel_audit_logs" USING btree ("created_at");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_connections_account" ON "agentica"."tunnel_connections" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_connections_sandbox" ON "agentica"."tunnel_connections" USING btree ("sandbox_id");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_connections_status" ON "agentica"."tunnel_connections" USING btree ("status");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_tunnel_device_auth_code" ON "agentica"."tunnel_device_auth_requests" USING btree ("device_code");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_device_auth_status" ON "agentica"."tunnel_device_auth_requests" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_device_auth_expires" ON "agentica"."tunnel_device_auth_requests" USING btree ("expires_at");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_perm_requests_tunnel" ON "agentica"."tunnel_permission_requests" USING btree ("tunnel_id");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_perm_requests_account" ON "agentica"."tunnel_permission_requests" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_perm_requests_status" ON "agentica"."tunnel_permission_requests" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_permissions_tunnel" ON "agentica"."tunnel_permissions" USING btree ("tunnel_id");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_permissions_account" ON "agentica"."tunnel_permissions" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_permissions_capability" ON "agentica"."tunnel_permissions" USING btree ("capability");--> statement-breakpoint
+CREATE INDEX "idx_tunnel_permissions_status" ON "agentica"."tunnel_permissions" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "idx_usage_events_account_time" ON "agentica"."usage_events" USING btree ("account_id","created_at");--> statement-breakpoint
+CREATE INDEX "idx_usage_events_project_time" ON "agentica"."usage_events" USING btree ("project_id","created_at");--> statement-breakpoint
+CREATE INDEX "idx_usage_events_session" ON "agentica"."usage_events" USING btree ("session_id");--> statement-breakpoint
+CREATE INDEX "idx_usage_events_model" ON "agentica"."usage_events" USING btree ("provider","model");--> statement-breakpoint
+CREATE INDEX "idx_yolo_member_tokens_prefix" ON "agentica"."yolo_member_tokens" USING btree ("token_prefix") WHERE "agentica"."yolo_member_tokens"."revoked_at" IS NULL;--> statement-breakpoint
+CREATE INDEX "idx_yolo_member_tokens_account" ON "agentica"."yolo_member_tokens" USING btree ("account_id");

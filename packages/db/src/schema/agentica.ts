@@ -100,7 +100,7 @@ export const apiKeyTypeEnum = kortixSchema.enum('api_key_type', [
 ]);
 
 // ─── Accounts & Members ─────────────────────────────────────────────────────
-// Replaces basejump.account_user. Fully kortix-native.
+// Replaces basejump.account_user.
 
 export const accountRoleEnum = kortixSchema.enum('account_role', [
   'owner',
@@ -855,7 +855,7 @@ export const chatEventDedup = kortixSchema.table(
 // Single-row-per-lock advisory lease for cross-replica leader election (the
 // scheduler / sweepers elect one leader so background work doesn't double-run
 // across ECS tasks). Previously SQL-migration-only; folded into the schema so
-// `kortix.*` is 100% Drizzle-owned and the migration engine has one source.
+// `agentica.*` is 100% Drizzle-owned and the migration engine has one source.
 export const workerLeaderLease = kortixSchema.table('worker_leader_lease', {
   lockKey: text('lock_key').primaryKey(),
   ownerId: text('owner_id').notNull(),
@@ -863,7 +863,7 @@ export const workerLeaderLease = kortixSchema.table('worker_leader_lease', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-// Per-session sandbox runtime row. Decoupled from `kortix.sandboxes` (the
+// Per-session sandbox runtime row. Decoupled from `sandboxes` (the
 // legacy /instances table) on purpose: project sessions carry no billing
 // state, no sandbox_members roster, and no team membership semantics — their
 // ACL is enforced via `project_members`.
@@ -1028,14 +1028,14 @@ export const sandboxTemplates = kortixSchema.table(
     builtFromCommit: text('built_from_commit'),
     /**
      * Agent-swap eligibility key of the last build: user image + spec + NON-agent
-     * runtime layer (everything the kortix-agent CAS swap does NOT touch). The
+     * runtime layer (everything the agent CAS swap does NOT touch). The
      * builder swaps the agent in place of a full rebuild ONLY when the new
      * identity's swapKey equals this stored value — i.e. the agent binary is the
      * sole delta. NULL for rows built before this column / the platform default
      * until first build → those rebuild. See snapshots/builder.ts maybeSwapAgent.
      */
     swapKey: text('swap_key'),
-    /** Provider-side snapshot name (e.g. `kortix-default-…`, `kortix-tpl-…`). */
+    /** Provider-side snapshot name (e.g. `agentica-default-…`, `agentica-tpl-…`). */
     providerSnapshotName: text('provider_snapshot_name'),
     /** Last-known provider state: 'active' | 'building' | 'pulling' | 'error' | 'missing'. */
     providerState: text('provider_state').default('missing').notNull(),
@@ -1235,7 +1235,7 @@ export const legacySandboxMigrations = kortixSchema.table(
 // each chat's sandbox files archived under legacy/<slug>/. Same durable-runner
 // model as legacy_sandbox_migrations (phase/progress/heartbeat lease, resumable
 // by the worker), but keyed on account_id since the source is public.resources,
-// not kortix.sandboxes.
+// not agentica.sandboxes.
 export const sunaAccountMigrations = kortixSchema.table(
   'suna_account_migrations',
   {
@@ -1425,7 +1425,7 @@ export const accountTokens = kortixSchema.table(
     /** Per-agent authorization grant for a sandbox session token: which Kortix
      *  CLI/API actions + connector profiles the running agent may use. Resolved
      *  from agentica.toml's [[agents]] overlay at session birth (= declared ∩ the
-     *  launching user's role; the default `kortix` agent = "all" ∩ user). Null
+     *  launching user's role; the default agent = "all" ∩ user). Null
      *  for non-agent tokens (laptop CLI PATs, etc.) — which keep full access. */
     agentGrant: jsonb('agent_grant').$type<AgentGrant>(),
     /** Session this token belongs to (sandbox executor token, session_id =
@@ -2625,9 +2625,9 @@ export const auditWebhooks = kortixSchema.table(
 );
 
 // ─── SAML SSO (per-account) ─────────────────────────────────────────────────
-// Pairs a kortix account with the Supabase auth.sso_providers row that
+// Pairs an account with the Supabase auth.sso_providers row that
 // represents its SAML connection. The Supabase side handles the SAML
-// handshake; we look up the kortix account here when a JWT carrying a
+// handshake; we look up the account here when a JWT carrying a
 // matching sso_provider_id arrives, then JIT-provision membership and
 // sync group memberships from the configured group claim.
 

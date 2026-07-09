@@ -81,7 +81,7 @@ iamRouter.openapi(
         SELECT COUNT(*)::int FROM auth.mfa_factors mf
         WHERE mf.user_id = am.user_id AND mf.status = 'verified'
       ), 0) AS verified_factors
-    FROM kortix.account_members am
+    FROM agentica.account_members am
     WHERE am.account_id = ${accountId}::uuid
   `);
 
@@ -187,7 +187,7 @@ iamRouter.openapi(
     if (!superAdmin) {
       const enrolled = await db.execute<{ user_id: string }>(sql`
         SELECT am.user_id
-        FROM kortix.account_members am
+        FROM agentica.account_members am
         WHERE am.account_id = ${accountId}::uuid
           AND EXISTS (
             SELECT 1 FROM auth.mfa_factors mf

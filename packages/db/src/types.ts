@@ -43,7 +43,7 @@ export type NewLegacySandboxMigration = typeof legacySandboxMigrations.$inferIns
 export type Sandbox = typeof sandboxes.$inferSelect;
 export type ApiKey = typeof apiKeys.$inferSelect;
 export type CreditAccount = typeof creditAccounts.$inferSelect;
-/** @deprecated Use AccountMember instead — basejump.account_user is being migrated to kortix.account_members */
+/** @deprecated Use AccountMember instead — basejump.account_user is being migrated to agentica.account_members */
 export type AccountUser = typeof accountUser.$inferSelect;
 export type KortixApiKey = typeof kortixApiKeys.$inferSelect;
 

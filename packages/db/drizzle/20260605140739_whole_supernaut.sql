@@ -1,4 +1,4 @@
-CREATE TABLE "kortix"."suna_account_migrations" (
+CREATE TABLE "agentica"."suna_account_migrations" (
 	"migration_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"run_id" text NOT NULL,
 	"account_id" uuid NOT NULL,
@@ -18,6 +18,6 @@ CREATE TABLE "kortix"."suna_account_migrations" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE INDEX "idx_suna_account_migrations_status" ON "kortix"."suna_account_migrations" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "idx_suna_account_migrations_account" ON "kortix"."suna_account_migrations" USING btree ("account_id");--> statement-breakpoint
-CREATE INDEX "idx_suna_account_migrations_heartbeat" ON "kortix"."suna_account_migrations" USING btree ("status","heartbeat_at");
+CREATE INDEX "idx_suna_account_migrations_status" ON "agentica"."suna_account_migrations" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "idx_suna_account_migrations_account" ON "agentica"."suna_account_migrations" USING btree ("account_id");--> statement-breakpoint
+CREATE INDEX "idx_suna_account_migrations_heartbeat" ON "agentica"."suna_account_migrations" USING btree ("status","heartbeat_at");

@@ -5,7 +5,7 @@
 -- baseline, but faked-baseline environments need this forward-only enum backfill
 -- before `syncProjectConnectors` can materialize provider_type='channel'.
 
-ALTER TYPE kortix.executor_connector_provider ADD VALUE IF NOT EXISTS 'channel';
+ALTER TYPE agentica.executor_connector_provider ADD VALUE IF NOT EXISTS 'channel';
 
 -- Down Migration
 -- PostgreSQL enum values are intentionally forward-only here. Removing `channel`

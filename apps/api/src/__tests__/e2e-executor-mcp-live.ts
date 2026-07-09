@@ -33,7 +33,7 @@ function check(name: string, cond: boolean, detail?: unknown) {
 
 async function seed(): Promise<string> {
   const [proj] = await db.execute<{ account_id: string }>(
-    sql`select account_id from kortix.projects where project_id = ${PROJECT_ID} limit 1`,
+    sql`select account_id from agentica.projects where project_id = ${PROJECT_ID} limit 1`,
   ).then((r) => ((r as any).rows ?? r) as { account_id: string }[]);
   if (!proj) throw new Error(`project ${PROJECT_ID} not found`);
   const accountId = proj.account_id;
@@ -55,7 +55,7 @@ async function seed(): Promise<string> {
   });
 
   const member = (await db.execute<{ user_id: string; account_id: string }>(
-    sql`select user_id, account_id from kortix.account_members where account_id = ${accountId} order by joined_at limit 1`,
+    sql`select user_id, account_id from agentica.account_members where account_id = ${accountId} order by joined_at limit 1`,
   ).then((r) => ((r as any).rows ?? r)))[0];
   if (!member) throw new Error(`no account_members for account ${accountId}`);
 

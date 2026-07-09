@@ -98,7 +98,7 @@ accountsRouter.openapi(
   try {
     const patRows = await db.execute<{ user_id: string; n: number }>(sql`
       SELECT user_id::text, COUNT(*)::int AS n
-      FROM kortix.account_tokens
+      FROM agentica.account_tokens
       WHERE account_id = ${accountId}::uuid AND status = 'active'
       GROUP BY user_id
     `);
@@ -120,7 +120,7 @@ accountsRouter.openapi(
       FROM auth.mfa_factors
       WHERE status = 'verified'
         AND user_id IN (
-          SELECT user_id FROM kortix.account_members WHERE account_id = ${accountId}::uuid
+          SELECT user_id FROM agentica.account_members WHERE account_id = ${accountId}::uuid
         )
     `);
     const mfaData = ((mfaRows as unknown) as { rows: typeof mfaRows }).rows ?? mfaRows;

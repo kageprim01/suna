@@ -1,9 +1,9 @@
 -- Allow function bodies to reference objects created later (pg_dump preamble).
 SET check_function_bodies = false;
 --> statement-breakpoint
--- 0000_bootstrap — non-kortix baseline curated from prod (2026-06-05).
+-- 0000_bootstrap — non-agentica baseline curated from prod (2026-06-05).
 -- basejump (account framework + auth.users signup trigger), public credit
--- RPC functions, signup helpers, welcome webhook, storage buckets. kortix.*
+-- RPC functions, signup helpers, welcome webhook, storage buckets. agentica.*
 -- is generated in 0001. Assumes a fresh Supabase stack (auth, storage, roles).
 
 create extension if not exists pgcrypto;
@@ -608,7 +608,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "basejump"."invitations" TO "service_
 --> statement-breakpoint
 RESET ALL;
 --> statement-breakpoint
--- public: atomic credit RPC functions (operate on kortix.credit_accounts)
+-- public: atomic credit RPC functions (operate on agentica.credit_accounts)
 CREATE OR REPLACE FUNCTION public.atomic_add_credits(p_account_id uuid, p_amount numeric, p_is_expiring boolean DEFAULT true, p_description text DEFAULT 'Credit added'::text, p_expires_at timestamp with time zone DEFAULT NULL::timestamp with time zone, p_type text DEFAULT NULL::text, p_stripe_event_id text DEFAULT NULL::text, p_idempotency_key text DEFAULT NULL::text)
  RETURNS jsonb
  LANGUAGE plpgsql
@@ -627,7 +627,7 @@ BEGIN
     -- Idempotency: check stripe_event_id
     IF p_stripe_event_id IS NOT NULL THEN
         IF EXISTS (
-            SELECT 1 FROM kortix.credit_ledger
+            SELECT 1 FROM agentica.credit_ledger
             WHERE stripe_event_id = p_stripe_event_id
         ) THEN
             RETURN jsonb_build_object(
@@ -641,7 +641,7 @@ BEGIN
     -- Idempotency: check idempotency_key
     IF p_idempotency_key IS NOT NULL THEN
         IF EXISTS (
-            SELECT 1 FROM kortix.credit_ledger
+            SELECT 1 FROM agentica.credit_ledger
             WHERE idempotency_key = p_idempotency_key
             AND created_at > NOW() - INTERVAL '1 hour'
         ) THEN
@@ -655,7 +655,7 @@ BEGIN
 
     SELECT expiring_credits, non_expiring_credits, balance, tier
     INTO v_current_expiring, v_current_non_expiring, v_current_balance, v_tier
-    FROM kortix.credit_accounts
+    FROM agentica.credit_accounts
     WHERE account_id = p_account_id
     FOR UPDATE;
 
@@ -665,7 +665,7 @@ BEGIN
         v_current_balance := 0;
         v_tier := 'none';
 
-        INSERT INTO kortix.credit_accounts (
+        INSERT INTO agentica.credit_accounts (
             account_id, expiring_credits, non_expiring_credits, balance, tier
         ) VALUES (
             p_account_id, 0, 0, 0, v_tier
@@ -682,7 +682,7 @@ BEGIN
 
     v_new_total := v_new_expiring + v_new_non_expiring;
 
-    UPDATE kortix.credit_accounts
+    UPDATE agentica.credit_accounts
     SET
         expiring_credits = v_new_expiring,
         non_expiring_credits = v_new_non_expiring,
@@ -690,7 +690,7 @@ BEGIN
         updated_at = NOW()
     WHERE account_id = p_account_id;
 
-    INSERT INTO kortix.credit_ledger (
+    INSERT INTO agentica.credit_ledger (
         account_id, amount, balance_after, type, description,
         is_expiring, expires_at, stripe_event_id, idempotency_key, processing_source
     ) VALUES (
@@ -900,17 +900,17 @@ BEGIN
     )
     SELECT p_account_id, p_period_start, p_period_end, stripe_subscription_id,
            p_processed_by, p_credits, p_stripe_event_id
-    FROM kortix.credit_accounts
+    FROM agentica.credit_accounts
     WHERE account_id = p_account_id;
 
     SELECT non_expiring_credits INTO v_current_non_expiring
-    FROM kortix.credit_accounts WHERE account_id = p_account_id;
+    FROM agentica.credit_accounts WHERE account_id = p_account_id;
 
     v_current_non_expiring := COALESCE(v_current_non_expiring, 0);
     v_new_total := p_credits + v_current_non_expiring;
     v_expires_at := TO_TIMESTAMP(p_period_end);
 
-    UPDATE kortix.credit_accounts
+    UPDATE agentica.credit_accounts
     SET
         expiring_credits = p_credits,
         balance = v_new_total,
@@ -921,7 +921,7 @@ BEGIN
         updated_at = NOW()
     WHERE account_id = p_account_id;
 
-    INSERT INTO kortix.credit_ledger (
+    INSERT INTO agentica.credit_ledger (
         account_id, amount, balance_after, type, description,
         is_expiring, expires_at, stripe_event_id, processing_source
     ) VALUES (
@@ -964,7 +964,7 @@ DECLARE
 BEGIN
     SELECT balance, expiring_credits, non_expiring_credits
     INTO v_current_balance, v_current_expiring, v_current_non_expiring
-    FROM kortix.credit_accounts
+    FROM agentica.credit_accounts
     WHERE account_id = p_account_id
     FOR UPDATE;
 
@@ -981,7 +981,7 @@ BEGIN
     v_new_total := p_new_credits + v_actual_non_expiring;
     v_expires_at := DATE_TRUNC('month', NOW() + INTERVAL '1 month') + INTERVAL '1 month';
 
-    UPDATE kortix.credit_accounts
+    UPDATE agentica.credit_accounts
     SET
         expiring_credits = p_new_credits,
         non_expiring_credits = v_actual_non_expiring,
@@ -989,7 +989,7 @@ BEGIN
         updated_at = NOW()
     WHERE account_id = p_account_id;
 
-    INSERT INTO kortix.credit_ledger (
+    INSERT INTO agentica.credit_ledger (
         account_id, amount, balance_after, type, description,
         is_expiring, expires_at, stripe_event_id, metadata, processing_source
     ) VALUES (
@@ -1027,16 +1027,16 @@ AS $function$
       SELECT COALESCE(daily_credits_balance,0),COALESCE(expiring_credits,0),
              COALESCE(non_expiring_credits,0),COALESCE(balance,0)
       INTO v_daily,v_exp,v_nonexp,v_total
-      FROM kortix.credit_accounts WHERE account_id=p_account_id FOR UPDATE;
+      FROM agentica.credit_accounts WHERE account_id=p_account_id FOR UPDATE;
       IF NOT FOUND THEN RETURN jsonb_build_object('success',false,'error','No credit account found','required',p_amount,'available',0); END IF;
       v_rem:=p_amount;
       IF v_rem>0 AND v_daily>0 THEN IF v_daily>=v_rem THEN v_fd:=v_rem;v_rem:=0; ELSE v_fd:=v_daily;v_rem:=v_rem-v_daily; END IF; END IF;
       IF v_rem>0 AND v_exp>0 THEN IF v_exp>=v_rem THEN v_fe:=v_rem;v_rem:=0; ELSE v_fe:=v_exp;v_rem:=v_rem-v_exp; END IF; END IF;
       IF v_rem>0 THEN v_fn:=v_rem;v_rem:=0; END IF;
       v_nd:=v_daily-v_fd; v_ne:=v_exp-v_fe; v_nn:=v_nonexp-v_fn; v_nt:=v_nd+v_ne+v_nn;
-      UPDATE kortix.credit_accounts SET daily_credits_balance=v_nd,expiring_credits=v_ne,
+      UPDATE agentica.credit_accounts SET daily_credits_balance=v_nd,expiring_credits=v_ne,
         non_expiring_credits=v_nn,balance=v_nt,updated_at=NOW() WHERE account_id=p_account_id;
-      INSERT INTO kortix.credit_ledger(account_id,amount,balance_after,type,description,metadata)
+      INSERT INTO agentica.credit_ledger(account_id,amount,balance_after,type,description,metadata)
       VALUES(p_account_id,-p_amount,v_nt,'usage',p_description,
         jsonb_build_object('from_daily',v_fd,'from_monthly',v_fe,'from_extra',v_fn,'thread_id',p_thread_id,'message_id',p_message_id))
       RETURNING id INTO v_tid;

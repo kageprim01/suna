@@ -118,7 +118,7 @@ async function touchActivity(
   // `xmax = 0` — Postgres sets xmax to 0 for new rows but to the
   // current xid for updates. Cheap, single round-trip.
   const rows = await db.execute<{ first_sight: boolean }>(sql`
-    INSERT INTO kortix.account_session_activity
+    INSERT INTO agentica.account_session_activity
       (account_id, user_id, session_id, ip, user_agent)
     VALUES (${accountId}::uuid, ${userId}::uuid, ${sessionId}::uuid, ${ip}, ${userAgent})
     ON CONFLICT (account_id, user_id, session_id)

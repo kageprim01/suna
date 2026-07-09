@@ -45,14 +45,14 @@ export async function listGroups(accountId: string): Promise<
       // both sides of `WHERE x.group_id = "group_id"` to the inner alias
       // and the filter degenerates to `WHERE TRUE` — counts come back as
       // table-wide totals. Aliasing the inner table doesn't help; we need
-      // the OUTER reference to be unambiguously kortix.account_groups.
+      // the OUTER reference to be unambiguously agentica.account_groups.
       memberCount: sql<number>`(
-        SELECT COUNT(*)::int FROM kortix.account_group_members agm
-        WHERE agm.group_id = kortix.account_groups.group_id
+        SELECT COUNT(*)::int FROM agentica.account_group_members agm
+        WHERE agm.group_id = agentica.account_groups.group_id
       )`,
       projectCount: sql<number>`(
-        SELECT COUNT(*)::int FROM kortix.project_group_grants pgg
-        WHERE pgg.group_id = kortix.account_groups.group_id
+        SELECT COUNT(*)::int FROM agentica.project_group_grants pgg
+        WHERE pgg.group_id = agentica.account_groups.group_id
       )`,
     })
     .from(accountGroups)

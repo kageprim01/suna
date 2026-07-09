@@ -7,7 +7,7 @@ describe('lintMigration', () => {
   test('a well-formed migration produces no errors', () => {
     const { errors } = lintMigration(
       GOOD_NAME,
-      'ALTER TABLE kortix.accounts ADD COLUMN note text;\n',
+      'ALTER TABLE agentica.accounts ADD COLUMN note text;\n',
     );
     expect(errors).toEqual([]);
   });
@@ -36,23 +36,23 @@ describe('lintMigration', () => {
   });
 
   test('warns on a destructive DROP in the up migration', () => {
-    const { warnings } = lintMigration(GOOD_NAME, 'DROP TABLE kortix.widgets;');
+    const { warnings } = lintMigration(GOOD_NAME, 'DROP TABLE agentica.widgets;');
     expect(warnings.some((w) => w.includes('destructive'))).toBe(true);
   });
 
   test('does not warn when the DROP is only in the down section', () => {
     const sql =
-      '-- Up Migration\nCREATE TABLE kortix.w (id int);\n-- Down Migration\nDROP TABLE kortix.w;';
+      '-- Up Migration\nCREATE TABLE agentica.w (id int);\n-- Down Migration\nDROP TABLE agentica.w;';
     expect(lintMigration(GOOD_NAME, sql).warnings).toEqual([]);
   });
 
   test('warns on DELETE without a WHERE clause', () => {
-    const { warnings } = lintMigration(GOOD_NAME, 'DELETE FROM kortix.widgets;');
+    const { warnings } = lintMigration(GOOD_NAME, 'DELETE FROM agentica.widgets;');
     expect(warnings.some((w) => w.includes('DELETE without a WHERE'))).toBe(true);
   });
 
   test('does not warn on DELETE that has a WHERE clause', () => {
-    const { warnings } = lintMigration(GOOD_NAME, "DELETE FROM kortix.widgets WHERE id = '1';");
+    const { warnings } = lintMigration(GOOD_NAME, "DELETE FROM agentica.widgets WHERE id = '1';");
     expect(warnings).toEqual([]);
   });
 });

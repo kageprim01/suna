@@ -110,12 +110,12 @@ export async function reconcileSnapshotQuota(
              p.status <> 'archived' AND (
                coalesce((p.metadata ->> 'warm_pool_seen_at')::timestamptz, 'epoch'::timestamptz) > ${activityCutoff}::timestamptz
                OR EXISTS (
-                 SELECT 1 FROM kortix.project_sessions ps
+                 SELECT 1 FROM agentica.project_sessions ps
                  WHERE ps.project_id = p.project_id AND ps.created_at > ${activityCutoff}::timestamptz
                )
              )
            ) AS active
-    FROM kortix.projects p
+    FROM agentica.projects p
     WHERE p.metadata -> 'warm_snapshot' ->> 'name' IS NOT NULL
   `);
   const pointerList = ((pointerRows as unknown as { rows?: any[] }).rows ?? (pointerRows as unknown as any[])) as Array<{

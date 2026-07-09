@@ -82,7 +82,7 @@ async function loadAffected(args: Args): Promise<AffectedRow[]> {
   const rows: any = await db.execute(sql`
     WITH usage AS (
       SELECT session_id, max(created_at) AS last_usage
-      FROM kortix.usage_events
+      FROM agentica.usage_events
       GROUP BY session_id
     )
     SELECT
@@ -96,8 +96,8 @@ async function loadAffected(args: Args): Promise<AffectedRow[]> {
         coalesce(cs.ended_at, cs.last_billed_at)
         - (GREATEST(coalesce(u.last_usage, cs.started_at), cs.started_at) + ${graceSql})
       ))::bigint AS over_seconds
-    FROM kortix.sandbox_compute_sessions cs
-    LEFT JOIN kortix.session_sandboxes ss ON ss.sandbox_id = cs.sandbox_id
+    FROM agentica.sandbox_compute_sessions cs
+    LEFT JOIN agentica.session_sandboxes ss ON ss.sandbox_id = cs.sandbox_id
     LEFT JOIN usage u ON u.session_id = cs.session_id
     WHERE cs.cost_usd > 0
       ${accountFilter}
@@ -127,7 +127,7 @@ function round2(n: number): number {
 
 async function alreadyRefunded(accountId: string, key: string): Promise<boolean> {
   const res: any = await db.execute(sql`
-    SELECT 1 FROM kortix.credit_ledger
+    SELECT 1 FROM agentica.credit_ledger
     WHERE account_id = ${accountId}::uuid AND stripe_event_id = ${key}
     LIMIT 1
   `);

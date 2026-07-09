@@ -5,7 +5,7 @@
 -- existing rows so historical Slack/scheduled/webhook threads show up too.
 -- Idempotent: only flips rows still sitting at 'private' (explicitly
 -- restricted/shared rows are left alone).
-UPDATE "kortix"."project_sessions"
+UPDATE "agentica"."project_sessions"
 SET "visibility" = 'project'
 WHERE "visibility" = 'private'
   AND (

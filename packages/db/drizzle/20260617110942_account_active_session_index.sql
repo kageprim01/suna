@@ -2,7 +2,7 @@
 
 -- Partial composite index for the concurrency-cap COUNT run on EVERY session
 -- create (countActiveProjectSessions → checkConcurrentSessionCap):
---   SELECT count(*) FROM kortix.project_sessions
+--   SELECT count(*) FROM agentica.project_sessions
 --   WHERE account_id = $1 AND status IN ('queued','branching','provisioning','running');
 -- Without it Postgres uses idx_project_sessions_account and heap-filters status,
 -- walking an account's FULL session history (terminal stopped/failed/completed
@@ -16,12 +16,12 @@
 -- ever large enough that the build lock matters, an operator may build it
 -- out-of-band first:
 --   CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_project_sessions_account_active
---     ON kortix.project_sessions (account_id)
+--     ON agentica.project_sessions (account_id)
 --     WHERE status IN ('queued','branching','provisioning','running');
 -- (run outside any migration), after which this IF NOT EXISTS statement no-ops.
 --
 -- The predicate MUST stay in sync with ACTIVE_SESSION_STATUSES in
 -- apps/api/src/projects/lib/serializers.ts.
 CREATE INDEX IF NOT EXISTS "idx_project_sessions_account_active"
-  ON "kortix"."project_sessions" ("account_id")
+  ON "agentica"."project_sessions" ("account_id")
   WHERE status IN ('queued', 'branching', 'provisioning', 'running');

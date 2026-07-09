@@ -1,5 +1,5 @@
-CREATE TYPE "kortix"."session_lifecycle_command_status" AS ENUM('queued', 'running', 'succeeded', 'failed', 'dead_lettered');--> statement-breakpoint
-CREATE TABLE "kortix"."project_session_public_shares" (
+CREATE TYPE "agentica"."session_lifecycle_command_status" AS ENUM('queued', 'running', 'succeeded', 'failed', 'dead_lettered');--> statement-breakpoint
+CREATE TABLE "agentica"."project_session_public_shares" (
 	"share_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"token_hash" text NOT NULL,
 	"session_id" text NOT NULL,
@@ -20,11 +20,11 @@ CREATE TABLE "kortix"."project_session_public_shares" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "kortix"."session_lifecycle_commands" (
+CREATE TABLE "agentica"."session_lifecycle_commands" (
 	"command_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"command_type" varchar(64) NOT NULL,
 	"source" varchar(64) NOT NULL,
-	"status" "kortix"."session_lifecycle_command_status" DEFAULT 'queued' NOT NULL,
+	"status" "agentica"."session_lifecycle_command_status" DEFAULT 'queued' NOT NULL,
 	"project_id" uuid NOT NULL,
 	"session_id" text,
 	"account_id" uuid NOT NULL,
@@ -41,17 +41,17 @@ CREATE TABLE "kortix"."session_lifecycle_commands" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "kortix"."project_session_public_shares" ADD CONSTRAINT "project_session_public_shares_session_id_project_sessions_session_id_fk" FOREIGN KEY ("session_id") REFERENCES "kortix"."project_sessions"("session_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_session_public_shares" ADD CONSTRAINT "project_session_public_shares_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."project_session_public_shares" ADD CONSTRAINT "project_session_public_shares_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."session_lifecycle_commands" ADD CONSTRAINT "session_lifecycle_commands_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "kortix"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."session_lifecycle_commands" ADD CONSTRAINT "session_lifecycle_commands_session_id_project_sessions_session_id_fk" FOREIGN KEY ("session_id") REFERENCES "kortix"."project_sessions"("session_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "kortix"."session_lifecycle_commands" ADD CONSTRAINT "session_lifecycle_commands_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "kortix"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_project_session_public_shares_token_hash" ON "kortix"."project_session_public_shares" USING btree ("token_hash");--> statement-breakpoint
-CREATE INDEX "idx_project_session_public_shares_session" ON "kortix"."project_session_public_shares" USING btree ("session_id");--> statement-breakpoint
-CREATE INDEX "idx_project_session_public_shares_project" ON "kortix"."project_session_public_shares" USING btree ("project_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "idx_session_lifecycle_commands_idempotency" ON "kortix"."session_lifecycle_commands" USING btree ("idempotency_key");--> statement-breakpoint
-CREATE INDEX "idx_session_lifecycle_commands_due" ON "kortix"."session_lifecycle_commands" USING btree ("status","available_at");--> statement-breakpoint
-CREATE INDEX "idx_session_lifecycle_commands_project" ON "kortix"."session_lifecycle_commands" USING btree ("project_id");--> statement-breakpoint
-CREATE INDEX "idx_session_lifecycle_commands_session" ON "kortix"."session_lifecycle_commands" USING btree ("session_id");--> statement-breakpoint
-CREATE INDEX "idx_session_lifecycle_commands_locked" ON "kortix"."session_lifecycle_commands" USING btree ("locked_until");
+ALTER TABLE "agentica"."project_session_public_shares" ADD CONSTRAINT "project_session_public_shares_session_id_project_sessions_session_id_fk" FOREIGN KEY ("session_id") REFERENCES "agentica"."project_sessions"("session_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_session_public_shares" ADD CONSTRAINT "project_session_public_shares_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."project_session_public_shares" ADD CONSTRAINT "project_session_public_shares_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."session_lifecycle_commands" ADD CONSTRAINT "session_lifecycle_commands_project_id_projects_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "agentica"."projects"("project_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."session_lifecycle_commands" ADD CONSTRAINT "session_lifecycle_commands_session_id_project_sessions_session_id_fk" FOREIGN KEY ("session_id") REFERENCES "agentica"."project_sessions"("session_id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "agentica"."session_lifecycle_commands" ADD CONSTRAINT "session_lifecycle_commands_account_id_accounts_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "agentica"."accounts"("account_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_project_session_public_shares_token_hash" ON "agentica"."project_session_public_shares" USING btree ("token_hash");--> statement-breakpoint
+CREATE INDEX "idx_project_session_public_shares_session" ON "agentica"."project_session_public_shares" USING btree ("session_id");--> statement-breakpoint
+CREATE INDEX "idx_project_session_public_shares_project" ON "agentica"."project_session_public_shares" USING btree ("project_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "idx_session_lifecycle_commands_idempotency" ON "agentica"."session_lifecycle_commands" USING btree ("idempotency_key");--> statement-breakpoint
+CREATE INDEX "idx_session_lifecycle_commands_due" ON "agentica"."session_lifecycle_commands" USING btree ("status","available_at");--> statement-breakpoint
+CREATE INDEX "idx_session_lifecycle_commands_project" ON "agentica"."session_lifecycle_commands" USING btree ("project_id");--> statement-breakpoint
+CREATE INDEX "idx_session_lifecycle_commands_session" ON "agentica"."session_lifecycle_commands" USING btree ("session_id");--> statement-breakpoint
+CREATE INDEX "idx_session_lifecycle_commands_locked" ON "agentica"."session_lifecycle_commands" USING btree ("locked_until");
