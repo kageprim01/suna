@@ -535,7 +535,12 @@ export async function signUpWithPassword(prevState: any, formData: FormData) {
   const billingEnabled = runtimeEnv.BILLING_ENABLED;
   let redirectTo = returnUrl;
 
-  if (billingEnabled && !alreadyExists && signInData.session?.access_token) {
+  // Detect new user (created within the last 60 seconds)
+  const isNewUser =
+    signInData.user &&
+    Date.now() - new Date(signInData.user.created_at).getTime() < 60000;
+
+  if (billingEnabled && !alreadyExists && isNewUser && signInData.session?.access_token) {
     try {
       const backendUrl = (process.env.BACKEND_URL || runtimeEnv.BACKEND_URL || '').replace(
         /\/v1\/?$/,
@@ -552,6 +557,13 @@ export async function signUpWithPassword(prevState: any, formData: FormData) {
     } catch {
       // Fall back to the default return URL.
     }
+  }
+
+  // Append onboarding signal when redirecting to the projects list
+  if (isNewUser && redirectTo === returnUrl) {
+    const url = new URL(redirectTo, 'https://kortix.local');
+    url.searchParams.set('auth_event', 'signup');
+    redirectTo = url.pathname + url.search;
   }
 
   return {
@@ -674,11 +686,19 @@ export async function verifyOtp(prevState: any, formData: FormData) {
     }
   }
 
+  // Append onboarding signal when redirecting to the projects list
+  let redirectTo = finalDestination;
+  if (isNewUser && redirectTo === returnUrl) {
+    const url = new URL(redirectTo, 'https://kortix.local');
+    url.searchParams.set('auth_event', 'signup');
+    redirectTo = url.pathname + url.search;
+  }
+
   return {
     success: true,
     authEvent,
     authMethod: 'email_otp',
-    redirectTo: finalDestination,
+    redirectTo,
     // Hand the session back so the client can establish it synchronously
     // (supabase.auth.setSession) before navigating. Without this the client
     // only picks up the session on a later background token refresh, which
