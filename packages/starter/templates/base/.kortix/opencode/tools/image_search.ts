@@ -91,7 +91,7 @@ async function describeImage(
 
 async function enrichImages(images: EnrichedImage[]): Promise<EnrichedImage[]> {
   const replicateBaseUrl = getKortixRouterBase("replicate") ?? undefined;
-  // Route through the Kortix router (derived from KORTIX_API_URL); auth with
+  // Route through the Agentica router (derived from KORTIX_API_URL); auth with
   // KORTIX_TOKEN. Fall back to a raw REPLICATE_API_TOKEN only when unset.
   const replicateToken = replicateBaseUrl
     ? getEnv("KORTIX_TOKEN")
@@ -142,7 +142,7 @@ export default tool({
   },
   async execute(args, _context) {
     const serperUrlOverride = getKortixRouterBase("serper") ?? undefined;
-    // Route through the Kortix router (derived from KORTIX_API_URL); auth with
+    // Route through the Agentica router (derived from KORTIX_API_URL); auth with
     // KORTIX_TOKEN. Fall back to a raw SERPER_API_KEY only when unset.
     const apiKey = serperUrlOverride
       ? getEnv("KORTIX_TOKEN")

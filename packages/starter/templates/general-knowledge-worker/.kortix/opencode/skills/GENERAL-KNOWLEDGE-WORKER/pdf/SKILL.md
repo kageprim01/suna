@@ -48,12 +48,12 @@ Use this for fast inspection. Move to the tool-specific sections below when you 
 ## PDF Metadata
 
 Always set metadata when creating PDFs:
-- **Author** should default to `"Kortix"` unless the user asks for a different organization or author name
+- **Author** should default to `"Agentica"` unless the user asks for a different organization or author name
 - **Title** should be a descriptive name relevant to the document contents
 
-Canvas API: `c.setTitle(...)`, `c.setAuthor("Kortix")` right after creating the canvas.
-SimpleDocTemplate: pass `title=...`, `author="Kortix"` as constructor kwargs.
-pdf-lib (JS): `doc.setTitle(...)`, `doc.setAuthor("Kortix")`.
+Canvas API: `c.setTitle(...)`, `c.setAuthor("Agentica")` right after creating the canvas.
+SimpleDocTemplate: pass `title=...`, `author="Agentica"` as constructor kwargs.
+pdf-lib (JS): `doc.setTitle(...)`, `doc.setAuthor("Agentica")`.
 
 ## Source Citations
 

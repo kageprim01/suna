@@ -9,7 +9,7 @@ let dir: string;
 
 beforeEach(() => {
   dir = mkdtempSync(join(tmpdir(), 'kortix-agents-'));
-  mkdirSync(join(dir, '.kortix/opencode/skills/kortix-system'), { recursive: true });
+  mkdirSync(join(dir, '.kortix/opencode/skills/system'), { recursive: true });
   writeFileSync(join(dir, CANONICAL_SKILL), 'canonical skill', 'utf8');
 });
 
@@ -41,7 +41,7 @@ describe('wireCodingAgents', () => {
       expect(lstatSync(join(dir, link)).isSymbolicLink()).toBe(true);
       expect(readlinkSync(join(dir, link))).toBe('.kortix/opencode');
       // …and it resolves all the way to the canonical skill.
-      const skill = join(dir, link, 'skills/kortix-system/SKILL.md');
+      const skill = join(dir, link, 'skills/system/SKILL.md');
       expect(readFileSync(skill, 'utf8')).toBe('canonical skill');
     }
 

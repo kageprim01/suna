@@ -241,7 +241,7 @@ async function waitForThreadSession(teamId: string, threadId: string): Promise<s
 
 const TURN_INSTRUCTIONS = [
   'How to work:',
-  '- **First, load the `kortix-slack` skill** via the `skill` tool. It is the canonical',
+  '- **First, load the `slack` skill** via the `skill` tool. It is the canonical',
   '  reference for posting in Slack — covers step/send semantics, link syntax,',
   '  Block Kit answers, sources, tone, and gotchas. Do not skip it.',
   '- The `slack` CLI needs **no token** in your sandbox — every command runs through the',

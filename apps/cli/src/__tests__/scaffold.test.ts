@@ -11,7 +11,7 @@ const REQUIRED_BASE_PATHS = [
   '.gitignore',
   '.kortix/memory/MEMORY.md',
   '.kortix/opencode/agents/kortix.md',
-  '.kortix/opencode/skills/kortix-system/SKILL.md',
+  '.kortix/opencode/skills/system/SKILL.md',
   '.kortix/opencode/tools/show.ts',
   'README.md',
   'kortix.toml',

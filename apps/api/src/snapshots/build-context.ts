@@ -118,8 +118,8 @@ export async function stageBuildContext(
   await gzipFile(AGENT_BIN_PATH, join(contextDir, 'kortix-agent.gz'));
   await gzipFile(CLI_BIN_PATH, join(contextDir, 'kortix.gz'));
   await copyFile(ENTRYPOINT_PATH, join(contextDir, 'kortix-entrypoint'));
-  await cp(SLACK_CLI_SRC_PATH, join(contextDir, 'kortix-slack-cli'), { recursive: true });
-  await cp(EXECUTOR_SDK_SRC_PATH, join(contextDir, 'kortix-executor-sdk'), { recursive: true });
+  await cp(SLACK_CLI_SRC_PATH, join(contextDir, 'slack-cli'), { recursive: true });
+  await cp(EXECUTOR_SDK_SRC_PATH, join(contextDir, 'executor-sdk'), { recursive: true });
   // Stage the starter opencode config for the build-time instance warm-up.
   // Best effort: if it's missing, skip the warm-up (the build still succeeds and
   // sessions just pay the first-instance cost at runtime as before).
@@ -159,8 +159,8 @@ export async function stageBuildContext(
     agentBinaryPath: 'kortix-agent.gz',
     cliBinaryPath: 'kortix.gz',
     entrypointScriptPath: 'kortix-entrypoint',
-    slackCliPath: 'kortix-slack-cli',
-    executorSdkPath: 'kortix-executor-sdk',
+    slackCliPath: 'slack-cli',
+    executorSdkPath: 'executor-sdk',
     opencodeConfigPath,
     catalogPath: 'kortix-llm-catalog.json',
   });

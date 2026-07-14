@@ -29,7 +29,7 @@ python skills/GENERAL-KNOWLEDGE-WORKER/elevenlabs/scripts/tts.py <command> [args
 
 ```bash
 # Basic — default voice (George), multilingual v2 model
-python scripts/tts.py speak "Hello, this is Kortix speaking."
+python scripts/tts.py speak "Hello, this is Agentica speaking."
 
 # Named voice
 python scripts/tts.py speak "Welcome to the presentation." --voice Rachel
@@ -170,7 +170,7 @@ python scripts/tts.py speak @workspace/report.md --voice Rachel -o report_narrat
 ### Create a podcast intro
 
 ```bash
-python scripts/tts.py speak "Welcome to the Kortix Weekly. I'm your host, and today we're diving into autonomous AI agents." \
+python scripts/tts.py speak "Welcome to the Agentica Weekly. I'm your host, and today we're diving into autonomous AI agents." \
   --voice George --stability 0.4 --similarity 0.8 --style 0.5 \
   -o podcast_intro.mp3
 ```

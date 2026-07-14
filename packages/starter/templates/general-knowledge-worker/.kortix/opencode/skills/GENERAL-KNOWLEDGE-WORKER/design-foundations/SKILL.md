@@ -28,7 +28,7 @@ Color is emphasis — every non-neutral color must answer: **what does this help
 
 ## Default Palette — Nexus
 
-**Use when the user gives no color direction.** Kortix-aligned default palette — warm, professional, accessible.
+**Use when the user gives no color direction.** Agentica-aligned default palette — warm, professional, accessible.
 
 **These are roles, not a mandate.** A typical output uses Background + Text + Primary. Add semantic colors (error, warning, success) only when the content requires them. Do not introduce color for decoration.
 

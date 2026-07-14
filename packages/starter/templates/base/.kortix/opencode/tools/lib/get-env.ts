@@ -194,7 +194,7 @@ export function getEnv(key: string): string | undefined {
 }
 
 /**
- * Base URL for a Kortix router-proxied upstream service, derived from
+ * Base URL for an Agentica router-proxied upstream service, derived from
  * KORTIX_API_URL. The sandbox only ever holds KORTIX_API_URL + KORTIX_TOKEN;
  * tools build their proxy endpoint from those two. Normalizes so it works
  * whether KORTIX_API_URL is a bare origin or already ends in /v1 or /v1/router.

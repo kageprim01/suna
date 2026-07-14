@@ -17,9 +17,9 @@ describe('buildRuntimeArtifactFingerprint', () => {
         sandboxVersion: 'dev-test',
         opencodeVersion: '1.2.3',
         artifacts: [
-          { label: 'kortix-agent', path: join(root, 'agent') },
-          { label: 'kortix-entrypoint', path: join(root, 'entrypoint') },
-          { label: 'kortix-slack-cli', path: join(root, 'cli') },
+          { label: 'agentica-agent', path: join(root, 'agent') },
+          { label: 'agentica-entrypoint', path: join(root, 'entrypoint') },
+          { label: 'slack-cli', path: join(root, 'cli') },
         ],
       };
 
@@ -76,8 +76,8 @@ describe('buildRuntimeArtifactFingerprint', () => {
       await writeFile(join(root, 'cli', 'index.ts'), 'cli-v1');
 
       const artifacts = [
-        { label: 'kortix-agent', path: join(root, 'agent') },
-        { label: 'kortix-slack-cli', path: join(root, 'cli') },
+        { label: 'agentica-agent', path: join(root, 'agent') },
+        { label: 'slack-cli', path: join(root, 'cli') },
       ];
 
       const before = await buildRuntimeArtifactFingerprint({

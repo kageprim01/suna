@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kortix TTS — ElevenLabs Text-to-Speech CLI
+Agentica TTS — ElevenLabs Text-to-Speech CLI
 
 Usage:
   python tts.py speak "Hello world"                          # Speak with default voice
@@ -256,7 +256,7 @@ def cmd_clone(args: argparse.Namespace) -> None:
 
     # Build multipart form data manually
     import mimetypes
-    boundary = "----KortixBoundary" + os.urandom(8).hex()
+    boundary = "----AgenticaBoundary" + os.urandom(8).hex()
 
     parts = []
     parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="name"\r\n\r\n{args.name}')
@@ -326,7 +326,7 @@ def cmd_sound(args: argparse.Namespace) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="tts",
-        description="Kortix TTS — ElevenLabs Text-to-Speech CLI",
+        description="Agentica TTS — ElevenLabs Text-to-Speech CLI",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 

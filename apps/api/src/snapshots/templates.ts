@@ -713,8 +713,8 @@ const AGENT_RUNTIME_ARTIFACTS = [
 ];
 const NON_AGENT_RUNTIME_ARTIFACTS = [
   { label: 'kortix-entrypoint', path: ENTRYPOINT_PATH },
-  { label: 'kortix-slack-cli', path: SLACK_CLI_SRC_PATH, excludeNames: FINGERPRINT_EXCLUDES },
-  { label: 'kortix-executor-sdk', path: EXECUTOR_SDK_SRC_PATH, excludeNames: FINGERPRINT_EXCLUDES },
+  { label: 'slack-cli', path: SLACK_CLI_SRC_PATH, excludeNames: FINGERPRINT_EXCLUDES },
+  { label: 'executor-sdk', path: EXECUTOR_SDK_SRC_PATH, excludeNames: FINGERPRINT_EXCLUDES },
   { label: 'kortix-cli-src', path: CLI_SRC_DIR, excludeNames: FINGERPRINT_EXCLUDES },
   { label: 'kortix-cli-pkg', path: CLI_PKG_JSON },
   { label: 'kortix-manifest-schema-src', path: MANIFEST_SCHEMA_SRC_DIR, excludeNames: FINGERPRINT_EXCLUDES },

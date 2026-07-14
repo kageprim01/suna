@@ -130,7 +130,7 @@ async function runSlack(args: string[], opts: { ok?: boolean } = {}): Promise<Cl
 }
 
 beforeEach(() => {
-  tempDir = mkdtempSync(join(tmpdir(), 'kortix-slack-cli-test-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'agentica-slack-cli-test-'));
   world = {
     executor: [],
     turns: [],

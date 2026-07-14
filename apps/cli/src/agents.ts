@@ -8,7 +8,7 @@ export const SUPPORTED_AGENTS: readonly CodingAgent[] = ['opencode', 'claude', '
 export const DEFAULT_PRIMARY: CodingAgent = 'codex';
 
 /** Path of the canonical Kortix skill, relative to repo root. */
-export const CANONICAL_SKILL = '.kortix/opencode/skills/kortix-system/SKILL.md';
+export const CANONICAL_SKILL = '.kortix/opencode/skills/system/SKILL.md';
 
 /** The OpenCode runtime config dir every coding agent is pointed at. */
 const OPENCODE_DIR = '.kortix/opencode';

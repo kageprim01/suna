@@ -10,7 +10,7 @@ first with the `memory` tool and add entries here (or split a topic into
 its own sub-file) as the project grows. The **memory-reflector** agent
 keeps it tidy on a schedule.
 
-To work with memory, load the **kortix-memory** skill.
+To work with memory, load the **memory** skill.
 
 <!-- Add one line per sub-file as you create them, e.g.:
 - [integrations.md](integrations.md) — third parties, MCP servers, channels -->

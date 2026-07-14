@@ -80,7 +80,7 @@ export default tool({
       ),
   },
   async execute(args, _context) {
-    // Route through the Kortix router (derived from KORTIX_API_URL) and auth with
+    // Route through the Agentica router (derived from KORTIX_API_URL) and auth with
     // KORTIX_TOKEN; the router injects the real upstream key. Fall back to a raw
     // TAVILY_API_KEY only when KORTIX_API_URL is unset (self-host/direct).
     const apiBaseURL = getKortixRouterBase("tavily") ?? undefined;

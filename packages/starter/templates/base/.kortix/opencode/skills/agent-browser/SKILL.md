@@ -11,7 +11,7 @@ Fast browser automation CLI for AI agents. Chrome/Chromium via CDP with
 accessibility-tree snapshots and compact `@eN` element refs.
 
 The `agent-browser` CLI and a headless Chromium are **already installed** in this
-Kortix sandbox and on `$PATH` — you do not need to run any install step. The
+Agentica sandbox and on `$PATH` — you do not need to run any install step. The
 browser is pre-wired via `AGENT_BROWSER_EXECUTABLE_PATH`, so `agent-browser open`
 works out of the box. (For reference, outside this sandbox it installs with
 `npm i -g agent-browser && agent-browser install`.)

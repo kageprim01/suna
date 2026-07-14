@@ -1,13 +1,13 @@
-# Kortix project manifest. Source of truth for project-wide config that
+# Agentica project manifest. Source of truth for project-wide config that
 # lives in git alongside the code. `kortix_version` pins the schema so
 # the platform can evolve safely.
 kortix_version = 1
 
 [project]
 name = "{{projectName}}"
-description = "A Kortix project."
+description = "An Agentica project."
 
-# Env vars the runtime needs. Required values must be set in the Kortix
+# Env vars the runtime needs. Required values must be set in the Agentica
 # Secrets Manager before a session can start.
 [env]
 required = []
@@ -15,13 +15,13 @@ optional = ["ANTHROPIC_API_KEY", "OPENAI_API_KEY"]
 
 # ─── Sandbox templates ───────────────────────────────────────────────────
 # Sessions boot from a sandbox image. The platform's default image (Ubuntu +
-# the Kortix runtime layer) is always available — sessions clone your repo
+# the Agentica runtime layer) is always available — sessions clone your repo
 # into /workspace at boot, so no per-project build is needed by default.
 #
 # Define `[[sandbox.templates]]` entries below if you want named custom images
 # for this project. Each entry can point at either a Dockerfile in the repo
 # (`dockerfile = "…"`) or a public Docker image (`image = "…"`). Pick one or
-# the other. The Kortix runtime layer is always added on top.
+# the other. The Agentica runtime layer is always added on top.
 #
 # Hardware: cpu = cores, memory = GiB, disk = GiB. All optional.
 #
@@ -52,18 +52,18 @@ optional = ["ANTHROPIC_API_KEY", "OPENAI_API_KEY"]
 # under this folder. `opencode.jsonc` remains OpenCode's native registry
 # for plugins, MCP servers, providers, models, and runtime defaults.
 # Defaults to `.kortix/opencode` — relocate if you want to share a
-# single opencode config across multiple Kortix repos.
+# single opencode config across multiple Agentica repos.
 [opencode]
 config_dir = ".kortix/opencode"
 
 # ─── Triggers ────────────────────────────────────────────────────────────
 # Each `[[triggers]]` entry spawns a fresh session that runs `prompt` as
-# its initial message. Add from the Kortix UI or uncomment one below.
+# its initial message. Add from the Agentica UI or uncomment one below.
 # Slugs must be lowercase URL-safe and unique per project.
 
 # Memory reflector — surveys recent project activity and curates
 # `.kortix/memory/` (the project brain). Reads its rubric from the
-# `kortix-memory` skill. Opens a `memory: …` change request at the end
+# `memory` skill. Opens a `memory: …` change request at the end
 # of each run; exits silently when nothing is worth changing.
 #
 # Disabled by default. Flip `enabled = true` once your project has
@@ -78,7 +78,7 @@ enabled = false
 cron = "0 0 3 * * *"             # 03:00 daily
 timezone = "UTC"
 prompt = """
-Load the `kortix-memory` skill, then reflect on the last 24h of
+Load the `memory` skill, then reflect on the last 24h of
 project activity (git log, merged CRs). Update `.kortix/memory/` per
 the rubric and open a single CR titled `memory: …`. Exit silently if
 nothing is worth changing.
@@ -122,7 +122,7 @@ nothing is worth changing.
 # Connect a chat platform (Slack today; Teams/Discord/etc. later) to this
 # project. The Slack install (bot token + signing secret) lives in this
 # project's secrets manager — connect it from Customize → Channels in the
-# Kortix dashboard. Once connected, the bot listens in any channel of the
+# Agentica dashboard. Once connected, the bot listens in any channel of the
 # workspace it's been invited to.
 #
 # One [[channels]] entry per platform per project. Everything except
@@ -139,7 +139,7 @@ nothing is worth changing.
 # """
 
 # ─── Apps ────────────────────────────────────────────────────────────────
-# Each `[[apps]]` entry is a deployable website. Kortix builds it and serves
+# Each `[[apps]]` entry is a deployable website. Agentica builds it and serves
 # it on a free `*.style.dev` URL (or your own domain). Manage these from the
 # dashboard's Apps panel, or edit here by hand. Experimental — gated by the
 # platform flag KORTIX_APPS_EXPERIMENTAL.
@@ -165,9 +165,9 @@ nothing is worth changing.
 #   NEXT_PUBLIC_API_URL = "https://api.example.com"
 
 # ─── Per-agent governance (optional) ──────────────────────────────
-# Declare the agents Kortix should treat as platform-launchable and scope what
+# Declare the agents Agentica should treat as platform-launchable and scope what
 # each one can touch — TWO knobs OpenCode's agent .md can't express:
-#   • kortix_cli — what it may do to Kortix via the CLI/API (open/merge CRs,
+#   • kortix_cli — what it may do to Agentica via the CLI/API (open/merge CRs,
 #       deploy, manage triggers/secrets, spawn sessions). "all" = everything the
 #       LAUNCHING USER can do (an agent is always capped at its launcher) | a list
 #       | omit = none. Run `kortix validate --scopes` for the full action list.
@@ -183,7 +183,7 @@ nothing is worth changing.
 #
 # [[agents]]
 # name       = "kortix"            # your default general-purpose agent
-# kortix_cli = "all"               # full Kortix powers — merge, deploy, spawn… (∩ the user)
+# kortix_cli = "all"               # full Agentica powers — merge, deploy, spawn… (∩ the user)
 # connectors = "all"               # every connector profile
 #
 # [[agents]]

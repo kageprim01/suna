@@ -440,21 +440,21 @@ Q4 performance for the Nike license agreement. She opens the review
 dashboard and clicks 'Start Review'..."
 
 Step 2: Contract Analysis
-"Kortix retrieves the Nike contract PDF and extracts the performance
+"Agentica retrieves the Nike contract PDF and extracts the performance
 obligations: minimum $50M revenue, 12% margin requirement, quarterly
 reporting deadline..."
 
 Step 3: Data Query
-"Kortix formulates a query and sends it to Workato DataGenie:
+"Agentica formulates a query and sends it to Workato DataGenie:
 'Get Q4 2025 revenue and gross margin for Nike brand from Snowflake'..."
 
 Step 4: Results & Synthesis
-"Snowflake returns the data. Kortix compares actuals vs. obligations:
+"Snowflake returns the data. Agentica compares actuals vs. obligations:
 Revenue $52.3M ✓ (exceeded by $2.3M)
 Margin 11.2% ⚠️ (0.8% below threshold)..."
 
 Step 5: Insight Delivery
-"Kortix synthesizes findings into an executive summary with
+"Agentica synthesizes findings into an executive summary with
 recommendations: 'Review promotional spend allocation to improve
 margin performance...'"
 ```
@@ -465,7 +465,7 @@ margin performance...'"
 
 > **Non-web formats only.** The color system, typography, cards, buttons, and animations below apply to deck-style, one-pager, and workflow demo outputs. For interactive landing pages and any web-based format, ignore this section entirely and follow the `website-building` skill for visual design.
 
-**Design foundation:** Follow the design-foundations principle of **1 accent + neutrals** (see `skills/GENERAL-KNOWLEDGE-WORKER/design-foundations/SKILL.md`). The prospect's brand primary becomes the accent; everything else should be neutral. If no brand colors are available, fall back to the Kortix neutral palette defaults: black/white or off-white neutrals plus one accent. Reserve color for emphasis — the viewer's eye goes where color is.
+**Design foundation:** Follow the design-foundations principle of **1 accent + neutrals** (see `skills/GENERAL-KNOWLEDGE-WORKER/design-foundations/SKILL.md`). The prospect's brand primary becomes the accent; everything else should be neutral. If no brand colors are available, fall back to the Agentica neutral palette defaults: black/white or off-white neutrals plus one accent. Reserve color for emphasis — the viewer's eye goes where color is.
 
 ### Color System
 
@@ -807,12 +807,12 @@ Strategic Fit | Business Impact | ROI Calculator | Security & Trust | Next Steps
 - Audience: IT architects
 - Purpose: POC proposal
 - Format: Workflow demo
-- Components: Kortix, Workato DataGenie, Snowflake, PDF contracts
+- Components: Agentica, Workato DataGenie, Snowflake, PDF contracts
 
 **Output structure:**
 ```
 [Interactive canvas with 5 nodes]
-Human → Kortix → PDF Contracts → Workato → Snowflake
+Human → Agentica → PDF Contracts → Workato → Snowflake
          ↓
     [Results back to Human]
 
@@ -848,7 +848,7 @@ For workflow demos, use these icon mappings:
 |------|------|---------|
 | human | 👤 or person SVG | User, Analyst, Admin |
 | document | 📄 or file SVG | PDF, Contract, Report |
-| ai | 🤖 or brain SVG | Kortix, AI Agent |
+| ai | 🤖 or brain SVG | Agentica, AI Agent |
 | database | 🗄️ or cylinder SVG | Snowflake, Postgres |
 | api | 🔌 or plug SVG | REST API, GraphQL |
 | middleware | ⚡ or hub SVG | Workato, MCP Server |
@@ -868,7 +868,7 @@ If brand colors cannot be extracted, use **1 accent** from this table + neutrals
 | Manufacturing | `#ea580c` (orange) |
 | Retail | `#db2777` (magenta) |
 | Energy | `#16a34a` (green) |
-| Default | Kortix teal `#22808D` (see `skills/GENERAL-KNOWLEDGE-WORKER/design-foundations/SKILL.md`) |
+| Default | Agentica teal `#22808D` (see `skills/GENERAL-KNOWLEDGE-WORKER/design-foundations/SKILL.md`) |
 
 ---
 

@@ -103,19 +103,19 @@ export const FOR_DEVELOPERS = {
                     children: [{ name: 'SKILL.md' }],
                   },
                   {
-                    name: 'kortix-executor',
+                    name: 'executor',
                     children: [{ name: 'SKILL.md' }],
                   },
                   {
-                    name: 'kortix-memory',
+                    name: 'memory',
                     children: [{ name: 'SKILL.md' }],
                   },
                   {
-                    name: 'kortix-slack',
+                    name: 'slack',
                     children: [{ name: 'SKILL.md' }],
                   },
                   {
-                    name: 'kortix-system',
+                    name: 'system',
                     children: [{ name: 'SKILL.md' }],
                   },
                   {

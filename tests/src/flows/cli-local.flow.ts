@@ -91,9 +91,9 @@ flow("INIT-3", { domain: "cli", routes: [] }, async (ctx) => {
         );
         check(
           ".claude → .kortix/opencode resolves to shared skills",
-          sb.exists("wired/.claude/skills/kortix-system/SKILL.md"),
+          sb.exists("wired/.claude/skills/system/SKILL.md"),
           true,
-          sb.exists("wired/.claude/skills/kortix-system/SKILL.md"),
+          sb.exists("wired/.claude/skills/system/SKILL.md"),
         );
         // cursor was selected → AGENTS.md pointer (read natively); no .cursor rule file.
         check("AGENTS.md pointer written", sb.exists("wired/AGENTS.md"), true, sb.exists("wired/AGENTS.md"));

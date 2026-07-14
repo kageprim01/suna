@@ -80,7 +80,7 @@ export function SessionFilesPanel({
   // standalone debug harness) we fall back to copying the prompt.
   const askAgentToOpenChangeRequest = async () => {
     if (asking) return;
-    const prompt = `Load the kortix-system skill and read about Versions & Change Requests. Then review the changes in this session, commit them, and open a change request to merge into \`${baseRef}\`. Give it a clear title and a description of what changed and why.`;
+    const prompt = `Load the system skill and read about Versions & Change Requests. Then review the changes in this session, commit them, and open a change request to merge into \`${baseRef}\`. Give it a clear title and a description of what changed and why.`;
 
     if (!chatSessionId) {
       try {
