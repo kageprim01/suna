@@ -12,7 +12,7 @@ export const SANDBOX_VERSION = process.env.SANDBOX_VERSION || 'unknown';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
-export type SandboxProviderName = 'daytona' | 'local_docker' | 'platinum';
+export type SandboxProviderName = 'daytona' | 'local_docker' | 'platinum' | 'e2b';
 type InternalAgenticaEnv = 'dev' | 'staging' | 'prod' | 'preview';
 
 // ─── Zod Helpers ────────────────────────────────────────────────────────────
@@ -261,6 +261,10 @@ const envSchema = z.object({
   // ── Billing — RevenueCat (optional) ──────────────────────────────────────
   REVENUECAT_WEBHOOK_SECRET:   optStr,
 
+  // ── E2B — Sandbox provisioning (conditional: required if e2b provider enabled) ──
+  E2B_API_KEY:             optStr,
+  E2B_WEBHOOK_SECRET:      optStr,
+
   // ── Daytona — Sandbox provisioning (conditional: required if daytona provider enabled) ──
   // Note: there is intentionally no DAYTONA_SNAPSHOT here. Every sandbox
   // boots from a per-project snapshot built by the snapshot builder
@@ -406,7 +410,7 @@ type EnvIssue = { var: string; message: string; level: 'error' | 'warn' };
 // Recognised provider names. Source-of-truth for what can legally appear in
 // ALLOWED_SANDBOX_PROVIDERS — adding a new provider is a one-place change
 // here plus a case in `getProvider()` in platform/providers/index.ts.
-const KNOWN_PROVIDERS: readonly SandboxProviderName[] = ['daytona', 'local_docker', 'platinum'] as const;
+const KNOWN_PROVIDERS: readonly SandboxProviderName[] = ['daytona', 'local_docker', 'platinum', 'e2b'] as const;
 
 /** Parse comma-separated provider list (e.g. "daytona,local_docker"). */
 function parseAllowedProviders(raw: string): SandboxProviderName[] {
@@ -440,8 +444,14 @@ function validateEnv(): z.infer<typeof envSchema> {
   // Use raw values for conditional checks (schema may have failed)
   const raw = result.success ? result.data : (process.env as Record<string, string | undefined>);
 
-  // ── Conditional: Daytona provider enabled → need Daytona keys ──────────
+  // ── Conditional: per-provider requirements ───────────────────────────
   const providers = parseAllowedProviders((raw as any).ALLOWED_SANDBOX_PROVIDERS || '');
+
+  if (providers.includes('e2b')) {
+    if (!raw.E2B_API_KEY) issues.push({ var: 'E2B_API_KEY', message: 'Required when ALLOWED_SANDBOX_PROVIDERS includes "e2b"', level: 'error' });
+  }
+
+  // ── Conditional: Daytona provider enabled → need Daytona keys ──────────
   if (providers.includes('daytona')) {
     if (!raw.DAYTONA_API_KEY)    issues.push({ var: 'DAYTONA_API_KEY',    message: 'Required when ALLOWED_SANDBOX_PROVIDERS includes "daytona"', level: 'error' });
     if (!raw.DAYTONA_SERVER_URL) issues.push({ var: 'DAYTONA_SERVER_URL', message: 'Required when ALLOWED_SANDBOX_PROVIDERS includes "daytona"', level: 'error' });
@@ -653,6 +663,10 @@ export const config = {
   // ─── RevenueCat (Billing) ─────────────────────────────────────────────────
   REVENUECAT_WEBHOOK_SECRET: env.REVENUECAT_WEBHOOK_SECRET,
 
+  // ─── E2B (Sandbox provisioning + preview proxy) ───────────────────────────
+  E2B_API_KEY: env.E2B_API_KEY,
+  E2B_WEBHOOK_SECRET: env.E2B_WEBHOOK_SECRET,
+
   // ─── Daytona (Sandbox provisioning + preview proxy) ───────────────────────
   // No DAYTONA_SNAPSHOT here — see comment in the env schema above. Every
   // sandbox boots from its project-specific snapshot resolved at session
@@ -781,6 +795,7 @@ export const config = {
       case 'daytona': return !!this.DAYTONA_API_KEY;
       case 'local_docker': return !!this.DOCKER_HOST;
       case 'platinum': return !!this.PLATINUM_API_KEY;
+      case 'e2b': return !!this.E2B_API_KEY;
       default: {
         const exhaustive: never = name;
         return exhaustive;

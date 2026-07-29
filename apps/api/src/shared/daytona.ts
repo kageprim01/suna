@@ -82,6 +82,7 @@ export function warmSnapshotsEnabledFor(provider: SandboxProviderName): boolean 
   if (!warmSnapshotSetting().enabled) return false;
   if (provider === 'daytona') return warmSnapshotsEnabled();
   if (provider === 'platinum') return isPlatinumConfigured();
+  if (provider === 'e2b') return false; // E2B templates start fast enough; no warm pool needed.
   return false;
 }
 

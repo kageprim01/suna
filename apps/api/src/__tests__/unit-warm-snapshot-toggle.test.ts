@@ -138,6 +138,15 @@ describe('warmSnapshotsEnabledFor (master AND per-provider sub-gate)', () => {
     expect(warmSnapshotsEnabledFor('local_docker' as never)).toBe(false);
   });
 
+  test('e2b → always false (templates start fast enough, no warm pool needed)', async () => {
+    await loadRows(MASTER_ON);
+    cfg.DAYTONA_API_KEY = 'k';
+    cfg.DAYTONA_WARM_TARGET = 'experimental';
+    expect(warmSnapshotsEnabledFor('e2b')).toBe(false);
+    await loadRows(MASTER_OFF);
+    expect(warmSnapshotsEnabledFor('e2b')).toBe(false);
+  });
+
   test('warmSnapshotsEnabled() (daytona helper) tracks master AND warm target', async () => {
     cfg.DAYTONA_API_KEY = 'k';
     cfg.DAYTONA_WARM_TARGET = 'experimental';

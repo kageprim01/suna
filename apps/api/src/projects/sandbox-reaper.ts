@@ -640,26 +640,8 @@ export interface OrphanReapResult {
 export async function reapOrphanProviderBoxes(now = new Date()): Promise<OrphanReapResult> {
   const zero: OrphanReapResult = { listed: 0, orphans: 0, stopped: 0, errors: 0 };
   if (process.env.KORTIX_ORPHAN_BOX_REAP_ENABLED === 'false') return zero;
-  // Daytona is the only org-shared provider that leaks this way; local_docker
-  // boxes are per-host and Platinum is reconciled on its own path.
-  if (!config.DAYTONA_API_KEY) return zero;
-  let listManaged: (() => Promise<Array<{ externalId: string; createdAt: Date | null }>>) | undefined;
-  try {
-    const provider = getProvider('daytona');
-    listManaged = provider.listManagedRunningSandboxes?.bind(provider);
-  } catch {
-    return zero;
-  }
-  if (!listManaged) return zero;
 
-  let boxes: Array<{ externalId: string; createdAt: Date | null }>;
-  try {
-    boxes = await listManaged();
-  } catch (err) {
-    console.warn('[reaper] orphan-box list failed:', err instanceof Error ? err.message : err);
-    return zero;
-  }
-  if (boxes.length === 0) return zero;
+  const total: OrphanReapResult = { listed: 0, orphans: 0, stopped: 0, errors: 0 };
 
   // keepSet: never stop a box the DB considers live or touched recently.
   const keepRows = await db
@@ -675,37 +657,62 @@ export async function reapOrphanProviderBoxes(now = new Date()): Promise<OrphanR
       ),
     );
   const keep = new Set(keepRows.map((r) => r.externalId).filter((x): x is string => !!x));
-
   const cutoff = now.getTime() - ORPHAN_BOX_GRACE_MS;
-  const orphans = boxes.filter(
-    (b) => !keep.has(b.externalId) && b.createdAt != null && b.createdAt.getTime() <= cutoff,
-  );
 
-  let stopped = 0;
-  let errors = 0;
-  let cursor = 0;
-  const worker = async () => {
-    while (cursor < orphans.length && stopped + errors < ORPHAN_REAP_MAX_PER_PASS) {
-      const box = orphans[cursor++];
-      try {
-        await getProvider('daytona').stop(box.externalId);
-        // Reconcile any DB row (state drift) + close billing; no-op when there's none.
-        await reconcileSandboxStoppedByExternalId(box.externalId, now).catch(() => {});
-        stopped += 1;
-      } catch (err) {
-        errors += 1;
-        if (errors <= 5) {
-          console.warn(
-            `[reaper] orphan-box stop failed for ${box.externalId}:`,
-            err instanceof Error ? err.message : err,
-          );
+  for (const providerName of config.ALLOWED_SANDBOX_PROVIDERS) {
+    let listManaged: (() => Promise<Array<{ externalId: string; createdAt: Date | null }>>) | undefined;
+    try {
+      const provider = getProvider(providerName);
+      listManaged = provider.listManagedRunningSandboxes?.bind(provider);
+    } catch {
+      continue;
+    }
+    if (!listManaged) continue;
+
+    let boxes: Array<{ externalId: string; createdAt: Date | null }>;
+    try {
+      boxes = await listManaged();
+    } catch (err) {
+      console.warn(`[reaper] orphan-box list failed for ${providerName}:`, err instanceof Error ? err.message : err);
+      continue;
+    }
+    if (boxes.length === 0) continue;
+    total.listed += boxes.length;
+
+    const orphans = boxes.filter(
+      (b) => !keep.has(b.externalId) && b.createdAt != null && b.createdAt.getTime() <= cutoff,
+    );
+
+    let stopped = 0;
+    let errors = 0;
+    let cursor = 0;
+    const worker = async () => {
+      while (cursor < orphans.length && stopped + errors < ORPHAN_REAP_MAX_PER_PASS) {
+        const box = orphans[cursor++];
+        try {
+          await getProvider(providerName).stop(box.externalId);
+          await reconcileSandboxStoppedByExternalId(box.externalId, now).catch(() => {});
+          stopped += 1;
+        } catch (err) {
+          errors += 1;
+          if (errors <= 5) {
+            console.warn(
+              `[reaper] orphan-box stop failed for ${providerName} sandbox ${box.externalId}:`,
+              err instanceof Error ? err.message : err,
+            );
+          }
         }
       }
+    };
+    await Promise.all(Array.from({ length: Math.min(REAP_CONCURRENCY, orphans.length) }, worker));
+    total.orphans += orphans.length;
+    total.stopped += stopped;
+    total.errors += errors;
+
+    if (stopped || errors) {
+      console.log(`[reaper] orphan-box sweep for ${providerName}`, { listed: boxes.length, orphans: orphans.length, stopped, errors });
     }
-  };
-  await Promise.all(Array.from({ length: Math.min(REAP_CONCURRENCY, orphans.length) }, worker));
-  if (stopped || errors) {
-    console.log('[reaper] orphan-box sweep', { listed: boxes.length, orphans: orphans.length, stopped, errors });
   }
-  return { listed: boxes.length, orphans: orphans.length, stopped, errors };
+
+  return total;
 }

@@ -114,6 +114,8 @@ describe('/v1/setup', () => {
       const data = await res.json();
       expect(data.daytona).toBeDefined();
       expect(typeof data.daytona.ok).toBe('boolean');
+      expect(data.e2b).toBeDefined();
+      expect(typeof data.e2b.ok).toBe('boolean');
     });
   });
 });

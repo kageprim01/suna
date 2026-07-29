@@ -37,6 +37,7 @@ import {
   COMPUTE_DISK_PRICE_PER_GB_SECOND,
   COMPUTE_PRICE_MARKUP,
   DAYTONA_DISCOUNT,
+  E2B_DISCOUNT,
   isPerSeatAccount,
 } from './tiers';
 
@@ -53,15 +54,17 @@ export interface StartComputeOpts {
 
 /**
  * Compute the cost (in USD, pre-balance-deduction) for a window.
- * tiers.ts holds Daytona's LIST rates; here we apply our volume discount
- * (DAYTONA_DISCOUNT → our real cost) and then the markup (our margin).
+ * tiers.ts holds provider LIST rates; here we apply our volume discount and
+ * then the markup (our margin). Falls back to DAYTONA_DISCOUNT when provider
+ * is unspecified.
  */
-export function calculateComputeCost(spec: SandboxSpec, durationSeconds: number): number {
+export function calculateComputeCost(spec: SandboxSpec, durationSeconds: number, provider?: string): number {
   if (durationSeconds <= 0) return 0;
+  const discount = provider === 'e2b' ? E2B_DISCOUNT : DAYTONA_DISCOUNT;
   const cpuCost    = spec.cpuCores  * COMPUTE_CPU_PRICE_PER_CORE_SECOND  * durationSeconds;
   const memCost    = spec.memoryGb  * COMPUTE_MEMORY_PRICE_PER_GB_SECOND * durationSeconds;
   const diskCost   = spec.diskGb    * COMPUTE_DISK_PRICE_PER_GB_SECOND   * durationSeconds;
-  return (cpuCost + memCost + diskCost) * DAYTONA_DISCOUNT * COMPUTE_PRICE_MARKUP;
+  return (cpuCost + memCost + diskCost) * discount * COMPUTE_PRICE_MARKUP;
 }
 
 /**

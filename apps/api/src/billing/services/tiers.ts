@@ -76,6 +76,9 @@ export const COMPUTE_DISK_PRICE_PER_GB_SECOND = 0.00000003;
  *  this. Applied before the markup so users are billed on our actual (discounted)
  *  cost, not Daytona's list. Bump toward 1.0 if the discount shrinks. */
 export const DAYTONA_DISCOUNT = 0.5;
+/** E2B volume discount placeholder — set to negotiated rate when E2B pricing is
+ *  finalized. Same structure as DAYTONA_DISCOUNT for consistency. */
+export const E2B_DISCOUNT = 1.0;
 /** Stopped-but-not-destroyed sandboxes pay a fraction of the disk rate. v2: not billed; reserved for future. */
 export const COMPUTE_ARCHIVE_DISK_MULTIPLIER = 0.25;
 

@@ -36,8 +36,9 @@ export type SandboxLifecycleOutcome = 'stopped' | 'removed' | 'noop';
 export function classifyLifecycle(state: string | undefined | null, eventType: string): SandboxLifecycleOutcome {
   const s = (state ?? '').toLowerCase();
   const e = (eventType ?? '').toLowerCase();
-  if (e.includes('delet') || e.includes('destroy')) return 'removed';
+  if (e.includes('delet') || e.includes('destroy') || e.includes('kill')) return 'removed';
   if (['destroyed', 'deleted', 'removed', 'lost', 'failed-start'].includes(s)) return 'removed';
+  if (e.includes('paus') || e.includes('stop')) return 'stopped';
   if (['stopped', 'stopping', 'archived', 'archiving'].includes(s)) return 'stopped';
   return 'noop';
 }
@@ -137,6 +138,52 @@ export async function handleDaytonaWebhook(
   if (!externalId) return { status: 200, body: { ok: true, ignored: 'no sandbox id' } };
 
   const dedupId = `daytona:${getHeader('webhook-id') ?? `${externalId}:${newState}:${event?.updatedAt ?? ''}`}`;
+  const fresh = await recordWebhookEvent(dedupId, eventType || 'sandbox.event').catch(() => true);
+  if (!fresh) return { status: 200, body: { ok: true, deduped: true } };
+
+  const outcome = classifyLifecycle(newState, eventType);
+  const res = await applySandboxLifecycle(externalId, outcome);
+  return { status: 200, body: { ok: true, externalId, ...res } };
+}
+
+/**
+ * E2B webhook signature verification.
+ *
+ * E2B signs with: base64(sha256(secret + rawBody)), then strips trailing `=`.
+ * The signed value is sent in the `e2b-signature` header.
+ */
+export function verifyE2B(rawBody: string, secret: string, headerValue: string | undefined): boolean {
+  if (!headerValue) return false;
+  const hash = createHmac('sha256', secret).update(rawBody, 'utf8').digest('base64').replace(/=+$/, '');
+  return safeEqual(headerValue, hash);
+}
+
+/** E2B webhook handler. */
+export async function handleE2BWebhook(
+  rawBody: string,
+  getHeader: (name: string) => string | undefined,
+): Promise<WebhookResult> {
+  const secret = config.E2B_WEBHOOK_SECRET;
+  if (!secret) return { status: 503, body: { error: 'e2b webhook not configured' } };
+
+  const sig = getHeader('e2b-signature');
+  if (!verifyE2B(rawBody, secret, sig)) {
+    return { status: 401, body: { error: 'invalid signature' } };
+  }
+
+  let event: any;
+  try {
+    event = JSON.parse(rawBody);
+  } catch {
+    return { status: 400, body: { error: 'invalid json' } };
+  }
+
+  const externalId: string | undefined = event?.payload?.sandbox_id ?? event?.sandboxId;
+  const eventType: string = event?.event ?? event?.type ?? '';
+  const newState: string | undefined = event?.payload?.state ?? event?.state;
+  if (!externalId) return { status: 200, body: { ok: true, ignored: 'no sandbox id' } };
+
+  const dedupId = `e2b:${externalId}:${eventType}:${event?.payload?.timestamp ?? event?.timestamp ?? ''}`;
   const fresh = await recordWebhookEvent(dedupId, eventType || 'sandbox.event').catch(() => true);
   if (!fresh) return { status: 200, body: { ok: true, deduped: true } };
 

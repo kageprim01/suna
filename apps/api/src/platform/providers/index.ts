@@ -1,4 +1,5 @@
 import { config } from '../../config';
+import { E2BProvider } from './e2b';
 import { DaytonaProvider } from './daytona';
 import { LocalDockerProvider } from './local-docker';
 import { PlatinumProvider } from './platinum';
@@ -12,7 +13,7 @@ import { PlatinumProvider } from './platinum';
  *   - daytona — managed cloud (Daytona)
  *   - local_docker — self-hosted/local Docker runtime
  */
-export type ProviderName = 'daytona' | 'local_docker' | 'platinum';
+export type ProviderName = 'daytona' | 'local_docker' | 'platinum' | 'e2b';
 
 /**
  * Thrown by the Daytona warm path when the experimental memory-snapshot restore
@@ -134,6 +135,12 @@ export function getProvider(name: ProviderName): SandboxProvider {
   let provider: SandboxProvider;
 
   switch (name) {
+    case 'e2b':
+      if (!config.E2B_API_KEY) {
+        throw new Error('E2B provider requires E2B_API_KEY to be set.');
+      }
+      provider = new E2BProvider();
+      break;
     case 'daytona':
       if (!config.DAYTONA_API_KEY) {
         throw new Error('Daytona provider requires DAYTONA_API_KEY to be set.');

@@ -20,6 +20,7 @@ import { accounts } from '@kortix/db';
 import { db, hasDatabase } from '../shared/db';
 import { resolveAccountId } from '../shared/resolve-account';
 import { getSupabase } from '../shared/supabase';
+import { isE2BConfigured } from '../shared/e2b';
 /** Shape mirrors the legacy LocalSandboxHealthCheck (now removed) so the
  *  frontend health UI keeps reading the same `{ok, error?}` per check. */
 type HealthCheck = { ok: boolean; error?: string };
@@ -210,6 +211,7 @@ setupApp.openapi(
   // Provider capabilities — tells the frontend how to handle provisioning UI
   const capabilities: Record<string, { async: boolean; events: boolean; polling: boolean }> = {
     daytona: { async: false, events: false, polling: false },
+    e2b: { async: false, events: true, polling: false },
   };
 
   return c.json({
@@ -374,6 +376,9 @@ setupApp.openapi(
   checks.daytona = config.DAYTONA_API_KEY
     ? { ok: true }
     : { ok: false, error: 'DAYTONA_API_KEY not configured' };
+  checks.e2b = isE2BConfigured()
+    ? { ok: true }
+    : { ok: false, error: 'E2B_API_KEY not configured' };
   return c.json(checks);
   },
 );
