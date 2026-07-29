@@ -166,7 +166,7 @@ export async function handleE2BWebhook(
   const secret = config.E2B_WEBHOOK_SECRET;
   if (!secret) return { status: 503, body: { error: 'e2b webhook not configured' } };
 
-  const sig = getHeader('e2b-signature');
+  const sig = getHeader('x-e2b-signature') ?? getHeader('e2b-signature');
   if (!verifyE2B(rawBody, secret, sig)) {
     return { status: 401, body: { error: 'invalid signature' } };
   }
@@ -178,16 +178,18 @@ export async function handleE2BWebhook(
     return { status: 400, body: { error: 'invalid json' } };
   }
 
-  const externalId: string | undefined = event?.payload?.sandbox_id ?? event?.sandboxId;
-  const eventType: string = event?.event ?? event?.type ?? '';
-  const newState: string | undefined = event?.payload?.state ?? event?.state;
+  // E2B v2 webhook payload: sandbox_id + type at top level, no nested payload.state
+  const externalId: string | undefined = event?.sandbox_id;
+  const eventType: string = event?.type ?? '';
   if (!externalId) return { status: 200, body: { ok: true, ignored: 'no sandbox id' } };
 
-  const dedupId = `e2b:${externalId}:${eventType}:${event?.payload?.timestamp ?? event?.timestamp ?? ''}`;
+  const dedupId = `e2b:${externalId}:${eventType}:${event?.timestamp ?? event?.id ?? ''}`;
   const fresh = await recordWebhookEvent(dedupId, eventType || 'sandbox.event').catch(() => true);
   if (!fresh) return { status: 200, body: { ok: true, deduped: true } };
 
-  const outcome = classifyLifecycle(newState, eventType);
+  // classifyLifecycle uses eventType to determine outcome — e.g.
+  // "sandbox.lifecycle.killed" → removed, "sandbox.lifecycle.paused" → stopped
+  const outcome = classifyLifecycle(event?.event_label, eventType);
   const res = await applySandboxLifecycle(externalId, outcome);
   return { status: 200, body: { ok: true, externalId, ...res } };
 }

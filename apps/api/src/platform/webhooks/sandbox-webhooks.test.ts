@@ -182,7 +182,7 @@ describe('handleE2BWebhook', () => {
   const secret = 'e2b-webhook-secret';
   function e2bHeader(body: string): (h: string) => string | undefined {
     const sig = createHmac('sha256', secret).update(body, 'utf8').digest('base64').replace(/=+$/, '');
-    return (h: string) => (h.toLowerCase() === 'e2b-signature' ? sig : undefined);
+    return (h: string) => (h.toLowerCase() === 'x-e2b-signature' ? sig : undefined);
   }
   test('503 when not configured', async () => {
     const r = await handleE2BWebhook('{}', () => undefined);
@@ -190,26 +190,26 @@ describe('handleE2BWebhook', () => {
   });
   test('401 on bad signature', async () => {
     cfg.E2B_WEBHOOK_SECRET = secret;
-    const r = await handleE2BWebhook('{"event":"x"}', () => 'bad');
+    const r = await handleE2BWebhook('{"type":"x"}', () => 'bad');
     expect(r.status).toBe(401);
   });
   test('closes billing on a killed event', async () => {
     cfg.E2B_WEBHOOK_SECRET = secret;
-    const body = JSON.stringify({ event: 'sandbox.lifecycle.killed', payload: { sandbox_id: 'e2bA' } });
+    const body = JSON.stringify({ type: 'sandbox.lifecycle.killed', sandbox_id: 'e2bA', id: 'evt-1' });
     const r = await handleE2BWebhook(body, e2bHeader(body));
     expect(r.status).toBe(200);
     expect(removedCalls).toEqual(['e2bA']);
   });
   test('stops billing on a paused event', async () => {
     cfg.E2B_WEBHOOK_SECRET = secret;
-    const body = JSON.stringify({ event: 'sandbox.lifecycle.paused', payload: { sandbox_id: 'e2bB' } });
+    const body = JSON.stringify({ type: 'sandbox.lifecycle.paused', sandbox_id: 'e2bB', id: 'evt-2' });
     const r = await handleE2BWebhook(body, e2bHeader(body));
     expect(r.status).toBe(200);
     expect(stoppedCalls).toEqual(['e2bB']);
   });
   test('dedupes a repeated delivery', async () => {
     cfg.E2B_WEBHOOK_SECRET = secret;
-    const body = JSON.stringify({ event: 'sandbox.lifecycle.killed', payload: { sandbox_id: 'e2bC' } });
+    const body = JSON.stringify({ type: 'sandbox.lifecycle.killed', sandbox_id: 'e2bC', id: 'evt-3' });
     const hdr = e2bHeader(body);
     await handleE2BWebhook(body, hdr);
     await handleE2BWebhook(body, hdr);
