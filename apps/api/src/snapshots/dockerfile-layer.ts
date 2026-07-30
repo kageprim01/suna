@@ -152,6 +152,49 @@ export function buildLayeredDockerfile(opts: BuildLayeredDockerfileOpts): string
   // When `e2bBaseImage` is set, the FROM is replaced with a pre-baked base
   // image that already contains all heavy deps, and the entire slowLayer is
   // skipped. Only the COPYs + gunzip + metadata + warump-up RUN are emitted.
+  // When `e2bBaseImage` is set to a pre-baked base that already contains
+  // the agent binary, CLI, slack-cli, executor-sdk, and scaffold.git, we
+  // skip the infrastructure COPYs and gunzip step — they're already in the
+  // base image. Only the opencode starter config (user project overlay) and
+  // the workspace setup are emitted.
+  if (e2bBaseImage) {
+    const fromReplaced = trimmed.replace(/^FROM\s+\S+/im, `FROM ${e2bBaseImage}`);
+    const warmUp = opencodeConfigPath
+      ? [
+          '',
+          '# ─── opencode instance warm-up (base image has deps baked in) ──',
+          'RUN set +e; \\',
+          '    export HOME=/opt/kortix/home \\',
+          '        XDG_DATA_HOME=/opt/kortix/home/.local/share \\',
+          '        XDG_CONFIG_HOME=/opt/kortix/home/.config \\',
+          '        XDG_CACHE_HOME=/opt/kortix/home/.cache \\',
+          '        BUN_INSTALL_CACHE_DIR=/opt/kortix/home/.bun/install/cache; \\',
+          '    mkdir -p /workspace/.kortix; \\',
+          '    cp -a /opt/kortix/warm-config/.kortix/opencode /workspace/.kortix/opencode; \\',
+          '    rm -rf /workspace/.kortix/opencode/node_modules; \\',
+          '    ln -s /opt/kortix/opencode-config-deps/node_modules /workspace/.kortix/opencode/node_modules; \\',
+          '    export OPENCODE_CONFIG_DIR=/workspace/.kortix/opencode; \\',
+          '    cd /workspace; \\',
+          '    opencode serve --port 4096 --hostname 127.0.0.1 >/tmp/oc-warm.log 2>&1 & oc_pid=$!; \\',
+          '    ready=0; \\',
+          '    for i in $(seq 1 300); do \\',
+          `        code=$(curl -s -o /dev/null -m 3 "http://127.0.0.1:4096/session?directory=/workspace" 2>/dev/null); \\`,
+          '        case "$code" in 200|204|301|302) ready=1; break;; esac; \\',
+          '        kill -0 "$oc_pid" 2>/dev/null || break; \\',
+          '        sleep 1; \\',
+          '    done; \\',
+          '    echo "=== instance-warm: ready=$ready ==="; \\',
+          '    kill "$oc_pid" 2>/dev/null; wait "$oc_pid" 2>/dev/null; \\',
+          '    find /workspace -mindepth 1 -delete 2>/dev/null; \\',
+          '    rm -rf /opt/kortix/warm-config; \\',
+          '    echo "=== instance-warm: opencode log tail ==="; tail -20 /tmp/oc-warm.log; \\',
+          '    rm -f /tmp/oc-warm.log; true',
+          '',
+        ]
+      : [];
+    return `${fromReplaced}\nUSER root\n${warmUp.join('\n')}ENV KORTIX_WORKSPACE=/workspace\nRUN mkdir -p /workspace\nWORKDIR /workspace\nEXPOSE 8000\nENTRYPOINT ["/usr/local/bin/kortix-entrypoint"]\n`;
+  }
+
   const fastLayer = [
     '',
     '# ─── Agentica app layer (fast — COPYs, gunzip, metadata) ────────────',

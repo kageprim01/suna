@@ -1,9 +1,10 @@
 # syntax=docker/dockerfile:1.7
-# Kortix sandbox base image — pre-bakes all slow runtime dependencies so the
-# per-deploy template Dockerfile has zero COPY-heavy instructions. E2B's envd
-# auto-update (~T+5s into any build) corrupts COPY archive extraction;
-# by baking everything into a base image, the per-deploy Dockerfile becomes a
-# thin FROM + COPY + metadata layer that completes in < 1s, before the timer.
+# Kortix sandbox base image — pre-bakes ALL runtime infrastructure so the
+# per-deploy template Dockerfile (when using e2bBaseImage) has zero
+# COPY-heavy instructions. E2B's envd auto-update (~T+5s into any build)
+# corrupts COPY archive extraction; by baking everything into a base image,
+# the per-deploy Dockerfile becomes a thin FROM + opencode warm-up layer
+# that completes in < 1s, safely before the timer.
 #
 # Build and push after bumping any pinned version below:
 #   docker buildx build \
@@ -20,21 +21,13 @@ WORKDIR /workspace
 
 USER root
 
-# ── System deps ──────────────────────────────────────────────────────────
-# tmux: lets the agent run long-running processes (dev servers for preview)
-# in a detached session that survives the agent's bash tool call.
-# iproute2 (`ip`) + iputils-arping are REQUIRED on Platinum: a warm-pool
-# clone is a memory-restored VM that keeps its snapshot-baked IP until the
-# host's reconfigure_net runs `ip addr flush/add` + a gratuitous `arping`
-# inside the guest. Without these the IP never changes → the guest stays on
-# the baked IP while the edge routes to the allocated IP → every request
-# 502s. (Harmless on Daytona, which doesn't memory-restore.)
+# ── System deps ──────────────────────────────────────────────────
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates curl git gzip nodejs npm unzip tmux iproute2 iputils-arping \
     && rm -rf /var/lib/apt/lists/*
 
-# ── opencode CLI ─────────────────────────────────────────────────────────
+# ── opencode CLI ─────────────────────────────────────────────────
 ARG OPENCODE_VERSION
 RUN npm install -g --no-audit --no-fund "opencode-ai@${OPENCODE_VERSION}" \
     && command -v opencode \
@@ -56,10 +49,7 @@ RUN mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" \
     kill "$oc_pid" 2>/dev/null; wait "$oc_pid" 2>/dev/null; \
     rm -f /tmp/oc-bake.log; true
 
-# ── bun runtime ──────────────────────────────────────────────────────────
-# For the agent CLIs (slack, …) + `kortix executor mcp`.
-# Install via npm since the bun.sh install script hides the binary behind a
-# shell wrapper that fails in non-interactive Docker builds.
+# ── bun runtime ──────────────────────────────────────────────────
 RUN npm install -g --no-audit --no-fund bun \
     && bun --version
 
@@ -69,7 +59,7 @@ RUN mkdir -p /opt/kortix/home/.bun/install/cache /opt/kortix/opencode-config-dep
     && printf '{"name":"kortix-opencode-config","private":true,"dependencies":{"@mendable/firecrawl-js":"^4.25.1","@tavily/core":"^0.7.3","replicate":"^1.4.0"}}' > package.json \
     && HOME=/opt/kortix/home BUN_INSTALL_CACHE_DIR=/opt/kortix/home/.bun/install/cache bun install
 
-# ── agent-browser + Playwright Chromium ─────────────────────────────────
+# ── agent-browser + Playwright Chromium ─────────────────────────
 ENV PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers \
     AGENT_BROWSER_EXECUTABLE_PATH=/usr/local/bin/chromium \
     AGENT_BROWSER_ARGS=--no-sandbox,--disable-dev-shm-usage
@@ -86,5 +76,49 @@ RUN npm install -g --no-audit --no-fund "agent-browser@${AGENT_BROWSER_VERSION}"
     && ln -sf "$(dirname "$pw_chrome")" /opt/kortix/home/.agent-browser/browsers/chrome-linux64 \
     && /usr/local/bin/chromium --version \
     && env -u AGENT_BROWSER_EXECUTABLE_PATH HOME=/opt/kortix/home agent-browser doctor 2>&1 | grep -qE 'pass.+chrome-linux64/chrome'
+
+# ── Kortix agent binary ─────────────────────────────────────────
+# Built from apps/kortix-sandbox-agent-server during base image creation.
+# The per-deploy Dockerfile (when using e2bBaseImage) skips COPY for this
+# since it's pre-baked here.
+COPY apps/kortix-sandbox-agent-server /tmp/kortix-agent-src
+RUN cd /tmp/kortix-agent-src \
+    && BUN_COMPILE_TARGET=bun-linux-x64 bun run build \
+    && cp dist/kortix-agent /usr/local/bin/kortix-agent \
+    && chmod +x /usr/local/bin/kortix-agent \
+    && kortix-agent --version \
+    && rm -rf /tmp/kortix-agent-src
+
+# ── Kortix CLI binary ───────────────────────────────────────────
+# Built from apps/cli during base image creation.
+COPY apps/cli /tmp/kortix-cli-src
+RUN cd /tmp/kortix-cli-src \
+    && BUN_COMPILE_TARGET=bun-linux-x64 bun run build \
+    && cp dist/kortix /usr/local/bin/kortix \
+    && chmod +x /usr/local/bin/kortix \
+    && kortix --version \
+    && rm -rf /tmp/kortix-cli-src
+
+# ── slack-cli ────────────────────────────────────────────────────
+# Copied from apps/sandbox/slack-cli into the base image so the per-deploy
+# Dockerfile (e2bBaseImage) doesn't need to COPY it (large directory).
+COPY apps/sandbox/slack-cli /opt/kortix/apps/sandbox/slack-cli
+RUN find /opt/kortix/apps/sandbox/slack-cli -name 'node_modules' -exec rm -rf {} + 2>/dev/null; true
+
+# ── executor-sdk ────────────────────────────────────────────────
+# Pre-staged so the per-deploy Dockerfile (e2bBaseImage) skips this COPY.
+COPY packages/executor-sdk /opt/kortix/packages/executor-sdk
+
+# ── scaffold.git (bare repo) ────────────────────────────────────
+# Pre-staged so the per-deploy Dockerfile (e2bBaseImage) skips this COPY.
+COPY scaffold.git /opt/kortix/scaffold.git
+
+# ── LLM catalog ─────────────────────────────────────────────────
+# Optional — only included if the build context has it.
+COPY kortix-llm-catalog.json /opt/kortix/llm-catalog.json 2>/dev/null; true
+
+# ── opencode starter config ─────────────────────────────────────
+# Pre-staged so the per-deploy Dockerfile (e2bBaseImage) skips COPY.
+COPY .kortix/opencode /opt/kortix/warm-config/.kortix/opencode
 
 CMD ["sleep", "infinity"]
