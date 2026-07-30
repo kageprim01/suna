@@ -98,6 +98,7 @@ class E2BAdapter implements SandboxProviderAdapter {
         const info = await Template.build(template, input.snapshotName, {
           cpuCount: resources.cpu,
           memoryMB: resources.memory * 1024,
+          tags: ['default'],
           onBuildLogs: (logs) => {
             if (!Array.isArray(logs)) {
               console.warn(`[e2b] onBuildLogs received non-array: ${typeof logs} ${JSON.stringify(logs).slice(0, 100)}`);
@@ -116,7 +117,6 @@ class E2BAdapter implements SandboxProviderAdapter {
         });
 
         await this.waitForReady(info.templateId, info.buildId);
-        await Template.assignTags(`${input.snapshotName}:${input.snapshotName}`, 'default');
         return;
       } catch (err) {
         lastErr = err;
