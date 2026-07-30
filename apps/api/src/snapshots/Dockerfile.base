@@ -1,0 +1,90 @@
+# syntax=docker/dockerfile:1.7
+# Kortix sandbox base image — pre-bakes all slow runtime dependencies so the
+# per-deploy template Dockerfile has zero COPY-heavy instructions. E2B's envd
+# auto-update (~T+5s into any build) corrupts COPY archive extraction;
+# by baking everything into a base image, the per-deploy Dockerfile becomes a
+# thin FROM + COPY + metadata layer that completes in < 1s, before the timer.
+#
+# Build and push after bumping any pinned version below:
+#   docker buildx build \
+#     --build-arg OPENCODE_VERSION=<version> \
+#     --build-arg AGENT_BROWSER_VERSION=<version> \
+#     -t ghcr.io/kortix/sandbox-base:latest \
+#     --push \
+#     -f apps/api/src/snapshots/Dockerfile.base \
+#     .
+
+FROM ubuntu:24.04
+
+WORKDIR /workspace
+
+USER root
+
+# ── System deps ──────────────────────────────────────────────────────────
+# tmux: lets the agent run long-running processes (dev servers for preview)
+# in a detached session that survives the agent's bash tool call.
+# iproute2 (`ip`) + iputils-arping are REQUIRED on Platinum: a warm-pool
+# clone is a memory-restored VM that keeps its snapshot-baked IP until the
+# host's reconfigure_net runs `ip addr flush/add` + a gratuitous `arping`
+# inside the guest. Without these the IP never changes → the guest stays on
+# the baked IP while the edge routes to the allocated IP → every request
+# 502s. (Harmless on Daytona, which doesn't memory-restore.)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates curl git gzip nodejs npm unzip tmux iproute2 iputils-arping \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── opencode CLI ─────────────────────────────────────────────────────────
+ARG OPENCODE_VERSION
+RUN npm install -g --no-audit --no-fund "opencode-ai@${OPENCODE_VERSION}" \
+    && command -v opencode \
+    && opencode --version
+
+# Bake OpenCode's "one time database migration" at BUILD time.
+ENV HOME=/opt/kortix/home \
+    XDG_DATA_HOME=/opt/kortix/home/.local/share \
+    XDG_CONFIG_HOME=/opt/kortix/home/.config \
+    XDG_CACHE_HOME=/opt/kortix/home/.cache
+RUN mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" \
+    && opencode serve --port 4096 --hostname 127.0.0.1 >/tmp/oc-bake.log 2>&1 & oc_pid=$! \
+    && for i in $(seq 1 180); do \
+        curl -s -o /dev/null -m 2 http://127.0.0.1:4096/ && break; \
+        kill -0 "$oc_pid" 2>/dev/null || break; \
+        sleep 1; \
+    done; \
+    sleep 3; \
+    kill "$oc_pid" 2>/dev/null; wait "$oc_pid" 2>/dev/null; \
+    rm -f /tmp/oc-bake.log; true
+
+# ── bun runtime ──────────────────────────────────────────────────────────
+# For the agent CLIs (slack, …) + `kortix executor mcp`.
+# Install via npm since the bun.sh install script hides the binary behind a
+# shell wrapper that fails in non-interactive Docker builds.
+RUN npm install -g --no-audit --no-fund bun \
+    && bun --version
+
+# Pre-install OpenCode tool deps once so boot install is a no-op.
+RUN mkdir -p /opt/kortix/home/.bun/install/cache /opt/kortix/opencode-config-deps \
+    && cd /opt/kortix/opencode-config-deps \
+    && printf '{"name":"kortix-opencode-config","private":true,"dependencies":{"@mendable/firecrawl-js":"^4.25.1","@tavily/core":"^0.7.3","replicate":"^1.4.0"}}' > package.json \
+    && HOME=/opt/kortix/home BUN_INSTALL_CACHE_DIR=/opt/kortix/home/.bun/install/cache bun install
+
+# ── agent-browser + Playwright Chromium ─────────────────────────────────
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers \
+    AGENT_BROWSER_EXECUTABLE_PATH=/usr/local/bin/chromium \
+    AGENT_BROWSER_ARGS=--no-sandbox,--disable-dev-shm-usage
+ARG AGENT_BROWSER_VERSION=0.27.0
+ARG PLAYWRIGHT_VERSION=1.60.0
+RUN npm install -g --no-audit --no-fund "agent-browser@${AGENT_BROWSER_VERSION}" \
+    && agent-browser --version \
+    && HOME=/opt/kortix/home npx -y "playwright@${PLAYWRIGHT_VERSION}" install --with-deps chromium \
+    && rm -rf /var/lib/apt/lists/* \
+    && pw_chrome="$(find /opt/pw-browsers -type f -path '*chrome-linux*/chrome' | head -n1)" \
+    && test -n "$pw_chrome" \
+    && ln -sf "$pw_chrome" /usr/local/bin/chromium \
+    && mkdir -p /opt/kortix/home/.agent-browser/browsers \
+    && ln -sf "$(dirname "$pw_chrome")" /opt/kortix/home/.agent-browser/browsers/chrome-linux64 \
+    && /usr/local/bin/chromium --version \
+    && env -u AGENT_BROWSER_EXECUTABLE_PATH HOME=/opt/kortix/home agent-browser doctor 2>&1 | grep -qE 'pass.+chrome-linux64/chrome'
+
+CMD ["sleep", "infinity"]

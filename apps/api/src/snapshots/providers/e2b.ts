@@ -9,7 +9,9 @@
  * shapes and retries.
  */
 
-import { rm } from 'node:fs/promises';
+import { cp, mkdir, rm } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Template, Sandbox } from 'e2b';
 import { isE2BConfigured, deleteE2BTemplate } from '../../shared/e2b';
 import { withTimeout } from '../../shared/with-timeout';
@@ -41,6 +43,9 @@ const SNAPSHOT_STATE_CACHE_TTL_MS = 60_000;
 const SNAPSHOT_STATE_TIMEOUT_MS = 8_000;
 const snapshotStateCache = new Map<string, { state: ProviderState; expiresAt: number }>();
 
+const _filename = fileURLToPath(import.meta.url);
+const _dirname = dirname(_filename);
+
 class E2BAdapter implements SandboxProviderAdapter {
   readonly id = 'e2b' as const;
 
@@ -64,14 +69,22 @@ class E2BAdapter implements SandboxProviderAdapter {
 
     let lastErr: unknown;
     for (let attempt = 1; attempt <= BUILD_ATTEMPTS; attempt++) {
-      const ctx = await stageBuildContext(input.snapshotName, userDockerfile);
+      const e2bBaseImage = process.env.E2B_BASE_IMAGE;
+      const ctx = await stageBuildContext(input.snapshotName, userDockerfile, e2bBaseImage);
       const buildLogs: string[] = [];
+      const relDir = `.kortix-e2b-ctx/${input.snapshotName}`;
+      const absRelDir = join(_dirname, relDir);
 
       try {
-        const template = Template()
-          .fromDockerfile(userDockerfile)
-          .setEnvs(input.captureEnv ?? {})
-          .copy(ctx.contextDir, '/build');
+        await rm(absRelDir, { recursive: true, force: true }).catch(() => {});
+        await mkdir(absRelDir, { recursive: true });
+        await cp(ctx.contextDir, absRelDir, { recursive: true });
+
+        const dockerfilePath = join(absRelDir, ctx.dockerfileName);
+
+        const template = Template({ fileContextPath: absRelDir })
+          .fromDockerfile(dockerfilePath)
+          .setEnvs(input.captureEnv ?? {});
 
         if (input.capture === 'stateful') {
           template.setStartCmd(
@@ -85,26 +98,32 @@ class E2BAdapter implements SandboxProviderAdapter {
         const info = await Template.build(template, input.snapshotName, {
           cpuCount: resources.cpu,
           memoryMB: resources.memory * 1024,
-          onBuildLogs: tap?.onLine
-            ? (logs) => {
-                for (const line of logs) {
-                  if (!line) continue;
-                  buildLogs.push(line);
-                  if (buildLogs.length > SNAPSHOT_LOG_TAIL_LIMIT) {
-                    buildLogs.splice(0, buildLogs.length - SNAPSHOT_LOG_TAIL_LIMIT);
-                  }
-                  console.info(`[snapshots] ${input.snapshotName}: ${line}`);
-                  tap.onLine!(line);
-                }
+          onBuildLogs: (logs) => {
+            if (!Array.isArray(logs)) {
+              console.warn(`[e2b] onBuildLogs received non-array: ${typeof logs} ${JSON.stringify(logs).slice(0, 100)}`);
+              return;
+            }
+            for (const line of logs) {
+              if (!line) continue;
+              buildLogs.push(line);
+              if (buildLogs.length > SNAPSHOT_LOG_TAIL_LIMIT) {
+                buildLogs.splice(0, buildLogs.length - SNAPSHOT_LOG_TAIL_LIMIT);
               }
-            : undefined,
+              console.info(`[snapshots] ${input.snapshotName}: ${line}`);
+              tap?.onLine?.(line);
+            }
+          },
         });
 
         await this.waitForReady(info.templateId, info.buildId);
+        await Template.assignTags(`${input.snapshotName}:${input.snapshotName}`, 'default');
         return;
       } catch (err) {
         lastErr = err;
         const msg = err instanceof Error ? err.message : String(err);
+        const errName = err instanceof Error ? err.name : typeof err;
+        const errStack = err instanceof Error ? err.stack?.split('\n').slice(0, 6).join(' | ') : 'no-stack';
+        console.error(`[e2b] build attempt ${attempt}/${BUILD_ATTEMPTS} failed: name=${errName} msg=${msg} stack=${errStack}`);
         if (!isRetryableBuildError(err) || attempt === BUILD_ATTEMPTS) {
           throw new Error(`Snapshot build failed: ${msg}`);
         }
@@ -114,6 +133,7 @@ class E2BAdapter implements SandboxProviderAdapter {
         await new Promise((r) => setTimeout(r, BUILD_RETRY_BASE_MS * attempt));
       } finally {
         await rm(ctx.contextDir, { recursive: true, force: true }).catch(() => {});
+        await rm(absRelDir, { recursive: true, force: true }).catch(() => {});
       }
     }
     throw lastErr;

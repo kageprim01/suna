@@ -30,7 +30,9 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@supabase_db_kortix-local:5432/postgres
       MANAGED_GIT_GITHUB_OWNER: Dosco-Inc
       KORTIX_DEFAULT_SANDBOX_DISK_GB: "10"
-      ALLOWED_SANDBOX_PROVIDERS: "daytona"
+      ALLOWED_SANDBOX_PROVIDERS: "e2b,daytona"
+      E2B_API_KEY: "e2b_b6b9971d37211869c7b0829e59402506b2a3b6fe"
+      E2B_BASE_IMAGE: "ghcr.io/kageprime/sandbox-base:latest"
       DAYTONA_SERVER_URL: "https://app.daytona.io/api"
       DAYTONA_TARGET: "us"
       DAYTONA_ORGANIZATION_ID: "c8e3f05c-b666-4f6d-b5db-55cc7736c8c4"

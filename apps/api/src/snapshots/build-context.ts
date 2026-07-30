@@ -82,6 +82,7 @@ export interface StagedContext {
 export async function stageBuildContext(
   snapshotName: string,
   userDockerfile: string,
+  e2bBaseImage?: string,
 ): Promise<StagedContext> {
   const AGENT_BIN_PATH = agentBinPath();
   const CLI_BIN_PATH = cliBinPath();
@@ -163,6 +164,7 @@ export async function stageBuildContext(
     executorSdkPath: 'executor-sdk',
     opencodeConfigPath,
     catalogPath: 'kortix-llm-catalog.json',
+    e2bBaseImage,
   });
   if (typeof (globalThis as any).Bun?.write === 'function') {
     await (globalThis as any).Bun.write(composedPath, composed);

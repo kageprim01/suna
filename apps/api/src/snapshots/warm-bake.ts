@@ -315,7 +315,7 @@ sleep 2; kill $pid 2>/dev/null; sleep 1; tail -2 /tmp/oc-bake.log`,
     await step(sb, 'bun + agent-browser',
       `${XDG_EXPORTS}
 if ! command -v bun >/dev/null; then
-  curl -fsSL https://bun.com/install | bash >/tmp/bun.log 2>&1
+  curl -fsSL https://bun.sh/install | bash >/tmp/bun.log 2>&1
   sudo install -m 755 ${RUNTIME_HOME}/.bun/bin/bun /usr/local/bin/bun 2>/dev/null || sudo install -m 755 "$HOME/.bun/bin/bun" /usr/local/bin/bun
 fi
 bun --version

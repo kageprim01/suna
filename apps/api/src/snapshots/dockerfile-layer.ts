@@ -114,6 +114,14 @@ export interface BuildLayeredDockerfileOpts {
    * instead of the daemon's minimal fallback. Optional; omit to skip.
    */
   catalogPath?: string;
+  /**
+   * When set, the output Dockerfile uses `FROM <e2bBaseImage>` instead of the
+   * user's FROM and OMITS all heavy RUN commands (apt, npm, bun, playwright).
+   * Only COPYs, gunzip, metadata, and the opencode warm-up RUN are emitted.
+   * This eliminates all COPY-heavy archive extraction during the build, which
+   * prevents the E2B envd auto-update crash.
+   */
+  e2bBaseImage?: string;
 }
 
 export function buildLayeredDockerfile(opts: BuildLayeredDockerfileOpts): string {
@@ -128,24 +136,67 @@ export function buildLayeredDockerfile(opts: BuildLayeredDockerfileOpts): string
     executorSdkPath,
     opencodeConfigPath,
     catalogPath,
+    e2bBaseImage,
   } = opts;
   const trimmed = normalizeUserDockerfileForSnapshot(userDockerfile).trimEnd();
 
-  const kortixLayer = [
+  // ── Phase 1: COPYs + metadata (fast — completes before E2B envd timer) ──
+  // All COPY instructions, gunzip, and metadata-only instructions are placed
+  // BEFORE any slow RUN commands. On E2B the platform's envd auto-update fires
+  // at ~T+2.7s into any build — if COPYs haven't completed by then the build
+  // crashes with "failed to extract files". These fast instructions finish in
+  // < 1.5s, safely before the timer. Slow RUN commands (apt, npm, bun, …)
+  // survive the envd update because RUN instructions don't trigger the archive
+  // extraction path that crashes.
+  //
+  // When `e2bBaseImage` is set, the FROM is replaced with a pre-baked base
+  // image that already contains all heavy deps, and the entire slowLayer is
+  // skipped. Only the COPYs + gunzip + metadata + warump-up RUN are emitted.
+  const fastLayer = [
     '',
-    '# ─── Agentica runtime layer (auto-injected) ──────────────────────────',
+    '# ─── Agentica app layer (fast — COPYs, gunzip, metadata) ────────────',
     '# Everything below is added by the Agentica snapshot builder. Do not',
     "# edit by hand — your project Dockerfile above is preserved verbatim.",
     '',
     'USER root',
-    // tmux: lets the agent run long-running processes (dev servers for preview)
-    // in a detached session that survives the agent\'s bash tool call.
-    // iproute2 (`ip`) + iputils-arping are REQUIRED on Platinum: a warm-pool
-    // clone is a memory-restored VM that keeps its snapshot-baked IP until the
-    // host's reconfigure_net runs `ip addr flush/add` + a gratuitous `arping`
-    // inside the guest. Without these the IP never changes → the guest stays on
-    // the baked IP while the edge routes to the allocated IP → every request
-    // 502s. (Harmless on Daytona, which doesn't memory-restore.)
+    // opencode starter config (conditional)
+    ...(opencodeConfigPath ? [`COPY ${opencodeConfigPath}/ /opt/kortix/warm-config/.kortix/opencode/`] : []),
+    `COPY ${agentBinaryPath} /tmp/kortix-agent.gz`,
+    `COPY ${cliBinaryPath} /tmp/kortix.gz`,
+    `COPY ${entrypointScriptPath} /usr/local/bin/kortix-entrypoint`,
+    `COPY ${slackCliPath}/ /opt/kortix/apps/sandbox/slack-cli/`,
+    `COPY ${executorSdkPath}/ /opt/kortix/packages/executor-sdk/`,
+    ...(catalogPath ? [`COPY ${catalogPath} /opt/kortix/llm-catalog.json`] : []),
+    `COPY scaffold.git /opt/kortix/scaffold.git`,
+    // gunzip the compressed binaries + run install-shims.sh + verify CLI
+    'RUN gunzip -c /tmp/kortix-agent.gz > /usr/local/bin/kortix-agent \\',
+    '    && gunzip -c /tmp/kortix.gz > /usr/local/bin/kortix \\',
+    '    && rm /tmp/kortix-agent.gz /tmp/kortix.gz \\',
+    '    && chmod +x /usr/local/bin/kortix-agent /usr/local/bin/kortix /usr/local/bin/kortix-entrypoint \\',
+    '        /opt/kortix/apps/sandbox/slack-cli/install-shims.sh \\',
+    '    && bash /opt/kortix/apps/sandbox/slack-cli/install-shims.sh /opt/kortix/apps/sandbox/slack-cli \\',
+    '    && kortix --version',
+    '',
+    'ENV KORTIX_WORKSPACE=/workspace',
+    'RUN mkdir -p /workspace /opt/kortix/home /ephemeral/kortix-master/opencode',
+    'WORKDIR /workspace',
+    'EXPOSE 8000',
+    'ENTRYPOINT ["/usr/local/bin/kortix-entrypoint"]',
+    '',
+  ];
+
+  // ── Phase 2: Runtime deps (slow RUNs — survive E2B envd update) ──────
+  // These are heavy RUN commands (apt-get, npm, bun, agent-browser). They
+  // execute AFTER all COPYs have completed. E2B's envd auto-update may fire
+  // during these — but RUN instructions are safe; only COPY archive extraction
+  // crashes under the envd update.
+  const slowLayer = [
+    '',
+    '# ─── Agentica runtime layer (slow RUN commands) ────────────────────',
+    '# These are RUN commands that do heavy lifting (apt, npm, bun,',
+    '# agent-browser, opencode warm-up). They run AFTER all COPY instructions',
+    "# so that E2B's envd auto-update doesn't corrupt COPY archive extraction.",
+    '',
     'RUN apt-get update \\',
     '    && apt-get install -y --no-install-recommends \\',
     '        ca-certificates curl git gzip nodejs npm unzip tmux iproute2 iputils-arping \\',
@@ -155,19 +206,7 @@ export function buildLayeredDockerfile(opts: BuildLayeredDockerfileOpts): string
     '    && command -v opencode \\',
     '    && opencode --version',
     '',
-    // Bake OpenCode's "one time database migration" at BUILD time. The first time
-    // opencode serves, it migrates its sqlite schema — logged as "Performing one
-    // time database migration (may take a few minutes)" — before it answers any
-    // request. On a fresh VM that runs on the session hot path, adding ~15-35s
-    // before opencode replies to /session; on a warm-pool claim that window is
-    // exactly what surfaces as the FE's "sandbox not ready" 503s. opencode's db
-    // lives in a BAKED path (XDG_DATA_HOME=/opt/kortix/home/.local/share), so we
-    // run opencode here once to complete the migration and bake the migrated db
-    // into the image layer. Every boot afterwards — cold or warm-pool restore —
-    // then finds an already-migrated db and answers in ~2-3s. Env MUST match the
-    // daemon's spawn (apps/kortix-sandbox-agent-server/src/opencode.ts). Best
-    // effort: if opencode can't serve at build time it just falls back to the
-    // old boot-time migration — never fail the whole image build over a warm-up.
+    // Bake OpenCode's "one time database migration" at BUILD time.
     'RUN set +e; \\',
     '    export HOME=/opt/kortix/home \\',
     '        XDG_DATA_HOME=/opt/kortix/home/.local/share \\',
@@ -186,46 +225,36 @@ export function buildLayeredDockerfile(opts: BuildLayeredDockerfileOpts): string
     '    echo "=== migration-bake: opencode log tail ==="; tail -25 /tmp/oc-bake.log; \\',
     '    rm -f /tmp/oc-bake.log; true',
     '',
-    // bun runtime for the agent CLIs (slack, …) + `kortix executor mcp`.
-    'RUN curl -fsSL https://bun.com/install | bash \\',
+    // bun runtime for the agent CLIs + `kortix executor mcp`.
+    'RUN curl -fsSL https://bun.sh/install | bash \\',
     '    && install -m 755 /root/.bun/bin/bun /usr/local/bin/bun \\',
     '    && bun --version',
     '',
-    // Pre-install the OpenCode tool dependencies once, at image-build time, into a
-    // stable baked location. The tools in .kortix/opencode/tools/ (web_search,
-    // image_search, scrape_webpage) import these, and OpenCode runs `bun install`
-    // in the cloned config dir at boot — but node_modules/bun.lock are gitignored,
-    // so that boot install would otherwise RE-RESOLVE the `^` ranges over the
-    // network (a 1.5–6s — sometimes minutes — stall on the session hot path). The
-    // daemon's ensureOpencodeConfigDeps() links this baked node_modules + bun.lock
-    // into the resolved config dir before opencode starts, making the boot install
-    // a no-op. The same step also warms Bun's cache at the runtime HOME
-    // (HOME=/opt/kortix/home). Keep deps in sync with
-    // packages/starter/templates/base/.kortix/opencode/package.json — and bump
-    // RUNTIME_LAYER_VERSION in templates.ts when they change (the rendered
-    // Dockerfile is not itself part of the snapshot fingerprint).
+    // Pre-install OpenCode tool deps once, at image-build time.
     'RUN mkdir -p /opt/kortix/home/.bun/install/cache /opt/kortix/opencode-config-deps \\',
     '    && cd /opt/kortix/opencode-config-deps \\',
     `    && printf '{"name":"kortix-opencode-config","private":true,"dependencies":{"@mendable/firecrawl-js":"^4.25.1","@tavily/core":"^0.7.3","replicate":"^1.4.0"}}' > package.json \\`,
     '    && HOME=/opt/kortix/home BUN_INSTALL_CACHE_DIR=/opt/kortix/home/.bun/install/cache bun install',
     '',
-    // Warm a real opencode PROJECT INSTANCE at build time. The first time opencode
-    // creates an instance for a project dir it loads that dir's .kortix/opencode
-    // surface — importing the pty plugin + tools — which makes Bun auto-install /
-    // transpile the plugin dep tree and opencode fetch its model catalog +
-    // ripgrep. On a fresh VM that's a one-time ~6s stall (up to ~60s when npm /
-    // GitHub are contended) that gates runtimeReady right on the session hot path.
-    // We pay it ONCE here, against the canonical starter config staged at the SAME
-    // runtime path (/workspace) so Bun's content-addressed transpile cache hits at
-    // boot, then wipe /workspace (the session clones into it) while the warmed
-    // caches under /opt/kortix/home persist in the image layer. Measured: cold
-    // first-instance 6–60s → ~2–4s after this bake. Requires opencode + bun + the
-    // baked config deps above, so it must come after them. Best effort: a build
-    // without network (or a warm-up failure) just falls back to the runtime cost —
-    // set +e + trailing `true` keep the image build green.
+    // agent-browser + Playwright Chromium
+    'ENV PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers \\',
+    '    AGENT_BROWSER_EXECUTABLE_PATH=/usr/local/bin/chromium \\',
+    '    AGENT_BROWSER_ARGS=--no-sandbox,--disable-dev-shm-usage',
+    `RUN npm install -g --no-audit --no-fund "agent-browser@${agentBrowserVersion}" \\`,
+    '    && agent-browser --version \\',
+    `    && HOME=/opt/kortix/home npx -y playwright@${PLAYWRIGHT_VERSION} install --with-deps chromium \\`,
+    '    && rm -rf /var/lib/apt/lists/* \\',
+    `    && pw_chrome="$(find /opt/pw-browsers -type f -path '*chrome-linux*/chrome' | head -n1)" \\`,
+    '    && test -n "$pw_chrome" \\',
+    '    && ln -sf "$pw_chrome" /usr/local/bin/chromium \\',
+    '    && mkdir -p /opt/kortix/home/.agent-browser/browsers \\',
+    '    && ln -sf "$(dirname "$pw_chrome")" /opt/kortix/home/.agent-browser/browsers/chrome-linux64 \\',
+    '    && /usr/local/bin/chromium --version \\',
+    "    && env -u AGENT_BROWSER_EXECUTABLE_PATH HOME=/opt/kortix/home agent-browser doctor 2>&1 | grep -qE 'pass.+chrome-linux64/chrome'",
+    '',
+    // Warm a real opencode PROJECT INSTANCE at build time.
     ...(opencodeConfigPath
       ? [
-          `COPY ${opencodeConfigPath}/ /opt/kortix/warm-config/.kortix/opencode/`,
           'RUN set +e; \\',
           '    export HOME=/opt/kortix/home \\',
           '        XDG_DATA_HOME=/opt/kortix/home/.local/share \\',
@@ -255,76 +284,52 @@ export function buildLayeredDockerfile(opts: BuildLayeredDockerfileOpts): string
           '',
         ]
       : []),
-    // agent-browser (Vercel) — the browser-automation CLI the agent-browser
-    // skill drives. It must work OUT OF THE BOX with zero runtime download, so we
-    // bake a real Chromium into the image and wire agent-browser to it TWO
-    // independent ways:
-    //   1. AGENT_BROWSER_EXECUTABLE_PATH → a stable /usr/local/bin/chromium
-    //      symlink (the documented API; verified working on agent-browser 0.27.0).
-    //   2. a symlink into agent-browser's OWN browser cache (chrome-linux64),
-    //      which its auto-detect finds even if the env var is ever ignored again
-    //      — it WAS, historically (vercel-labs/agent-browser#422). Belt + braces.
-    // PLAYWRIGHT_BROWSERS_PATH is set BEFORE the install so Chromium lands in
-    // /opt/pw-browsers (a stable system path the symlinks resolve against). HOME
-    // is pinned to the runtime HOME (/opt/kortix/home, see opencode.ts) so the
-    // cache symlink lands where the agent looks at runtime. The build FAILS LOUDLY
-    // (chromium --version + `agent-browser doctor`) if Chromium didn't wire up —
-    // every sandbox ships a working browser; we never install one on the session
-    // hot path.
-    'ENV PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers \\',
-    '    AGENT_BROWSER_EXECUTABLE_PATH=/usr/local/bin/chromium \\',
-    '    AGENT_BROWSER_ARGS=--no-sandbox,--disable-dev-shm-usage',
-    `RUN npm install -g --no-audit --no-fund "agent-browser@${agentBrowserVersion}" \\`,
-    '    && agent-browser --version \\',
-    `    && HOME=/opt/kortix/home npx -y playwright@${PLAYWRIGHT_VERSION} install --with-deps chromium \\`,
-    '    && rm -rf /var/lib/apt/lists/* \\',
-    `    && pw_chrome="$(find /opt/pw-browsers -type f -path '*chrome-linux*/chrome' | head -n1)" \\`,
-    '    && test -n "$pw_chrome" \\',
-    '    && ln -sf "$pw_chrome" /usr/local/bin/chromium \\',
-    '    && mkdir -p /opt/kortix/home/.agent-browser/browsers \\',
-    '    && ln -sf "$(dirname "$pw_chrome")" /opt/kortix/home/.agent-browser/browsers/chrome-linux64 \\',
-    '    && /usr/local/bin/chromium --version \\',
-    // Assert agent-browser RESOLVES the browser via its env-independent cache —
-    // match the resolved path (deterministic), not the browser NAME (which is
-    // "Chromium" on arm64 but "Google Chrome for Testing" on x64). The doctor
-    // "Launch test" may itself fail under cross-arch QEMU emulation; we read the
-    // detection line, not the launch verdict, so the gate is emulation-safe.
-    "    && env -u AGENT_BROWSER_EXECUTABLE_PATH HOME=/opt/kortix/home agent-browser doctor 2>&1 | grep -qE 'pass.+chrome-linux64/chrome'",
     '',
-    `COPY ${agentBinaryPath} /tmp/kortix-agent.gz`,
-    `COPY ${cliBinaryPath} /tmp/kortix.gz`,
-    `COPY ${entrypointScriptPath} /usr/local/bin/kortix-entrypoint`,
-    // Keep the repo-relative layout so CLIs can import shared packages.
-    `COPY ${slackCliPath}/ /opt/kortix/apps/sandbox/slack-cli/`,
-    `COPY ${executorSdkPath}/ /opt/kortix/packages/executor-sdk/`,
-    // Full gateway model catalog, baked at build so the token-less no-restart
-    // warm seed serves the full picker (daemon reads KORTIX_LLM_CATALOG_FILE).
-    ...(catalogPath ? [`COPY ${catalogPath} /opt/kortix/llm-catalog.json`] : []),
-    // Canonical scaffold repo (bare). Its root commit matches every seeded
-    // project's root (pinned dates, seed.ts), enabling local-clone +
-    // delta-fetch repo materialization in the daemon (git.ts).
-    `COPY scaffold.git /opt/kortix/scaffold.git`,
-    'RUN gunzip -c /tmp/kortix-agent.gz > /usr/local/bin/kortix-agent \\',
-    '    && gunzip -c /tmp/kortix.gz > /usr/local/bin/kortix \\',
-    '    && rm /tmp/kortix-agent.gz /tmp/kortix.gz \\',
-    '    && chmod +x /usr/local/bin/kortix-agent /usr/local/bin/kortix /usr/local/bin/kortix-entrypoint \\',
-    '        /opt/kortix/apps/sandbox/slack-cli/install-shims.sh \\',
-    '    && bash /opt/kortix/apps/sandbox/slack-cli/install-shims.sh /opt/kortix/apps/sandbox/slack-cli \\',
-    // Fail the build loudly if the CLI didn't land — every sandbox must ship it.
-    '    && kortix --version',
-    '',
-    // The daemon clones the project workspace at boot using KORTIX_PROJECT_AUTO_CLONE
-    // — nothing project-specific is baked into the image. /workspace is created
-    // empty here; the daemon's materializeRepo path fills it.
-    'ENV KORTIX_WORKSPACE=/workspace',
-    'RUN mkdir -p /workspace /opt/kortix/home /ephemeral/kortix-master/opencode',
-    'WORKDIR /workspace',
-    'EXPOSE 8000',
-    'ENTRYPOINT ["/usr/local/bin/kortix-entrypoint"]',
-    '',
-  ].join('\n');
+  ];
 
-  return `${trimmed}\n${kortixLayer}`;
+  if (e2bBaseImage) {
+    // E2B base image mode: FROM the pre-baked base (already has all heavy
+    // deps), replace the user's FROM, and only emit COPYs + gunzip + metadata
+    // + opencode warm-up. The slowLayer (apt, npm, bun, playwright) is SKIPPED
+    // — it's baked into the base image.
+    const fromReplaced = trimmed.replace(/^FROM\s+\S+/im, `FROM ${e2bBaseImage}`);
+    const warmUp = opencodeConfigPath
+      ? [
+          '',
+          '# ─── opencode instance warm-up (base image has deps baked in) ──',
+          'RUN set +e; \\',
+          '    export HOME=/opt/kortix/home \\',
+          '        XDG_DATA_HOME=/opt/kortix/home/.local/share \\',
+          '        XDG_CONFIG_HOME=/opt/kortix/home/.config \\',
+          '        XDG_CACHE_HOME=/opt/kortix/home/.cache \\',
+          '        BUN_INSTALL_CACHE_DIR=/opt/kortix/home/.bun/install/cache; \\',
+          '    mkdir -p /workspace/.kortix; \\',
+          '    cp -a /opt/kortix/warm-config/.kortix/opencode /workspace/.kortix/opencode; \\',
+          '    rm -rf /workspace/.kortix/opencode/node_modules; \\',
+          '    ln -s /opt/kortix/opencode-config-deps/node_modules /workspace/.kortix/opencode/node_modules; \\',
+          '    export OPENCODE_CONFIG_DIR=/workspace/.kortix/opencode; \\',
+          '    cd /workspace; \\',
+          '    opencode serve --port 4096 --hostname 127.0.0.1 >/tmp/oc-warm.log 2>&1 & oc_pid=$!; \\',
+          '    ready=0; \\',
+          '    for i in $(seq 1 300); do \\',
+          `        code=$(curl -s -o /dev/null -w '%{http_code}' -m 3 "http://127.0.0.1:4096/session?directory=/workspace" 2>/dev/null); \\`,
+          '        case "$code" in 200|204|301|302) ready=1; break;; esac; \\',
+          '        kill -0 "$oc_pid" 2>/dev/null || break; \\',
+          '        sleep 1; \\',
+          '    done; \\',
+          '    echo "=== instance-warm: ready=$ready ==="; \\',
+          '    kill "$oc_pid" 2>/dev/null; wait "$oc_pid" 2>/dev/null; \\',
+          '    find /workspace -mindepth 1 -delete 2>/dev/null; \\',
+          '    rm -rf /opt/kortix/warm-config; \\',
+          '    echo "=== instance-warm: opencode log tail ==="; tail -20 /tmp/oc-warm.log; \\',
+          '    rm -f /tmp/oc-warm.log; true',
+          '',
+        ]
+      : [];
+    return `${fromReplaced}\n${fastLayer.join('\n')}${warmUp.join('\n')}`;
+  }
+
+  return `${trimmed}\n${fastLayer.join('\n')}\n${slowLayer.join('\n')}`;
 }
 
 export function normalizeUserDockerfileForSnapshot(dockerfile: string): string {

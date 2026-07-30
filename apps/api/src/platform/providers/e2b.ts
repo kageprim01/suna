@@ -51,8 +51,8 @@ export class E2BProvider implements SandboxProvider {
       throw new Error('[e2b] create() called without KORTIX_TOKEN — sandbox cannot authenticate to the Kortix router.');
     }
 
-    const template = opts.snapshot;
-    if (!template) {
+    const templateName = opts.snapshot;
+    if (!templateName) {
       throw new Error(
         'E2B create() called without opts.snapshot. ' +
         'Every sandbox must boot from a per-project template built by ' +
@@ -60,7 +60,7 @@ export class E2BProvider implements SandboxProvider {
       );
     }
 
-    const sandbox = await Sandbox.create(template, {
+    const sandbox = await Sandbox.create(`${templateName}:default`, {
       envVars,
       timeout: (opts.autoStopInterval ?? 120) * 60, // minutes → seconds
       metadata: {
