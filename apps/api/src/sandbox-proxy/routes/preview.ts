@@ -190,12 +190,16 @@ function portUnreachableResponse(opts: {
   origin: string;
   incomingHeaders: Headers;
   reason: string;
+  retryAfter?: number;
 }): Response {
-  const { port, status, origin, incomingHeaders, reason } = opts;
+  const { port, status, origin, incomingHeaders, reason, retryAfter } = opts;
   const headers = new Headers({ 'Cache-Control': 'no-store' });
   if (origin) {
     headers.set('Access-Control-Allow-Origin', origin);
     headers.set('Access-Control-Allow-Credentials', 'true');
+  }
+  if (retryAfter !== undefined) {
+    headers.set('Retry-After', String(retryAfter));
   }
   if (isBrowserNavigation(incomingHeaders)) {
     headers.set('Content-Type', 'text/html; charset=utf-8');
@@ -338,7 +342,17 @@ export async function forwardToSandbox(
   // (opencode-listed +5578ms, 2026-06-14). Later delays stay progressive for a
   // genuinely cold-booting port.
   const RETRY_DELAYS_MS = [250, 1000, 3000];
+  // Upper bound a client should wait before re-polling: the retry budget
+  // (~4.25s) + the known in-sandbox daemon + OpenCode boot window (~15s for E2B
+  // microVMs to start listening). Returned as Retry-After so programmatic
+  // health polls back off during boot instead of hammering a port that's
+  // still coming up.
+  const nextReadyAtMs = Date.now() + Math.max(RETRY_DELAYS_MS.reduce((a, b) => a + b, 0), 15_000);
   let wakeTriggered = false;
+  // Whether the LAST attempt to reach the upstream died in a transport error
+  // (fetch threw: DNS/connection refused/gateway) vs. an HTTP 502/503 the
+  // gateway returned because the port isn't listening yet (daemon still booting).
+  let lastFailureTransport = false;
   // Only a CONFIRMED-dead provider signal (box stopped/archived) errors the row.
   // A transient unreachable / RX stall must NEVER error a sandbox whose daemon
   // health is green — that briefly flipped healthy boxes to 'error' (surfacing
@@ -454,6 +468,10 @@ export async function forwardToSandbox(
         duplex: 'half',
       });
 
+      // Got an HTTP response from upstream → this was NOT a transport error, it
+      // was a real upstream answer (e.g. 502/503 = port not listening yet, i.e.
+      // the daemon is still booting).
+      lastFailureTransport = false;
       if (upstream.status >= 300 && upstream.status < 400) {
         const respHeaders = clientResponseHeaders(upstream.headers, origin);
         const safeLocation = sanitizeRedirectLocation(
@@ -504,8 +522,12 @@ export async function forwardToSandbox(
           continue;
         }
         // Retries exhausted and the port still isn't answering. Show the friendly
-        // "port unreachable" page to browsers instead of the upstream's bare 5xx;
-        // programmatic clients still get the real status + JSON via passthrough.
+        // "port unreachable" page to browsers; programmatic (JSON) clients get a
+        // retryable 503 + Retry-After instead of a terminal 502 — the sandbox is
+        // still booting (daemon up ~15s) or briefly unreachable, NOT confirmed
+        // dead, so a passthrough 502/503 without Retry-After makes the dashboard
+        // hard-fail instead of backing off (2026-07-31: 'sandbox upstream
+        // unreachable' 502 surfaced at session-create time).
         if (isBrowserNavigation(incomingHeaders)) {
           void markSandboxUsed(sandboxId);
           return portUnreachableResponse({
@@ -516,6 +538,21 @@ export async function forwardToSandbox(
             reason: 'sandbox port unreachable',
           });
         }
+        // Programmatic client: retryable 503 + Retry-After so the caller backs off
+        // and retries through the boot window. (Confirmed-dead boxes are handled
+        // by the transport/dead-signal paths below.) Do NOT markSandboxUsed here:
+        // the box is healthy-and-booting, just not ready — the dashboard's health
+        // poll should back off and retry, not flag the sandbox for teardown.
+        const retryAfter = Math.max(Math.ceil((nextReadyAtMs - Date.now()) / 1000), 3);
+        void invalidatePreviewLink(sandboxId, port);
+        return portUnreachableResponse({
+          port,
+          status: 503,
+          origin,
+          incomingHeaders,
+          reason: `sandbox port not ready yet, retry in ${retryAfter}s`,
+          retryAfter,
+        });
       }
 
       if (upstream.status === 400 && attempt < MAX_RETRIES) {
@@ -564,6 +601,10 @@ export async function forwardToSandbox(
       console.warn(
         `[PREVIEW] Attempt ${attempt + 1}/${MAX_RETRIES + 1} failed for ${sandboxId}:${port}: ${(err as Error).message || err}`,
       );
+      // Transport-level failure (DNS, connection refused, gateway unreachable):
+      // the upstream never answered with HTTP — treat as genuinely unreachable
+      // downstream rather than "port not up yet".
+      lastFailureTransport = true;
 
       if (!wakeTriggered) {
         await wakeSandbox(sandboxId);
@@ -583,13 +624,44 @@ export async function forwardToSandbox(
   // health-check loop owns liveness and will retry the box.
   if (sawDeadSignal) {
     await markSandboxErrored(sandboxId);
+    return portUnreachableResponse({
+      port,
+      status: 502,
+      origin,
+      incomingHeaders,
+      // Signal the sandbox is dead, not merely slow — callers/clients can purge
+      // cached links without retrying into a box that's gone.
+      reason: 'sandbox upstream unreachable',
+    });
   }
+
+  // No confirmed-dead signal. Distinguish the failure mode at exhaustion:
+  //  - The last attempt was a TRANSPORT error (fetch threw: DNS, connection
+  //    refused, gateway down). The upstream never answered with HTTP — treat as
+  //    genuinely unreachable, return the terminal 502 so callers purge cached
+  //    links instead of retrying into a network fault.
+  //  - The last attempt got an HTTP 502/503 ("port not listening" = daemon
+  //    still booting). That is NOT dead — return a RETRYABLE 503 with
+  //    Retry-After so programmatic health polls back off and retry instead of
+  //    surfacing "sandbox upstream unreachable" for a box about to answer
+  //    (E2B microVMs take ~15s to start listening).
+  if (lastFailureTransport) {
+    return portUnreachableResponse({
+      port,
+      status: 502,
+      origin,
+      incomingHeaders,
+      reason: 'sandbox upstream unreachable',
+    });
+  }
+  const retryAfter = Math.max(Math.ceil((nextReadyAtMs - Date.now()) / 1000), 3);
   return portUnreachableResponse({
     port,
-    status: 502,
+    status: 503,
     origin,
     incomingHeaders,
-    reason: 'sandbox upstream unreachable',
+    reason: `sandbox port not ready yet, retry in ${retryAfter}s`,
+    retryAfter,
   });
 }
 

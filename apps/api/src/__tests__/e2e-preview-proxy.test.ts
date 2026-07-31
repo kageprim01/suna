@@ -1009,6 +1009,38 @@ describe('Preview proxy: retry exhaustion', () => {
     // Wake should be called only once (not once per retry)
     expect(mockWakeCalls.length).toBe(1);
   });
+
+  test('returns 502 on transport errors (fetch throws), not a retryable 503', async () => {
+    const savedFetch = globalThis.fetch;
+    globalThis.fetch = (() => Promise.reject(new Error('Connection refused'))) as any;
+    const app = createProxyTestApp();
+    const origSetTimeout = globalThis.setTimeout;
+    globalThis.setTimeout = ((fn: any) => fn()) as any;
+    const res = await app.request(`/v1/p/sandbox-transport-err/${TEST_PORT}/`, {
+      headers: { Authorization: 'Bearer test' },
+    });
+    globalThis.setTimeout = origSetTimeout;
+    globalThis.fetch = savedFetch;
+    expect(res.status).toBe(502);
+    expect((await res.json()).error).toBe('sandbox upstream unreachable');
+  });
+
+  test('returns retryable 503 (with Retry-After) when upstream returns 503 "port not ready" at exhaustion', async () => {
+    // Daemon still booting → E2B gateway 503s "port not ready". After retries
+    // exhaust, the proxy must NOT fatal-502 a not-confirmed-dead box; it should
+    // 503 + Retry-After so the dashboard's JSON health poll backs off and retries.
+    mockFetchResponses = [{ status: 503, body: 'port not listening' }];
+    const app = createProxyTestApp();
+    const origSetTimeout = globalThis.setTimeout;
+    globalThis.setTimeout = ((fn: any) => fn()) as any;
+    const res = await app.request(`/v1/p/sandbox-boot-503/${TEST_PORT}/`, {
+      headers: { Authorization: 'Bearer test' },
+    });
+    globalThis.setTimeout = origSetTimeout;
+    expect(res.status).toBe(503);
+    expect(res.headers.get('Retry-After')).toBeTruthy();
+    expect((await res.json()).error).toContain('port not ready yet');
+  });
 });
 
 describe('Preview proxy: no-trailing-slash', () => {
