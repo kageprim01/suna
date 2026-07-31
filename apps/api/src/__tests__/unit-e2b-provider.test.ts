@@ -39,7 +39,14 @@ class MockSandbox {
   static list = mock(() => mockListPaginator);
 }
 
-mock.module('e2b', () => ({ Sandbox: MockSandbox, Template: {} }));
+class SandboxNotFoundErrorMock extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'SandboxNotFoundError';
+  }
+}
+
+mock.module('e2b', () => ({ Sandbox: MockSandbox, Template: {}, SandboxNotFoundError: SandboxNotFoundErrorMock }));
 
 const { E2BProvider } = await import('../platform/providers/e2b');
 
@@ -83,8 +90,49 @@ describe('E2BProvider', () => {
     expect(result.externalId).toBe('e2b-sbx-1');
     expect(result.metadata.template).toBe('tmpl-project-1');
     expect(mockCreate).toHaveBeenCalledWith('tmpl-project-1', expect.objectContaining({
-      timeout: 1800,
-      envVars: expect.objectContaining({ KORTIX_TOKEN: 'tok-1' }),
+      timeoutMs: 30 * 60 * 1000,
+      envs: expect.objectContaining({ KORTIX_TOKEN: 'tok-1' }),
+    }));
+  });
+
+  test('create defaults to 1h TTL (E2B Hobby max) when autoStopInterval is unset', async () => {
+    await provider.create({
+      accountId: 'acct-1',
+      userId: 'user-1',
+      name: 'test-sb',
+      snapshot: 'tmpl-project-1',
+      envVars: { KORTIX_TOKEN: 'tok-1' },
+    });
+    expect(mockCreate).toHaveBeenCalledWith('tmpl-project-1', expect.objectContaining({
+      timeoutMs: 60 * 60 * 1000,
+    }));
+  });
+
+  test('create caps warm-pool (autoStopInterval 0) at 1h TTL', async () => {
+    await provider.create({
+      accountId: 'acct-1',
+      userId: 'user-1',
+      name: 'test-sb',
+      snapshot: 'tmpl-project-1',
+      envVars: { KORTIX_TOKEN: 'tok-1' },
+      autoStopInterval: 0,
+    });
+    expect(mockCreate).toHaveBeenCalledWith('tmpl-project-1', expect.objectContaining({
+      timeoutMs: 60 * 60 * 1000,
+    }));
+  });
+
+  test('create clamps an over-long autoStopInterval to the 1h Hobby max', async () => {
+    await provider.create({
+      accountId: 'acct-1',
+      userId: 'user-1',
+      name: 'test-sb',
+      snapshot: 'tmpl-project-1',
+      envVars: { KORTIX_TOKEN: 'tok-1' },
+      autoStopInterval: 120,
+    });
+    expect(mockCreate).toHaveBeenCalledWith('tmpl-project-1', expect.objectContaining({
+      timeoutMs: 60 * 60 * 1000,
     }));
   });
 
@@ -103,6 +151,12 @@ describe('E2BProvider', () => {
     expect(mockKill).toHaveBeenCalledWith('e2b-sbx-1');
   });
 
+  test('resolvePreviewLink normalizes scheme-less getHost() to https', async () => {
+    const link = await provider.resolvePreviewLink('e2b-sbx-1', 8000);
+    expect(link.url).toBe('https://8000-e2b-sbx-1.e2b.app');
+    expect(link.token).toBe('tok_abc');
+  });
+
   test('getStatus returns running for running state', async () => {
     mockGetInfoValue = 'running';
     const status = await provider.getStatus('e2b-sbx-1');
@@ -119,6 +173,19 @@ describe('E2BProvider', () => {
     MockSandbox.getInfo = mock(() => Promise.reject(new Error('not found')));
     const status = await provider.getStatus('e2b-sbx-missing');
     expect(status).toBe('unknown');
+    MockSandbox.getInfo = mock(() => Promise.resolve({ state: mockGetInfoValue }));
+  });
+
+  test('getStatus returns not_found on SandboxNotFoundError', async () => {
+    MockSandbox.getInfo = mock(() => Promise.reject(new SandboxNotFoundErrorMock('Sandbox e2b-sbx-gone not found')));
+    const status = await provider.getStatus('e2b-sbx-gone');
+    expect(status).toBe('not_found');
+    MockSandbox.getInfo = mock(() => Promise.resolve({ state: mockGetInfoValue }));
+  });
+
+  test('ensureRunning throws SandboxNotFoundError when the box is gone', async () => {
+    MockSandbox.getInfo = mock(() => Promise.reject(new SandboxNotFoundErrorMock('Paused sandbox e2b-sbx-gone not found')));
+    await expect(provider.ensureRunning('e2b-sbx-gone')).rejects.toThrow('reprovision');
     MockSandbox.getInfo = mock(() => Promise.resolve({ state: mockGetInfoValue }));
   });
 });

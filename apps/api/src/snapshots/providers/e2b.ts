@@ -13,7 +13,7 @@ import { cp, mkdir, rm } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Template, Sandbox } from 'e2b';
-import { isE2BConfigured, deleteE2BTemplate } from '../../shared/e2b';
+import { isE2BConfigured, getE2BApiKey, deleteE2BTemplate } from '../../shared/e2b';
 import { withTimeout } from '../../shared/with-timeout';
 import {
   stageBuildContext,
@@ -116,7 +116,8 @@ class E2BAdapter implements SandboxProviderAdapter {
           cpuCount: resources.cpu,
           memoryMB: resources.memory * 1024,
           tags: ['default'],
-          timeoutMs: BUILD_TIMEOUT_MS,
+          // No `timeoutMs` on BuildOptions — requestTimeoutMs bounds each HTTP
+          // request; the wait-for-build loop is the only real timeout guard.
           requestTimeoutMs: BUILD_TIMEOUT_MS,
           onBuildLogs: (logs) => {
             if (!Array.isArray(logs)) {

@@ -66,7 +66,7 @@ export interface ProvisionResult {
   metadata: Record<string, unknown>;
 }
 
-export type SandboxStatus = 'running' | 'stopped' | 'removed' | 'unknown';
+export type SandboxStatus = 'running' | 'stopped' | 'removed' | 'not_found' | 'unknown';
 
 export interface ResolvedEndpoint {
   url: string;

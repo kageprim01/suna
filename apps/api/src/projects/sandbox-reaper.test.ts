@@ -6,7 +6,7 @@ let candidates: any[] = [];
 let activeTurns: Array<{ sessionId: string }> = [];
 let usageRows: Array<{ sessionId: string; last: string }> = [];
 let throwOnUsageLookup = false;
-let statusByExternal: Record<string, 'running' | 'stopped' | 'removed' | 'unknown'> = {};
+let statusByExternal: Record<string, 'running' | 'stopped' | 'removed' | 'not_found' | 'unknown'> = {};
 let stopErrorByExternal: Record<string, Error> = {};
 let stops: string[] = [];
 let managedBoxes: Array<{ externalId: string; createdAt: Date | null }> = [];
@@ -130,6 +130,12 @@ describe('decideReap', () => {
 
   test('removed → reconcile-removed + reprovision', () => {
     const d = decideReap({ providerStatus: 'removed', meaningfulIdleMs: 0, hasActiveTurn: false, ttlMs: TTL, provider: 'platinum' });
+    expect(d.action).toBe('reconcile-removed');
+    expect(d.reprovisionOnResume).toBe(true);
+  });
+
+  test('not_found → reconcile-removed + reprovision (same as removed)', () => {
+    const d = decideReap({ providerStatus: 'not_found', meaningfulIdleMs: 0, hasActiveTurn: false, ttlMs: TTL, provider: 'e2b' });
     expect(d.action).toBe('reconcile-removed');
     expect(d.reprovisionOnResume).toBe(true);
   });

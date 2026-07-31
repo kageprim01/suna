@@ -79,7 +79,7 @@ export function decideReap(input: {
   }
   // The external box is gone — finalize billing and mark our row so the next
   // open reprovisions instead of trying to resume a box that no longer exists.
-  if (providerStatus === 'removed') {
+  if (providerStatus === 'removed' || providerStatus === 'not_found') {
     return { action: 'reconcile-removed', reprovisionOnResume: true, reason: 'provider-removed' };
   }
   // Provider already stopped/archived it (its own auto-stop, an admin, or a
@@ -435,7 +435,7 @@ export async function reconcileOrphanComputeSessions(): Promise<{ checked: numbe
         // active; here we only need to catch rows whose box is NOT running.
         if (row.provider === 'local_docker') continue;
         const status = await getProvider(row.provider as ProviderName).getStatus(row.externalId);
-        if (status === 'stopped' || status === 'removed') {
+        if (status === 'stopped' || status === 'removed' || status === 'not_found') {
           await pauseComputeSession(row.sandboxId);
           closed += 1;
         }

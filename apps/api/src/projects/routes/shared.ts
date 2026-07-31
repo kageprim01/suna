@@ -525,7 +525,7 @@ export async function openSession(args: {
     providerStatus = 'unknown';
   }
 
-  if (providerStatus === 'removed') {
+  if (providerStatus === 'removed' || providerStatus === 'not_found') {
     return replaceStaleRuntimeOnOpen(
       loaded,
       visible,

@@ -197,7 +197,7 @@ export async function restartSession(input: {
     const externalId = existingSandbox.externalId;
     const provider = getProvider(existingSandbox.provider as SandboxProviderName);
     const providerStatus = await provider.getStatus(externalId).catch(() => 'unknown' as const);
-    if (providerStatus === 'removed') {
+    if (providerStatus === 'removed' || providerStatus === 'not_found') {
       await retireSessionSandboxRow(existingSandbox, 'restart_removed_runtime').catch((err) =>
         console.warn(
           `[projects] failed to retire removed runtime ${externalId} for session ${sessionId}:`,

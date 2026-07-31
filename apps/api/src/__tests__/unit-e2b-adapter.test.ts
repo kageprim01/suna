@@ -15,6 +15,7 @@ const mockDeleteE2BTemplate = mock(() => Promise.resolve());
 
 mock.module('../shared/e2b', () => ({
   isE2BConfigured: () => true,
+  getE2BApiKey: () => 'e2b-key-test',
   deleteE2BTemplate: mockDeleteE2BTemplate,
 }));
 
@@ -47,6 +48,27 @@ MockTemplate.exists = mock(() => Promise.resolve(templateExists));
 MockTemplate.getBuildStatus = mockGetBuildStatus;
 
 mock.module('e2b', () => ({ Template: MockTemplate, Sandbox: {} }));
+
+const mockFetch = mock((input: string | URL | Request, init?: RequestInit) => {
+  if (templateExists) {
+    return Promise.resolve(
+      new Response(JSON.stringify([{ templateID: 'tmpl-1', aliases: ['tmpl-active'], buildStatus: 'ready' }]), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    );
+  }
+  return Promise.resolve(new Response(JSON.stringify([]), { status: 200 }));
+});
+mock.module('../shared/e2b', () => ({
+  isE2BConfigured: () => true,
+  getE2BApiKey: () => 'e2b-key-test',
+  deleteE2BTemplate: mockDeleteE2BTemplate,
+}));
+// getSnapshotState() lists templates via raw fetch — mock it so the state
+// derives from `templateExists` instead of hitting the real E2B API.
+// @ts-ignore — replace the global fetch for this test module.
+globalThis.fetch = mockFetch;
 
 const { e2bProvider } = await import('../snapshots/providers/e2b');
 
