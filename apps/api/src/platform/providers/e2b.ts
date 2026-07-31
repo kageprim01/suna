@@ -21,6 +21,9 @@ import type {
 const STATUS_CACHE_TTL_MS = 1500;
 const runningStatusCache = new Map<string, number>(); // externalId → cachedAt (ms)
 
+/** Full extension applied by the keep-alive; clamped to the Hobby 1h max. */
+const TTL_EXTEND_MS = 60 * 60 * 1000;
+
 function isE2BNotFound(err: unknown): boolean {
   return err instanceof SandboxNotFoundError ||
     (err instanceof Error && err.name === 'SandboxNotFoundError');
@@ -87,6 +90,18 @@ export class E2BProvider implements SandboxProvider {
         (opts.autoStopInterval && opts.autoStopInterval > 0 ? opts.autoStopInterval : 60),
         60,
       ) * 60 * 1000, // minutes → ms, clamped to the 1h Hobby max
+      // TTL expiry must NOT kill the box. E2B lifecycle docs (2026-07-31):
+      // `onTimeout: 'pause'` snapshots the sandbox (memory preserved) and keeps
+      // it paused indefinitely (excluded from concurrency + billing), and
+      // `autoResume: true` wakes it on the next request — so a 1h-expired
+      // sandbox comes back instead of being GC'd and needing reprovision.
+      // Valid only when `onTimeout` is `'pause'` and the snapshot keeps memory
+      // (the default) — both hold here. Explicit `stop()` (session stop) still
+      // pauses, `start()`/`connect()` resumes; both stay consistent.
+      lifecycle: {
+        onTimeout: 'pause',
+        autoResume: true,
+      },
       metadata: {
         'kortix.managed': 'true',
         'kortix.env': config.INTERNAL_AGENTICA_ENV,
@@ -225,5 +240,29 @@ export class E2BProvider implements SandboxProvider {
       console.warn('[E2B] listManagedRunningSandboxes failed:', err instanceof Error ? err.message : err);
     }
     return out;
+  }
+}
+
+/**
+ * Keep-alive: extend a running sandbox's TTL. E2B's `setTimeout` resets the
+ * timeout from NOW (docs/sandbox.md — "periodically call set timeout every
+ * time user interacts with it in your app"). The preview proxy calls this
+ * (cooldown-bounded) whenever traffic actually reaches a sandbox, so an
+ * actively-used session never hits the 1h TTL wall.
+ *
+ * Best-effort by contract: never throws, never blocks the caller's response.
+ * Returns true only when the extension call succeeded.
+ */
+export async function extendE2BSandboxTtl(externalId: string): Promise<boolean> {
+  if (!isE2BConfigured()) return false;
+  try {
+    await Sandbox.setTimeout(externalId, TTL_EXTEND_MS);
+    return true;
+  } catch (err) {
+    if (isE2BNotFound(err)) {
+      runningStatusCache.delete(externalId);
+    }
+    console.warn(`[E2B] TTL extension failed for ${externalId}:`, err instanceof Error ? err.message : err);
+    return false;
   }
 }

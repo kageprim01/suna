@@ -61,7 +61,7 @@ sandboxWebhooksApp.openapi(
     method: 'post',
     path: '/e2b',
     tags: ['webhooks'],
-    summary: 'E2B sandbox lifecycle webhook (HMAC-SHA-256 base64, public)',
+    summary: 'E2B sandbox lifecycle webhook (sha256(secret+body) base64, public)',
     responses: {
       200: json(z.record(z.string(), z.any()), 'Webhook processing result'),
       ...errors(400, 401, 503),

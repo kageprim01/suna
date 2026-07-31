@@ -27,6 +27,7 @@ const mockCreate = mock(() => Promise.resolve({ sandboxId: 'e2b-sbx-1' }));
 const mockConnect = mock(() => Promise.resolve({ getHost: () => 'https://8000-e2b-sbx-1.e2b.app', trafficAccessToken: 'tok_abc' }));
 const mockPause = mock(() => Promise.resolve());
 const mockKill = mock(() => Promise.resolve());
+const mockSetTimeout = mock(() => Promise.resolve());
 let mockGetInfoValue = 'running';
 const mockListPaginator = { hasNext: false, nextItems: mock(() => Promise.resolve([])) };
 
@@ -35,6 +36,7 @@ class MockSandbox {
   static connect = mockConnect;
   static pause = mockPause;
   static kill = mockKill;
+  static setTimeout = mockSetTimeout;
   static getInfo = mock(() => Promise.resolve({ state: mockGetInfoValue }));
   static list = mock(() => mockListPaginator);
 }
@@ -91,6 +93,7 @@ describe('E2BProvider', () => {
     expect(result.metadata.template).toBe('tmpl-project-1');
     expect(mockCreate).toHaveBeenCalledWith('tmpl-project-1', expect.objectContaining({
       timeoutMs: 30 * 60 * 1000,
+      lifecycle: { onTimeout: 'pause', autoResume: true },
       envs: expect.objectContaining({ KORTIX_TOKEN: 'tok-1' }),
     }));
   });
@@ -187,5 +190,25 @@ describe('E2BProvider', () => {
     MockSandbox.getInfo = mock(() => Promise.reject(new SandboxNotFoundErrorMock('Paused sandbox e2b-sbx-gone not found')));
     await expect(provider.ensureRunning('e2b-sbx-gone')).rejects.toThrow('reprovision');
     MockSandbox.getInfo = mock(() => Promise.resolve({ state: mockGetInfoValue }));
+  });
+});
+
+describe('extendE2BSandboxTtl', () => {
+  test('extends the TTL to the 1h ceiling and reports success', async () => {
+    const { extendE2BSandboxTtl } = await import('../platform/providers/e2b');
+    await expect(extendE2BSandboxTtl('e2b-sbx-1')).resolves.toBe(true);
+    expect(mockSetTimeout).toHaveBeenCalledWith('e2b-sbx-1', 60 * 60 * 1000);
+  });
+
+  test('never throws and reports failure on a provider error', async () => {
+    const { extendE2BSandboxTtl } = await import('../platform/providers/e2b');
+    mockSetTimeout.mockRejectedValueOnce(new Error('rate limited'));
+    await expect(extendE2BSandboxTtl('e2b-sbx-1')).resolves.toBe(false);
+  });
+
+  test('clears the status cache and reports failure when the box is gone', async () => {
+    const { extendE2BSandboxTtl } = await import('../platform/providers/e2b');
+    mockSetTimeout.mockRejectedValueOnce(new SandboxNotFoundErrorMock('Sandbox not found'));
+    await expect(extendE2BSandboxTtl('e2b-sbx-gone')).resolves.toBe(false);
   });
 });

@@ -18,7 +18,7 @@
  * correctness dependency.
  */
 
-import { createHmac, timingSafeEqual } from 'node:crypto';
+import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 import { config } from '../../config';
 import { recordWebhookEvent } from '../../billing/services/webhook-concurrency';
 import {
@@ -149,12 +149,18 @@ export async function handleDaytonaWebhook(
 /**
  * E2B webhook signature verification.
  *
- * E2B signs with: base64(sha256(secret + rawBody)), then strips trailing `=`.
- * The signed value is sent in the `e2b-signature` header.
+ * E2B's documented scheme (docs/sandbox/lifecycle-events-webhooks.md) is a
+ * PLAIN SHA-256 over the concatenation, base64'd and trimmed of trailing `=`:
+ *
+ *   expected = base64( sha256( secret + rawBody ) ).replace(/=+$/, '')
+ *
+ * sent in the `e2b-signature` header. (A HMAC-SHA-256 would be
+ * `createHmac(secret, body)` — that does NOT match E2B's hash(secret+body) and
+ * was rejected; corrected 2026-07-31.)
  */
 export function verifyE2B(rawBody: string, secret: string, headerValue: string | undefined): boolean {
   if (!headerValue) return false;
-  const hash = createHmac('sha256', secret).update(rawBody, 'utf8').digest('base64').replace(/=+$/, '');
+  const hash = createHash('sha256').update(secret + rawBody, 'utf8').digest('base64').replace(/=+$/, '');
   return safeEqual(headerValue, hash);
 }
 

@@ -686,7 +686,15 @@ app.route('/v1/webhooks/slack', slackWebhookApp); // /v1/webhooks/slack/:project
 app.route('/v1/webhooks/telegram', telegramWebhookApp); // /v1/webhooks/telegram/:projectId — Telegram updates
 
 const { sandboxWebhooksApp } = await import('./platform/webhooks/routes');
-app.route('/v1/webhooks/sandbox', sandboxWebhooksApp); // /v1/webhooks/sandbox/{daytona,platinum} — provider lifecycle → close billing
+app.route('/v1/webhooks/sandbox', sandboxWebhooksApp); // /v1/webhooks/sandbox/{daytona,platinum,e2b} — provider lifecycle → close billing
+
+// Register our E2B lifecycle webhook so `killed` events reconcile sandbox
+// rows in near-real-time (the reaper sweep stays the backstop). Fire-and-forget:
+// registration must never block boot, and failure just means the reaper covers.
+const { ensureE2BWebhookRegistered } = await import('./platform/webhooks/e2b-register');
+void ensureE2BWebhookRegistered().catch((err) =>
+  console.warn('[e2b-webhooks] startup registration failed:', err instanceof Error ? err.message : err),
+);
 
 // Access control — public endpoints for signup gating
 app.route('/v1/access', accessControlApp); // /v1/access/signup-status, /v1/access/check-email, /v1/access/request-access

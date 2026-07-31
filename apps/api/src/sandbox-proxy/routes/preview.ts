@@ -19,6 +19,24 @@ const KORTIX_USER_CONTEXT_QUERY_PARAM = '__kortix_user_context';
 // `userId` is set by combinedAuth (mounted in ../index.ts) before this route.
 const preview = new Hono<{ Variables: { userId: string; userEmail: string } }>();
 
+// ─── E2B TTL keep-alive ────────────────────────────────────────────────────
+// E2B sandboxes die when their TTL (1h Hobby max) elapses unless the TTL is
+// extended. E2B's docs recommend calling setTimeout() "every time user
+// interacts with it in your app" — so traffic that actually reaches a sandbox
+// through this proxy extends its life. Cooldown-bounded + fire-and-forget:
+// never in the request hot path, never affects the response.
+const TTL_KEEPALIVE_COOLDOWN_MS = 5 * 60 * 1000;
+const ttlExtendedAt = new Map<string, number>(); // sandboxId → last extension (ms)
+
+function maybeExtendSandboxTtl(sandboxId: string): void {
+  const last = ttlExtendedAt.get(sandboxId) ?? 0;
+  if (Date.now() - last < TTL_KEEPALIVE_COOLDOWN_MS) return;
+  ttlExtendedAt.set(sandboxId, Date.now());
+  import('../../platform/providers/e2b')
+    .then(({ extendE2BSandboxTtl }) => extendE2BSandboxTtl(sandboxId))
+    .catch(() => { /* best-effort; never throw into the hot path */ });
+}
+
 // Hop-by-hop + caller-controlled headers we never forward upstream. Auth is
 // replaced with the sandbox service key, trace headers are regenerated, and
 // Accept-Encoding is forced to identity (raw byte passthrough).
@@ -480,6 +498,7 @@ export async function forwardToSandbox(
           redirectPrefix,
         );
         if (safeLocation) respHeaders.set('Location', safeLocation);
+        void maybeExtendSandboxTtl(sandboxId);
         return new Response(null, {
           status: upstream.status,
           statusText: upstream.statusText,
@@ -588,6 +607,7 @@ export async function forwardToSandbox(
 
       // Got an HTTP response → sandbox is alive, pass it through with CORS.
       void markSandboxUsed(sandboxId);
+      void maybeExtendSandboxTtl(sandboxId);
       const respHeaders = clientResponseHeaders(upstream.headers, origin);
       return new Response(upstream.body, {
         status: upstream.status,

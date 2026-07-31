@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, mock, test } from 'bun:test';
-import { createHmac } from 'node:crypto';
+import { createHash, createHmac } from 'node:crypto';
 
 const cfg: { DAYTONA_WEBHOOK_SECRET?: string; PLATINUM_WEBHOOK_SECRET?: string; E2B_WEBHOOK_SECRET?: string } = {};
 let stoppedCalls: string[] = [];
@@ -168,12 +168,19 @@ describe('handlePlatinumWebhook', () => {
 describe('verifyE2B', () => {
   const secret = 'e2b-test-secret';
   const body = '{"event":"sandbox.lifecycle.killed","payload":{"sandbox_id":"sb_e2b"}}';
-  const hash = createHmac('sha256', secret).update(body, 'utf8').digest('base64').replace(/=+$/, '');
-  test('accepts a correct base64 signature', () => {
-    expect(verifyE2B(body, secret, hash)).toBe(true);
+  // E2B's documented scheme (docs/sandbox/lifecycle-events-webhooks.md):
+  //   base64( sha256( secret + rawBody ) ) with trailing '=' stripped.
+  const e2bSignature = (payload: string) =>
+    createHash('sha256').update(secret + payload, 'utf8').digest('base64').replace(/=+$/, '');
+  test('accepts the documented sha256(secret+body) signature', () => {
+    expect(verifyE2B(body, secret, e2bSignature(body))).toBe(true);
+  });
+  test('rejects an HMAC signature (the old buggy scheme)', () => {
+    const hmacSig = createHmac('sha256', secret).update(body, 'utf8').digest('base64').replace(/=+$/, '');
+    expect(verifyE2B(body, secret, hmacSig)).toBe(false);
   });
   test('rejects a wrong signature / missing header', () => {
-    expect(verifyE2B(body, secret, hash + 'x')).toBe(false);
+    expect(verifyE2B(body, secret, e2bSignature(body) + 'x')).toBe(false);
     expect(verifyE2B(body, secret, undefined)).toBe(false);
   });
 });
@@ -181,7 +188,7 @@ describe('verifyE2B', () => {
 describe('handleE2BWebhook', () => {
   const secret = 'e2b-webhook-secret';
   function e2bHeader(body: string): (h: string) => string | undefined {
-    const sig = createHmac('sha256', secret).update(body, 'utf8').digest('base64').replace(/=+$/, '');
+    const sig = createHash('sha256').update(secret + body, 'utf8').digest('base64').replace(/=+$/, '');
     return (h: string) => (h.toLowerCase() === 'x-e2b-signature' ? sig : undefined);
   }
   test('503 when not configured', async () => {

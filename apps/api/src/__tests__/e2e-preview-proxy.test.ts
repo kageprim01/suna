@@ -49,6 +49,7 @@ let mockFetchCallCount = 0;
 let mockFetchCalls: Array<{ url: string; method: string; headers: Record<string, string>; body: string | null }> = [];
 let mockDbUpdateCalls: Array<{ table: unknown; updates: Record<string, unknown> }> = [];
 let mockResolvedPreviewPorts: number[] = [];
+let mockTtlExtendCalls: string[] = [];
 
 function mockSandboxRows(): any[] {
   if (!mockDbSandbox) return [];
@@ -207,6 +208,13 @@ mock.module('../config', () => ({
   },
 }));
 
+mock.module('../platform/providers/e2b', () => ({
+  extendE2BSandboxTtl: async (externalId: string) => {
+    mockTtlExtendCalls.push(externalId);
+    return true;
+  },
+}));
+
 mock.module('../projects/secrets', () => {
   const snapshot = (projectId: string) => ({
     env: {
@@ -327,6 +335,7 @@ beforeEach(() => {
   mockFetchCalls = [];
   mockDbUpdateCalls = [];
   mockResolvedPreviewPorts = [];
+  mockTtlExtendCalls = [];
 
   // Install mock fetch
   globalThis.fetch = mockFetch as any;
@@ -840,6 +849,72 @@ describe('Preview proxy: forwarding', () => {
       headers: { Authorization: 'Bearer test' },
     });
     expect(mockFetchCalls[0].url).toContain('/api/v2/data');
+  });
+});
+
+describe('Preview proxy: E2B TTL keep-alive', () => {
+  // Each test uses its own sandbox ID: ttlExtendedAt is module-level state, so
+  // a reused ID would already be inside the 5-minute cooldown.
+  const keepaliveSandboxId = 'sb-ttl-keepalive-901';
+  const keepaliveRedirectSandboxId = 'sb-ttl-keepalive-902';
+  const keepaliveBurstSandboxId = 'sb-ttl-keepalive-903';
+  const keepalive503SandboxId = 'sb-ttl-keepalive-904';
+
+  async function flushMicrotasks() {
+    await new Promise((r) => setTimeout(r, 10));
+  }
+
+  test('extends the TTL after a successful 2xx passthrough', async () => {
+    mockFetchResponses = [{ status: 200, body: 'OK' }];
+    const app = createProxyTestApp();
+    const res = await app.request(`/v1/p/${keepaliveSandboxId}/${TEST_PORT}/`, {
+      headers: { Authorization: 'Bearer test' },
+    });
+    expect(res.status).toBe(200);
+    await flushMicrotasks();
+    expect(mockTtlExtendCalls).toEqual([keepaliveSandboxId]);
+  });
+
+  test('extends the TTL after a 3xx redirect response', async () => {
+    mockFetchResponses = [{ status: 302, body: '', headers: { location: '/login' } }];
+    const app = createProxyTestApp();
+    const res = await app.request(`/v1/p/${keepaliveRedirectSandboxId}/${TEST_PORT}/`, {
+      headers: { Authorization: 'Bearer test' },
+    });
+    expect(res.status).toBe(302);
+    await flushMicrotasks();
+    expect(mockTtlExtendCalls).toEqual([keepaliveRedirectSandboxId]);
+  });
+
+  test('is cooldown-bounded: repeated traffic within 5min extends at most once', async () => {
+    mockFetchResponses = [{ status: 200, body: 'OK' }];
+    const app = createProxyTestApp();
+    for (let i = 0; i < 3; i++) {
+      await app.request(`/v1/p/${keepaliveBurstSandboxId}/${TEST_PORT}/${i}`, {
+        headers: { Authorization: 'Bearer test' },
+      });
+    }
+    await flushMicrotasks();
+    expect(mockTtlExtendCalls.length).toBeLessThanOrEqual(1);
+  });
+
+  test('does not extend the TTL on boot-window 503s (sandbox not ready)', async () => {
+    mockFetchResponses = [
+      { status: 503, body: 'sandbox port not ready yet, retry in 10s' },
+      { status: 503, body: 'sandbox port not ready yet, retry in 10s' },
+      { status: 503, body: 'sandbox port not ready yet, retry in 10s' },
+      { status: 503, body: 'sandbox port not ready yet, retry in 10s' },
+      { status: 503, body: 'sandbox port not ready yet, retry in 10s' },
+      { status: 503, body: 'sandbox port not ready yet, retry in 10s' },
+      { status: 503, body: 'sandbox port not ready yet, retry in 10s' },
+    ];
+    const app = createProxyTestApp();
+    const res = await app.request(`/v1/p/${keepalive503SandboxId}/${TEST_PORT}/`, {
+      headers: { Authorization: 'Bearer test' },
+    });
+    expect(res.status).toBe(503);
+    await flushMicrotasks();
+    expect(mockTtlExtendCalls).toEqual([]);
   });
 });
 
