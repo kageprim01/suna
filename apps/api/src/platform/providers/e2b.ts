@@ -60,7 +60,7 @@ export class E2BProvider implements SandboxProvider {
       );
     }
 
-    const sandbox = await Sandbox.create(`${templateName}:default`, {
+    const sandbox = await Sandbox.create(templateName, {
       envVars,
       timeout: (opts.autoStopInterval ?? 120) * 60, // minutes → seconds
       metadata: {
@@ -78,7 +78,7 @@ export class E2BProvider implements SandboxProvider {
       metadata: {
         provisionedBy: opts.userId,
         e2bSandboxId: externalId,
-        template,
+        template: templateName,
         version: SANDBOX_VERSION,
       },
     };

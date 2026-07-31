@@ -116,21 +116,15 @@ export async function stageBuildContext(
   }
 
   const contextDir = await mkdtemp(join(tmpdir(), 'kortix-snap-'));
-  await gzipFile(AGENT_BIN_PATH, join(contextDir, 'kortix-agent.gz'));
-  await gzipFile(CLI_BIN_PATH, join(contextDir, 'kortix.gz'));
-  await copyFile(ENTRYPOINT_PATH, join(contextDir, 'kortix-entrypoint'));
-  await cp(SLACK_CLI_SRC_PATH, join(contextDir, 'slack-cli'), { recursive: true });
-  await cp(EXECUTOR_SDK_SRC_PATH, join(contextDir, 'executor-sdk'), { recursive: true });
-  // Stage the starter opencode config for the build-time instance warm-up.
-  // Best effort: if it's missing, skip the warm-up (the build still succeeds and
-  // sessions just pay the first-instance cost at runtime as before).
   let opencodeConfigPath: string | undefined;
-  if (await isDir(OPENCODE_CONFIG_SRC_PATH)) {
-    await cp(OPENCODE_CONFIG_SRC_PATH, join(contextDir, 'kortix-opencode-config'), {
-      recursive: true,
-    });
-    opencodeConfigPath = 'kortix-opencode-config';
-  }
+
+  const execTar = (args: string[], cwd: string) => execFileAsyncBC('tar', args, { cwd });
+  await execTar(['-czf', join(contextDir, 'k-agent-v5.tar.gz'), '-C', dirname(AGENT_BIN_PATH), 'kortix-agent'], process.cwd());
+  await execTar(['-czf', join(contextDir, 'k-cli-v5.tar.gz'), '-C', dirname(CLI_BIN_PATH), 'kortix'], process.cwd());
+  await copyFile(ENTRYPOINT_PATH, join(contextDir, 'kortix-entrypoint'));
+  
+  await execTar(['-czf', join(contextDir, 'slack-cli-v5.tar.gz'), '.'], SLACK_CLI_SRC_PATH);
+  await execTar(['-czf', join(contextDir, 'executor-sdk-v5.tar.gz'), '.'], EXECUTOR_SDK_SRC_PATH);
 
   // Bake the FULL gateway model catalog into the image. The no-restart warm seed
   // has no sandbox token / projectId to fetch the catalog at PARK, so without this
@@ -150,6 +144,18 @@ export async function stageBuildContext(
   // repos (imported, other starters) share no ancestor and transparently fall
   // back to a full fetch through the same code.
   await stageScaffoldRepo(contextDir);
+  await execTar(['-czf', join(contextDir, 'scaffold-v5.tar.gz'), '.'], join(contextDir, 'scaffold.git'));
+  await rm(join(contextDir, 'scaffold.git'), { recursive: true, force: true });
+
+  // Stage the starter opencode config for the build-time instance warm-up.
+  // Best effort: if it's missing, skip the warm-up (the build still succeeds and
+  // sessions just pay the first-instance cost at runtime as before).
+  if (await isDir(OPENCODE_CONFIG_SRC_PATH)) {
+    await cp(OPENCODE_CONFIG_SRC_PATH, join(contextDir, 'kortix-opencode-config'), {
+      recursive: true,
+    });
+    opencodeConfigPath = 'kortix-opencode-config';
+  }
 
   const dockerfileName = '.kortix-snapshot.Dockerfile';
   const composedPath = join(contextDir, dockerfileName);
@@ -157,11 +163,11 @@ export async function stageBuildContext(
     userDockerfile,
     opencodeVersion: OPENCODE_VERSION,
     agentBrowserVersion: AGENT_BROWSER_VERSION,
-    agentBinaryPath: 'kortix-agent.gz',
-    cliBinaryPath: 'kortix.gz',
+    agentBinaryPath: 'k-agent-v5.tar.gz',
+    cliBinaryPath: 'k-cli-v5.tar.gz',
     entrypointScriptPath: 'kortix-entrypoint',
-    slackCliPath: 'slack-cli',
-    executorSdkPath: 'executor-sdk',
+    slackCliPath: 'slack-cli-v5.tar.gz',
+    executorSdkPath: 'executor-sdk-v5.tar.gz',
     opencodeConfigPath,
     catalogPath: 'kortix-llm-catalog.json',
     e2bBaseImage,
@@ -177,7 +183,7 @@ export async function stageBuildContext(
   // "Path does not exist", and the auto-build can't tell it's a staging miss to
   // recover from. Assert at the source so a miss is caught here AND is retryable
   // (the daytona adapter re-stages on "staging incomplete").
-  await assertContextComplete(contextDir, dockerfileName);
+  await assertContextComplete(contextDir, dockerfileName, !!e2bBaseImage);
   console.info(`[snapshots] ${snapshotName}: build context staged at ${contextDir}`);
   return { contextDir, composedPath, dockerfileName };
 }
@@ -187,8 +193,9 @@ export async function stageBuildContext(
  * Dockerfile COPYs, so a staging miss fails HERE (clear + retryable) instead of
  * as an opaque provider "Path does not exist" mid-build. Cheap stat checks.
  */
-async function assertContextComplete(contextDir: string, dockerfileName: string): Promise<void> {
-  for (const rel of ['scaffold.git', 'kortix-agent.gz', dockerfileName]) {
+async function assertContextComplete(contextDir: string, dockerfileName: string, isE2BBase: boolean = false): Promise<void> {
+  const requiredFiles = isE2BBase ? [dockerfileName] : ['scaffold.git', 'k-agent-v5.tar.gz', dockerfileName];
+  for (const rel of requiredFiles) {
     try {
       await stat(join(contextDir, rel));
     } catch {

@@ -79,6 +79,7 @@ export async function ensureSandboxImage(
 ): Promise<EnsureSandboxImageResult> {
   const template = await resolveTemplateBySlug(project, opts.slug);
   const buildProvider = opts.provider ?? template.provider;
+  console.log(`[snapshots:debug] ensureSandboxImage slug=${opts.slug} opts.provider=${opts.provider} template.provider=${template.provider} buildProvider=${buildProvider} template.providerState=${template.providerState} template.contentHash=${template.contentHash} template.providerSnapshotName=${template.providerSnapshotName}`);
 
   // local_docker has no per-project snapshot to bake: the sandbox runs the base
   // SANDBOX_IMAGE directly and clones the repo at boot. There is deliberately no
@@ -127,6 +128,7 @@ export async function ensureSandboxImage(
   // Cache hit? (checks the ACTIVE provider — so a row built elsewhere doesn't
   // count, and we rebuild on this provider.)
   const state = await provider.getSnapshotState(identity.snapshotName);
+  console.log(`[snapshots:debug] getSnapshotState(${identity.snapshotName}) on ${buildProvider} => ${state}`);
   if (state === 'active') {
     await recordTemplateBuilt(template.templateId, {
       snapshotName: identity.snapshotName,
@@ -560,10 +562,8 @@ export async function reconcileStaleBuilds(
     .limit(STALE_BUILD_BATCH);
   if (rows.length === 0) return { checked: 0, closedReady: 0, closedFailed: 0 };
 
-  // Only Daytona today; build-log rows don't carry a provider column, so use
-  // the lone configured adapter. If it's not configured we can't know the true
-  // state, so leave the rows alone rather than mark good builds failed.
-  const provider = getSandboxProvider('daytona');
+  // Use the default configured sandbox provider adapter to check snapshot state.
+  const provider = getSandboxProvider(config.getDefaultProvider());
   if (!provider.isConfigured()) return { checked: rows.length, closedReady: 0, closedFailed: 0 };
 
   let closedReady = 0;
@@ -719,6 +719,7 @@ async function ensurePlatformDefaultImage(
   return ensureSandboxImage(PLATFORM_PROJECT_SHELL, {
     slug: DEFAULT_SANDBOX_SLUG,
     source: opts.source ?? 'startup',
+    provider: config.getDefaultProvider(),
   });
 }
 

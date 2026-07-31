@@ -159,40 +159,35 @@ export function buildLayeredDockerfile(opts: BuildLayeredDockerfileOpts): string
   // the workspace setup are emitted.
   if (e2bBaseImage) {
     const fromReplaced = trimmed.replace(/^FROM\s+\S+/im, `FROM ${e2bBaseImage}`);
-    const warmUp = opencodeConfigPath
-      ? [
-          '',
-          '# ─── opencode instance warm-up (base image has deps baked in) ──',
-          'RUN set +e; \\',
-          '    export HOME=/opt/kortix/home \\',
-          '        XDG_DATA_HOME=/opt/kortix/home/.local/share \\',
-          '        XDG_CONFIG_HOME=/opt/kortix/home/.config \\',
-          '        XDG_CACHE_HOME=/opt/kortix/home/.cache \\',
-          '        BUN_INSTALL_CACHE_DIR=/opt/kortix/home/.bun/install/cache; \\',
-          '    mkdir -p /workspace/.kortix; \\',
-          '    cp -a /opt/kortix/warm-config/.kortix/opencode /workspace/.kortix/opencode; \\',
-          '    rm -rf /workspace/.kortix/opencode/node_modules; \\',
-          '    ln -s /opt/kortix/opencode-config-deps/node_modules /workspace/.kortix/opencode/node_modules; \\',
-          '    export OPENCODE_CONFIG_DIR=/workspace/.kortix/opencode; \\',
-          '    cd /workspace; \\',
-          '    opencode serve --port 4096 --hostname 127.0.0.1 >/tmp/oc-warm.log 2>&1 & oc_pid=$!; \\',
-          '    ready=0; \\',
-          '    for i in $(seq 1 300); do \\',
-          `        code=$(curl -s -o /dev/null -m 3 "http://127.0.0.1:4096/session?directory=/workspace" 2>/dev/null); \\`,
-          '        case "$code" in 200|204|301|302) ready=1; break;; esac; \\',
-          '        kill -0 "$oc_pid" 2>/dev/null || break; \\',
-          '        sleep 1; \\',
-          '    done; \\',
-          '    echo "=== instance-warm: ready=$ready ==="; \\',
-          '    kill "$oc_pid" 2>/dev/null; wait "$oc_pid" 2>/dev/null; \\',
-          '    find /workspace -mindepth 1 -delete 2>/dev/null; \\',
-          '    rm -rf /opt/kortix/warm-config; \\',
-          '    echo "=== instance-warm: opencode log tail ==="; tail -20 /tmp/oc-warm.log; \\',
-          '    rm -f /tmp/oc-warm.log; true',
-          '',
-        ]
-      : [];
-    return `${fromReplaced}\nUSER root\n${warmUp.join('\n')}ENV KORTIX_WORKSPACE=/workspace\nRUN mkdir -p /workspace\nWORKDIR /workspace\nEXPOSE 8000\nENTRYPOINT ["/usr/local/bin/kortix-entrypoint"]\n`;
+    const agentCopies = [
+      '',
+      'USER root',
+      ...(opencodeConfigPath ? [`COPY ${opencodeConfigPath}/ /opt/kortix/warm-config/.kortix/opencode/`] : []),
+      `COPY ${agentBinaryPath} /opt/kortix/tmp/k-agent-v5.tar.gz`,
+      `COPY ${cliBinaryPath} /opt/kortix/tmp/k-cli-v5.tar.gz`,
+      `COPY ${entrypointScriptPath} /usr/local/bin/kortix-entrypoint`,
+      `COPY slack-cli-v5.tar.gz /opt/kortix/tmp/slack-cli-v5.tar.gz`,
+      `COPY executor-sdk-v5.tar.gz /opt/kortix/tmp/executor-sdk-v5.tar.gz`,
+      ...(catalogPath ? [`COPY ${catalogPath} /opt/kortix/llm-catalog.json`] : []),
+      `COPY scaffold-v5.tar.gz /opt/kortix/tmp/scaffold-v5.tar.gz`,
+      '# Wait for E2B envd auto-update to finish before doing any file I/O.',
+      '# The update fires ~2-3s into the build and takes ~15s; sleeping 20s',
+      '# in a dedicated layer guarantees it completes before extraction.',
+      'RUN sleep 20',
+      'RUN mkdir -p /opt/kortix/apps/sandbox/slack-cli /opt/kortix/packages/executor-sdk /opt/kortix/scaffold.git \\',
+      '    && tar -xzf /opt/kortix/tmp/k-agent-v5.tar.gz -C /usr/local/bin \\',
+      '    && tar -xzf /opt/kortix/tmp/k-cli-v5.tar.gz -C /usr/local/bin \\',
+      '    && tar -xzf /opt/kortix/tmp/slack-cli-v5.tar.gz -C /opt/kortix/apps/sandbox/slack-cli \\',
+      '    && tar -xzf /opt/kortix/tmp/executor-sdk-v5.tar.gz -C /opt/kortix/packages/executor-sdk \\',
+      '    && tar -xzf /opt/kortix/tmp/scaffold-v5.tar.gz -C /opt/kortix/scaffold.git \\',
+      '    && rm -rf /opt/kortix/tmp \\',
+      '    && chmod +x /usr/local/bin/kortix-agent /usr/local/bin/kortix /usr/local/bin/kortix-entrypoint \\',
+      '        /opt/kortix/apps/sandbox/slack-cli/install-shims.sh \\',
+      '    && bash /opt/kortix/apps/sandbox/slack-cli/install-shims.sh /opt/kortix/apps/sandbox/slack-cli \\',
+      '    && kortix --version',
+    ];
+    const warmUp: string[] = [];
+    return `${fromReplaced}\n${agentCopies.join('\n')}\n${warmUp.join('\n')}ENV KORTIX_WORKSPACE=/workspace\nRUN mkdir -p /workspace\nWORKDIR /workspace\nEXPOSE 8000\nENTRYPOINT ["/usr/local/bin/kortix-entrypoint"]\n`;
   }
 
   const fastLayer = [
@@ -204,17 +199,24 @@ export function buildLayeredDockerfile(opts: BuildLayeredDockerfileOpts): string
     'USER root',
     // opencode starter config (conditional)
     ...(opencodeConfigPath ? [`COPY ${opencodeConfigPath}/ /opt/kortix/warm-config/.kortix/opencode/`] : []),
-    `COPY ${agentBinaryPath} /tmp/kortix-agent.gz`,
-    `COPY ${cliBinaryPath} /tmp/kortix.gz`,
+    `COPY ${agentBinaryPath} /opt/kortix/tmp/k-agent-v5.tar.gz`,
+    `COPY ${cliBinaryPath} /opt/kortix/tmp/k-cli-v5.tar.gz`,
     `COPY ${entrypointScriptPath} /usr/local/bin/kortix-entrypoint`,
-    `COPY ${slackCliPath}/ /opt/kortix/apps/sandbox/slack-cli/`,
-    `COPY ${executorSdkPath}/ /opt/kortix/packages/executor-sdk/`,
+    `COPY slack-cli-v5.tar.gz /opt/kortix/tmp/slack-cli-v5.tar.gz`,
+    `COPY executor-sdk-v5.tar.gz /opt/kortix/tmp/executor-sdk-v5.tar.gz`,
     ...(catalogPath ? [`COPY ${catalogPath} /opt/kortix/llm-catalog.json`] : []),
-    `COPY scaffold.git /opt/kortix/scaffold.git`,
-    // gunzip the compressed binaries + run install-shims.sh + verify CLI
-    'RUN gunzip -c /tmp/kortix-agent.gz > /usr/local/bin/kortix-agent \\',
-    '    && gunzip -c /tmp/kortix.gz > /usr/local/bin/kortix \\',
-    '    && rm /tmp/kortix-agent.gz /tmp/kortix.gz \\',
+    `COPY scaffold-v5.tar.gz /opt/kortix/tmp/scaffold-v5.tar.gz`,
+    '# Wait for E2B envd auto-update to finish before doing any file I/O.',
+    '# The update fires ~2-3s into the build and takes ~15s; sleeping 20s',
+    '# in a dedicated layer guarantees it completes before extraction.',
+    'RUN sleep 20',
+    'RUN mkdir -p /opt/kortix/apps/sandbox/slack-cli /opt/kortix/packages/executor-sdk /opt/kortix/scaffold.git \\',
+    '    && tar -xzf /opt/kortix/tmp/k-agent-v5.tar.gz -C /usr/local/bin \\',
+    '    && tar -xzf /opt/kortix/tmp/k-cli-v5.tar.gz -C /usr/local/bin \\',
+    '    && tar -xzf /opt/kortix/tmp/slack-cli-v5.tar.gz -C /opt/kortix/apps/sandbox/slack-cli \\',
+    '    && tar -xzf /opt/kortix/tmp/executor-sdk-v5.tar.gz -C /opt/kortix/packages/executor-sdk \\',
+    '    && tar -xzf /opt/kortix/tmp/scaffold-v5.tar.gz -C /opt/kortix/scaffold.git \\',
+    '    && rm -rf /opt/kortix/tmp \\',
     '    && chmod +x /usr/local/bin/kortix-agent /usr/local/bin/kortix /usr/local/bin/kortix-entrypoint \\',
     '        /opt/kortix/apps/sandbox/slack-cli/install-shims.sh \\',
     '    && bash /opt/kortix/apps/sandbox/slack-cli/install-shims.sh /opt/kortix/apps/sandbox/slack-cli \\',
@@ -336,39 +338,7 @@ export function buildLayeredDockerfile(opts: BuildLayeredDockerfileOpts): string
     // + opencode warm-up. The slowLayer (apt, npm, bun, playwright) is SKIPPED
     // — it's baked into the base image.
     const fromReplaced = trimmed.replace(/^FROM\s+\S+/im, `FROM ${e2bBaseImage}`);
-    const warmUp = opencodeConfigPath
-      ? [
-          '',
-          '# ─── opencode instance warm-up (base image has deps baked in) ──',
-          'RUN set +e; \\',
-          '    export HOME=/opt/kortix/home \\',
-          '        XDG_DATA_HOME=/opt/kortix/home/.local/share \\',
-          '        XDG_CONFIG_HOME=/opt/kortix/home/.config \\',
-          '        XDG_CACHE_HOME=/opt/kortix/home/.cache \\',
-          '        BUN_INSTALL_CACHE_DIR=/opt/kortix/home/.bun/install/cache; \\',
-          '    mkdir -p /workspace/.kortix; \\',
-          '    cp -a /opt/kortix/warm-config/.kortix/opencode /workspace/.kortix/opencode; \\',
-          '    rm -rf /workspace/.kortix/opencode/node_modules; \\',
-          '    ln -s /opt/kortix/opencode-config-deps/node_modules /workspace/.kortix/opencode/node_modules; \\',
-          '    export OPENCODE_CONFIG_DIR=/workspace/.kortix/opencode; \\',
-          '    cd /workspace; \\',
-          '    opencode serve --port 4096 --hostname 127.0.0.1 >/tmp/oc-warm.log 2>&1 & oc_pid=$!; \\',
-          '    ready=0; \\',
-          '    for i in $(seq 1 300); do \\',
-          `        code=$(curl -s -o /dev/null -w '%{http_code}' -m 3 "http://127.0.0.1:4096/session?directory=/workspace" 2>/dev/null); \\`,
-          '        case "$code" in 200|204|301|302) ready=1; break;; esac; \\',
-          '        kill -0 "$oc_pid" 2>/dev/null || break; \\',
-          '        sleep 1; \\',
-          '    done; \\',
-          '    echo "=== instance-warm: ready=$ready ==="; \\',
-          '    kill "$oc_pid" 2>/dev/null; wait "$oc_pid" 2>/dev/null; \\',
-          '    find /workspace -mindepth 1 -delete 2>/dev/null; \\',
-          '    rm -rf /opt/kortix/warm-config; \\',
-          '    echo "=== instance-warm: opencode log tail ==="; tail -20 /tmp/oc-warm.log; \\',
-          '    rm -f /tmp/oc-warm.log; true',
-          '',
-        ]
-      : [];
+    const warmUp: string[] = [];
     return `${fromReplaced}\n${fastLayer.join('\n')}${warmUp.join('\n')}`;
   }
 

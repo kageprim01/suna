@@ -67,22 +67,36 @@ class E2BAdapter implements SandboxProviderAdapter {
       `[snapshots] ${input.snapshotName}: building (slug="${input.slug}", provider=e2b, spec=${JSON.stringify(resources)})`,
     );
 
+    // Delete any existing template with this name to clear zombie/stale builds
+    // that cause E2B's server to cancel new builds for the same name.
+    try {
+      console.info(`[e2b] deleting existing template '${input.snapshotName}' (if any) to clear stale builds`);
+      await deleteE2BTemplate(input.snapshotName);
+      snapshotStateCache.delete(input.snapshotName);
+    } catch {
+      // Template didn't exist — fine
+    }
+
     let lastErr: unknown;
     for (let attempt = 1; attempt <= BUILD_ATTEMPTS; attempt++) {
       const e2bBaseImage = process.env.E2B_BASE_IMAGE;
       const ctx = await stageBuildContext(input.snapshotName, userDockerfile, e2bBaseImage);
       const buildLogs: string[] = [];
-      const relDir = `.kortix-e2b-ctx/${input.snapshotName}`;
-      const absRelDir = join(_dirname, relDir);
 
       try {
-        await rm(absRelDir, { recursive: true, force: true }).catch(() => {});
-        await mkdir(absRelDir, { recursive: true });
-        await cp(ctx.contextDir, absRelDir, { recursive: true });
+        // Ensure any previous failed/partial build for this template is cleared
+        // from E2B before triggering a new build, to prevent naming conflict cancellations.
+        try {
+          console.info(`[e2b] deleting template '${input.snapshotName}' before attempt ${attempt}`);
+          await deleteE2BTemplate(input.snapshotName);
+          snapshotStateCache.delete(input.snapshotName);
+        } catch {
+          // Ignore delete failures (e.g. if doesn't exist)
+        }
 
-        const dockerfilePath = join(absRelDir, ctx.dockerfileName);
+        const dockerfilePath = join(ctx.contextDir, ctx.dockerfileName);
 
-        const template = Template({ fileContextPath: absRelDir })
+        const template = Template({ fileContextPath: ctx.contextDir })
           .fromDockerfile(dockerfilePath)
           .setEnvs(input.captureEnv ?? {});
 
@@ -95,10 +109,15 @@ class E2BAdapter implements SandboxProviderAdapter {
           );
         }
 
+        // Use Template.build() now that we clear stale builds before starting.
+        // This gives us streaming logs via onBuildLogs and automatically handles the build lifecycle.
+        console.info(`[e2b] starting build for '${input.snapshotName}' (attempt ${attempt}/${BUILD_ATTEMPTS})`);
         const info = await Template.build(template, input.snapshotName, {
           cpuCount: resources.cpu,
           memoryMB: resources.memory * 1024,
           tags: ['default'],
+          timeoutMs: BUILD_TIMEOUT_MS,
+          requestTimeoutMs: BUILD_TIMEOUT_MS,
           onBuildLogs: (logs) => {
             if (!Array.isArray(logs)) {
               console.warn(`[e2b] onBuildLogs received non-array: ${typeof logs} ${JSON.stringify(logs).slice(0, 100)}`);
@@ -115,8 +134,9 @@ class E2BAdapter implements SandboxProviderAdapter {
             }
           },
         });
-
+        console.info(`[e2b] build completed: templateId=${info.templateId}`);
         await this.waitForReady(info.templateId, info.buildId);
+        console.info(`[e2b] template '${input.snapshotName}' is ready`);
         return;
       } catch (err) {
         lastErr = err;
@@ -133,7 +153,6 @@ class E2BAdapter implements SandboxProviderAdapter {
         await new Promise((r) => setTimeout(r, BUILD_RETRY_BASE_MS * attempt));
       } finally {
         await rm(ctx.contextDir, { recursive: true, force: true }).catch(() => {});
-        await rm(absRelDir, { recursive: true, force: true }).catch(() => {});
       }
     }
     throw lastErr;
@@ -146,12 +165,38 @@ class E2BAdapter implements SandboxProviderAdapter {
     if (cached && Date.now() < cached.expiresAt) return cached.state;
 
     try {
-      const exists = await withTimeout(
-        Template.exists(snapshotName),
+      const apiKey = getE2BApiKey();
+      if (!apiKey) return 'missing';
+      const res = await withTimeout(
+        fetch('https://api.e2b.app/templates', {
+          headers: { 'X-API-Key': apiKey },
+        }),
         SNAPSHOT_STATE_TIMEOUT_MS,
-        `E2B Template.exists(${snapshotName})`,
+        `E2B list templates`,
       );
-      const state: ProviderState = exists ? 'active' : 'missing';
+      if (!res.ok) return 'missing';
+      const templates = (await res.json()) as any[];
+      const match = templates.find(
+        (t) =>
+          t.templateID === snapshotName ||
+          t.aliases?.includes(snapshotName) ||
+          t.names?.includes(snapshotName) ||
+          t.names?.some((n: string) => n.endsWith(`/${snapshotName}`)),
+      );
+
+      if (!match) {
+        snapshotStateCache.delete(snapshotName);
+        return 'missing';
+      }
+
+      if (match.buildStatus === 'error') {
+        console.warn(`[e2b] found errored template '${snapshotName}' (ID: ${match.templateID}) — reaping from E2B`);
+        await deleteE2BTemplate(match.templateID).catch(() => {});
+        snapshotStateCache.delete(snapshotName);
+        return 'missing';
+      }
+
+      const state: ProviderState = match.buildStatus === 'ready' ? 'active' : 'building';
       if (state === 'active') {
         snapshotStateCache.set(snapshotName, {
           state,
@@ -178,20 +223,31 @@ class E2BAdapter implements SandboxProviderAdapter {
   }
 
   private async waitForReady(templateId: string, buildId: string): Promise<void> {
-    const deadline = Date.now() + ACTIVATE_DEADLINE_MS;
+    const deadline = Date.now() + BUILD_TIMEOUT_MS;
     while (Date.now() < deadline) {
       try {
         const status = await Template.getBuildStatus(
           { templateId, buildId },
           { logsOffset: 0 },
         );
+        console.info(`[e2b] waitForReady: status=${status.status} templateId=${templateId}`);
         if (status.status === 'ready') return;
         if (status.status === 'error') {
-          throw new Error(`Template build failed: ${status.error ?? 'unknown error'}`);
+          const reason = (status as any).reason;
+          const detail = reason?.message || JSON.stringify(reason) || 'unknown error';
+          console.error(`[e2b] build error detail: ${detail}`);
+          throw new Error(`Template build failed: ${detail}`);
         }
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
-        if (msg.includes('error') || msg.includes('failed')) throw err;
+        if (msg.includes('build failed') || msg.includes('Template build failed')) throw err;
+        
+        // If it is a transient API flap (like build not found during build), log it and keep polling
+        if (isTransientE2BError(err)) {
+          console.warn(`[e2b] waitForReady encountered transient error: ${msg}. Continuing to poll...`);
+        } else {
+          throw err;
+        }
       }
       await new Promise((r) => setTimeout(r, BUILD_STATUS_POLL_MS));
     }
@@ -212,7 +268,14 @@ function isTransientE2BError(err: unknown): boolean {
     m.includes('gateway') ||
     m.includes(' 502') ||
     m.includes(' 503') ||
-    m.includes(' 504')
+    m.includes(' 504') ||
+    m.includes('failed to extract files') ||
+    m.includes('envd') ||
+    m.includes('exit status') ||
+    m.includes('start command failed') ||
+    m.includes('cancelled') ||
+    m.includes('canceled') ||
+    m.includes('not found')
   );
 }
 

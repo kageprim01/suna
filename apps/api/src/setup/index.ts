@@ -216,7 +216,7 @@ setupApp.openapi(
 
   return c.json({
     providers: available,
-    default: available.includes(config.getDefaultProvider()) ? config.getDefaultProvider() : (available[0] || 'daytona'),
+    default: available.includes(config.getDefaultProvider()) ? config.getDefaultProvider() : (available[0] || 'e2b'),
     capabilities: Object.fromEntries(available.map((p) => [p, capabilities[p] || { async: false, events: false, polling: false }])),
   });
   },

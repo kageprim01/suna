@@ -10,7 +10,7 @@ mock.module('../config', () => ({
   config: { E2B_API_KEY: 'e2b-key-1' },
 }));
 
-const mockStageBuildContext = mock(() => Promise.resolve({ contextDir: 'C:\\Users\\kage\\agentica\\apps\\api\\tmp\\ctx' }));
+const mockStageBuildContext = mock(() => Promise.resolve({ contextDir: '/tmp/ctx', dockerfileName: 'Dockerfile.kortix', composedPath: '/tmp/ctx/Dockerfile.kortix' }));
 const mockDeleteE2BTemplate = mock(() => Promise.resolve());
 
 mock.module('../shared/e2b', () => ({

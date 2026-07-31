@@ -321,7 +321,7 @@ const envSchema = z.object({
   // Public API base URL, without a route suffix. Auto-derived from PORT in local mode.
   KORTIX_URL:                  optStr,
   KORTIX_YOLO_URL:             optUrl('https://api-yolo.kortix.com/v1'),
-  ALLOWED_SANDBOX_PROVIDERS:   optStrDefault('daytona'),
+  ALLOWED_SANDBOX_PROVIDERS:   optStrDefault('e2b'),
   SANDBOX_IMAGE:               optStr,
   KORTIX_LOCAL_IMAGES:         optBoolFalse,
   DOCKER_HOST:                 optStr,
@@ -414,7 +414,7 @@ const KNOWN_PROVIDERS: readonly SandboxProviderName[] = ['daytona', 'local_docke
 
 /** Parse comma-separated provider list (e.g. "daytona,local_docker"). */
 function parseAllowedProviders(raw: string): SandboxProviderName[] {
-  if (!raw) return ['daytona'];
+  if (!raw) return ['e2b'];
   const names = raw.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
   const valid: SandboxProviderName[] = [];
   for (const n of names) {
@@ -425,7 +425,7 @@ function parseAllowedProviders(raw: string): SandboxProviderName[] {
       console.warn(`[config] Unknown sandbox provider "${n}" in ALLOWED_SANDBOX_PROVIDERS - ignored`);
     }
   }
-  return valid.length > 0 ? valid : ['daytona'];
+  return valid.length > 0 ? valid : ['e2b'];
 }
 
 function validateEnv(): z.infer<typeof envSchema> {
@@ -805,13 +805,17 @@ export const config = {
 
   /**
    * Default sandbox provider for new sessions. First entry of
-   * ALLOWED_SANDBOX_PROVIDERS, with 'daytona' as the safety belt for an
+   * ALLOWED_SANDBOX_PROVIDERS, with 'e2b' as the safety belt for an
    * empty list. The single-provider invariant means there's no resolution
    * order today, but the function is the contract callers depend on —
    * adding a new provider later just changes what the list can contain.
    */
   getDefaultProvider(): SandboxProviderName {
-    return this.ALLOWED_SANDBOX_PROVIDERS[0] ?? 'daytona';
+    return this.ALLOWED_SANDBOX_PROVIDERS[0] ?? 'e2b';
+  },
+
+  isE2BEnabled(): boolean {
+    return this.ALLOWED_SANDBOX_PROVIDERS.includes('e2b') && !!this.E2B_API_KEY;
   },
 
   isDaytonaEnabled(): boolean {
