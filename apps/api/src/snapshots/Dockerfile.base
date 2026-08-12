@@ -10,7 +10,7 @@
 #   docker buildx build \
 #     --build-arg OPENCODE_VERSION=<version> \
 #     --build-arg AGENT_BROWSER_VERSION=<version> \
-#     -t ghcr.io/kortix/sandbox-base:latest \
+#     -t ghcr.io/kageprime/sandbox-base:latest \
 #     --push \
 #     -f apps/api/src/snapshots/Dockerfile.base \
 #     .
@@ -28,7 +28,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # ── opencode CLI ─────────────────────────────────────────────────
-ARG OPENCODE_VERSION
+ARG OPENCODE_VERSION=1.15.10
 RUN npm install -g --no-audit --no-fund "opencode-ai@${OPENCODE_VERSION}" \
     && command -v opencode \
     && opencode --version
@@ -46,7 +46,10 @@ RUN mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" \
         sleep 1; \
     done; \
     sleep 3; \
-    kill "$oc_pid" 2>/dev/null; wait "$oc_pid" 2>/dev/null; \
+    kill -TERM "$oc_pid" 2>/dev/null; \
+    sleep 1; \
+    kill -KILL "$oc_pid" 2>/dev/null; \
+    wait "$oc_pid" 2>/dev/null || true; \
     rm -f /tmp/oc-bake.log; true
 
 # ── bun runtime ──────────────────────────────────────────────────
@@ -81,23 +84,39 @@ RUN npm install -g --no-audit --no-fund "agent-browser@${AGENT_BROWSER_VERSION}"
 # Built from apps/kortix-sandbox-agent-server during base image creation.
 # The per-deploy Dockerfile (when using e2bBaseImage) skips COPY for this
 # since it's pre-baked here.
+COPY apps/kortix-sandbox-agent-server/package.json apps/kortix-sandbox-agent-server/bun.lock /tmp/kortix-agent-src/
+RUN cd /tmp/kortix-agent-src && bun install --frozen-lockfile
 COPY apps/kortix-sandbox-agent-server /tmp/kortix-agent-src
 RUN cd /tmp/kortix-agent-src \
     && BUN_COMPILE_TARGET=bun-linux-x64 bun run build \
     && cp dist/kortix-agent /usr/local/bin/kortix-agent \
     && chmod +x /usr/local/bin/kortix-agent \
-    && kortix-agent --version \
-    && rm -rf /tmp/kortix-agent-src
+    # The agent binary has no `--version` handler — it boots the daemon and
+    # runs forever. Verify it starts (bounded by timeout; 124 = alive) instead
+    # of a version call, which would hang the build.
+    && timeout 20 kortix-agent --version >/tmp/agent-smoke.log 2>&1; rc=$?; \
+    if [ "$rc" -ne 0 ] && [ "$rc" -ne 124 ]; then cat /tmp/agent-smoke.log >&2; exit 1; fi; \
+    rm -f /tmp/agent-smoke.log; \
+    rm -rf /tmp/kortix-agent-src
 
 # ── Kortix CLI binary ───────────────────────────────────────────
-# Built from apps/cli during base image creation.
-COPY apps/cli /tmp/kortix-cli-src
-RUN cd /tmp/kortix-cli-src \
-    && BUN_COMPILE_TARGET=bun-linux-x64 bun run build \
-    && cp dist/kortix /usr/local/bin/kortix \
+# Built from apps/cli during base image creation. The CLI imports the
+# @kortix/* workspace packages and its build re-embeds the starter snapshot
+# via packages/starter/scripts/generate-embedded.ts, so assemble a throwaway
+# workspace root (same shape as apps/sandbox/Dockerfile's cli-builder stage).
+COPY apps/cli /tmp/kortix-ws/apps/cli
+COPY packages/executor-sdk /tmp/kortix-ws/packages/executor-sdk
+COPY packages/manifest-schema /tmp/kortix-ws/packages/manifest-schema
+COPY packages/registry /tmp/kortix-ws/packages/registry
+COPY packages/starter /tmp/kortix-ws/packages/starter
+RUN printf '{"name":"kortix-cli-build","private":true,"workspaces":["apps/cli","packages/*"]}\n' > /tmp/kortix-ws/package.json \
+    && cd /tmp/kortix-ws \
+    && bun install --no-save \
+    && BUN_COMPILE_TARGET=bun-linux-x64 bash apps/cli/scripts/build.sh \
+    && cp apps/cli/dist/kortix /usr/local/bin/kortix \
     && chmod +x /usr/local/bin/kortix \
     && kortix --version \
-    && rm -rf /tmp/kortix-cli-src
+    && rm -rf /tmp/kortix-ws
 
 # ── slack-cli ────────────────────────────────────────────────────
 # Copied from apps/sandbox/slack-cli into the base image so the per-deploy
@@ -110,15 +129,16 @@ RUN find /opt/kortix/apps/sandbox/slack-cli -name 'node_modules' -exec rm -rf {}
 COPY packages/executor-sdk /opt/kortix/packages/executor-sdk
 
 # ── scaffold.git (bare repo) ────────────────────────────────────
-# Pre-staged so the per-deploy Dockerfile (e2bBaseImage) skips this COPY.
-COPY scaffold.git /opt/kortix/scaffold.git
+# NOT baked here: the scaffold repo is generated per-deploy by
+# build-context.ts (stageScaffoldRepo) and shipped to the per-deploy
+# Dockerfile as scaffold-v5.tar.gz (dockerfile-layer.ts COPY + extract).
 
 # ── LLM catalog ─────────────────────────────────────────────────
-# Optional — only included if the build context has it.
-COPY kortix-llm-catalog.json /opt/kortix/llm-catalog.json 2>/dev/null; true
+# NOT baked here: generated per-deploy by build-context.ts
+# (kortix-llm-catalog.json) and COPYed by the per-deploy Dockerfile.
 
 # ── opencode starter config ─────────────────────────────────────
-# Pre-staged so the per-deploy Dockerfile (e2bBaseImage) skips COPY.
-COPY .kortix/opencode /opt/kortix/warm-config/.kortix/opencode
+# Canonical source lives in packages/starter/templates/base/.kortix/opencode.
+COPY packages/starter/templates/base/.kortix/opencode /opt/kortix/warm-config/.kortix/opencode
 
 CMD ["sleep", "infinity"]
